@@ -8,6 +8,9 @@ from pybricks.parameters import Port, Stop, Direction, Button, Color
 from pybricks.tools import wait, StopWatch, DataLog
 from pybricks.robotics import DriveBase
 from pybricks.media.ev3dev import SoundFile, ImageFile
+from pybricks.iodevices import Ev3devSensor
+
+import calibrate.py
 
 
 # This program requires LEGO EV3 MicroPython v2.0 or higher.
@@ -22,7 +25,8 @@ right_motor = Motor(Port.C, Direction.COUNTERCLOCKWISE)
 left_intake = Motor(Port.A)
 right_intake = Motor(Port.D)
 
-nxt_color_sensor = pybricks.nxtdevices.ColorSensor(Port.S1)
+# nxt_color_sensor = pybricks.nxtdevices.ColorSensor(Port.S1)
+ht_color_sensor = Ev3devSensor(Port.S1)
 left_color_sensor = pybricks.ev3devices.ColorSensor(Port.S2)
 right_color_sensor = pybricks.ev3devices.ColorSensor(Port.S3)
 gyro_sensor = GyroSensor(Port.S4)
@@ -32,7 +36,6 @@ car_order = []
 def pid_color(threshold: int, speed: int, sensor: int, target: int):
     kp = 0.07
     ki = 0.000
-    # kd = 0.6
     kd = 0.8
 
     proportional = 0.0
@@ -90,9 +93,10 @@ def pid_gyro_straight_angle(threshold: float, speed: float, target: int):
     left_motor.reset_angle(0)
     right_motor.reset_angle(0)
 
-    while True:
-    # while right_motor.angle() < target:
+    while right_motor.angle() < target:
+        
         error = threshold - gyro_sensor.angle()
+        # speed_percentage = 1 - (right_motor.angle() / target)
         proportional = error * kp
         integral += error
         derivative = (error - last_error) * kd
@@ -103,33 +107,71 @@ def pid_gyro_straight_angle(threshold: float, speed: float, target: int):
 
         last_error = error
         
-        print(gyro_sensor.angle())
+    brake()
         
 def detect_cars():
     
     last_color = None
     
-    blank_lower = (0, 0, 0)
-    blank_higher = (15, 15, 10)
-    red_lower = (65, 10, 13)
-    red_higher = (75, 22, 20)
-    green_lower = (10, 40, 17)
-    green_higher = (18, 50, 22)
-    blue_lower = (20, 33, 55)
-    blue_higher = (30, 41, 60)
+    # all unneeded wrong
+    red_lower = (60, 7, 13)
+    green_lower = (10, 30, 13)
+    green_higher = (18, 40, 22)
+    blue_lower = (13, 23, 60)
     
-    while len(car_order) < 6:
-        color = nxt_color_sensor.color()
+    right_motor.reset_angle(0)
+    
+    kp = 0.07
+    ki = 0.000
+    kd = 0.8
 
-        if (
-            (
-                last_color == None
-                or last_color == Color.YELLOW
-                or last_color == Color.BLACK
-            )
-            and (color != last_color)
-            and (color != None and color != Color.YELLOW and color != Color.BLACK)
-        ):
+    proportional = 0.0
+    integral = 0.0
+    derivative = 0.0
+
+    last_error = 0.0
+    error = 0.0
+    
+    loop = 0
+    
+    reading = left_color_sensor.reflection()
+        
+    threshold = 32
+    speed = 200
+    
+    while len(car_order) < 5:
+
+        error = threshold - reading
+        proportional = error * kp
+        integral += error
+        derivative = (error - last_error) * kd
+
+        correction = (integral * ki) + proportional + derivative
+        
+        if loop <= 400:
+            left_motor.run(200 + (correction * 10))
+            right_motor.run(200 - (correction * 10))
+        else:
+            left_motor.run(speed + (correction * 10))
+            right_motor.run(speed - (correction * 10))
+
+        last_error = error
+        
+        loop += 1
+        
+        if right_motor.angle() > 120:
+        
+            color = None
+        
+            if 60 < ht_color_sensor.read('RGB')[0]:
+                print(ht_color_sensor.read('RGB'))
+                color = Color.RED
+            elif 60 < ht_color_sensor.read('RGB')[2]:
+                print(ht_color_sensor.read('RGB'))
+                color = Color.BLUE
+            else:
+                print(ht_color_sensor.read('RGB'))
+                color = Color.GREEN
 
             car_order.append(color)
 
@@ -145,8 +187,11 @@ def detect_cars():
                 # red
                 ev3.speaker.beep(frequency=800, duration=100)
 
-        last_color = color
+            last_color = color
+            
+            right_motor.reset_angle(0)
 
+    brake()
     print(car_order)
         
 def brake():
@@ -156,28 +201,5 @@ def brake():
 # Write your program here.
 ev3.speaker.beep()
 gyro_sensor.reset_angle(0)
-# detect_cars()
-while True:
-    
-    blank_lower = (0, 0, 0)
-    blank_higher = (15, 15, 10)
-    red_lower = (65, 10, 13)
-    red_higher = (75, 22, 20)
-    green_lower = (10, 40, 17)
-    green_higher = (18, 50, 22)
-    blue_lower = (20, 33, 55)
-    blue_higher = (30, 41, 60)
-    
-    if blank_lower  < nxt_color_sensor.rgb() < blank_higher:
-        print("blank")
-    elif red_lower < nxt_color_sensor.rgb() < red_higher:
-        print("red")
-    elif green_lower < nxt_color_sensor.rgb() < green_higher:
-        print("green")
-    elif blue_lower < nxt_color_sensor.rgb() < blue_higher:
-        print("blue")
-    
-    # print(nxt_color_sensor.rgb())
-# pid_gyro_straight_angle(0, 800, 1000)
-# pid_color(50, 800, 2, 10)
 
+detect_cars()
