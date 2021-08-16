@@ -9,18 +9,7 @@ from pybricks.robotics import DriveBase
 from pybricks.media.ev3dev import SoundFile, ImageFile
 from pybricks.iodevices import Ev3devSensor
 
-ev3 = EV3Brick()
-
-left_motor = Motor(Port.B)
-right_motor = Motor(Port.C, Direction.COUNTERCLOCKWISE)
-left_intake = Motor(Port.A)
-right_intake = Motor(Port.D)
-
-# nxt_color_sensor = pybricks.nxtdevices.ColorSensor(Port.S1)
-ht_color_sensor = Ev3devSensor(Port.S1)
-left_color_sensor = pybricks.ev3devices.ColorSensor(Port.S2)
-right_color_sensor = pybricks.ev3devices.ColorSensor(Port.S3)
-gyro_sensor = GyroSensor(Port.S4)
+import declarations.py
 
 # calibrate left color sensor
 def left_color_cali():

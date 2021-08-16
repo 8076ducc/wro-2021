@@ -1,4 +1,3 @@
-#!/usr/bin/env pybricks-micropython
 from pybricks.hubs import EV3Brick
 import pybricks.ev3devices
 from pybricks.ev3devices import (Motor, TouchSensor,
@@ -10,17 +9,15 @@ from pybricks.robotics import DriveBase
 from pybricks.media.ev3dev import SoundFile, ImageFile
 from pybricks.iodevices import Ev3devSensor
 
-import declarations.py
-import calibrate.py
+ev3 = EV3Brick()
 
-car_order = []
-        
-def brake():
-    left_motor.brake()
-    right_motor.brake()
+left_motor = Motor(Port.B)
+right_motor = Motor(Port.C, Direction.COUNTERCLOCKWISE)
+left_intake = Motor(Port.A)
+right_intake = Motor(Port.D)
 
-# Write your program here.
-ev3.speaker.beep()
-gyro_sensor.reset_angle(0)
-
-detect_cars()
+# nxt_color_sensor = pybricks.nxtdevices.ColorSensor(Port.S1)
+ht_color_sensor = Ev3devSensor(Port.S1)
+left_color_sensor = pybricks.ev3devices.ColorSensor(Port.S2)
+right_color_sensor = pybricks.ev3devices.ColorSensor(Port.S3)
+gyro_sensor = GyroSensor(Port.S4)
