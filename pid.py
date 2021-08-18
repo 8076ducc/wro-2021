@@ -14,7 +14,7 @@ from pybricks.robotics import DriveBase
 from pybricks.media.ev3dev import SoundFile, ImageFile
 from pybricks.iodevices import Ev3devSensor
 
-import declarations.py
+import declarations
 
 
 def pid_color(threshold: int, speed: int, sensor: int, target: int):
@@ -30,19 +30,19 @@ def pid_color(threshold: int, speed: int, sensor: int, target: int):
     error = 0.0
 
     if sensor == 2:
-        target_sensor = right_color_sensor
+        target_sensor = declarations.right_color_sensor
     elif sensor == 3:
-        target_sensor = left_color_sensor
+        target_sensor = declarations.left_color_sensor
 
     loop = 0
 
-    # while target_sensor.reflection() != target:
-    while True:
+    while target_sensor.reflection() != target:
+        # while True:
 
         if sensor == 2:
-            reading = left_color_sensor.reflection()
+            reading = declarations.left_color_sensor.reflection()
         elif sensor == 3:
-            reading = right_color_sensor.reflection()
+            reading = declarations.right_color_sensor.reflection()
 
         error = threshold - reading
         proportional = error * kp
@@ -52,11 +52,11 @@ def pid_color(threshold: int, speed: int, sensor: int, target: int):
         correction = (integral * ki) + proportional + derivative
 
         if loop <= 400:
-            left_motor.run(200 - (correction * 10))
-            right_motor.run(200 + (correction * 10))
+            declarations.left_motor.run(200 - (correction * 10))
+            declarations.right_motor.run(200 + (correction * 10))
         else:
-            left_motor.run(speed - (correction * 10))
-            right_motor.run(speed + (correction * 10))
+            declarations.left_motor.run(speed - (correction * 10))
+            declarations.right_motor.run(speed + (correction * 10))
 
         last_error = error
 
@@ -75,20 +75,20 @@ def pid_gyro_straight_angle(threshold: float, speed: float, target: int):
     last_error = 0.0
     error = 0.0
 
-    left_motor.reset_angle(0)
-    right_motor.reset_angle(0)
+    declarations.left_motor.reset_angle(0)
+    declarations.right_motor.reset_angle(0)
 
-    while right_motor.angle() < target:
+    while declarations.right_motor.angle() < target:
 
-        error = threshold - gyro_sensor.angle()
+        error = threshold - declarations.gyro_sensor.angle()
         # speed_percentage = 1 - (right_motor.angle() / target)
         proportional = error * kp
         integral += error
         derivative = (error - last_error) * kd
 
         correction = (integral * ki) + proportional + derivative
-        left_motor.run(speed - (correction * 10))
-        right_motor.run(speed + (correction * 10))
+        declarations.left_motor.run(speed - (correction * 10))
+        declarations.right_motor.run(speed + (correction * 10))
 
         last_error = error
 
@@ -96,5 +96,5 @@ def pid_gyro_straight_angle(threshold: float, speed: float, target: int):
 
 
 def brake():
-    left_motor.brake()
-    right_motor.brake()
+    declarations.left_motor.brake()
+    declarations.right_motor.brake()

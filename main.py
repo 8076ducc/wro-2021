@@ -32,14 +32,6 @@ def start():
 
 def detect_cars():
 
-    # last_color = None
-
-    # all unneeded wrong
-    red_lower = (60, 7, 13)
-    green_lower = (10, 30, 13)
-    green_higher = (18, 40, 22)
-    blue_lower = (13, 23, 60)
-
     declarations.right_motor.reset_angle(0)
 
     kp = 0.07
@@ -107,8 +99,6 @@ def detect_cars():
             elif color == Color.RED:
                 # red
                 declarations.ev3.speaker.beep(frequency=800, duration=100)
-
-            # last_color = color
 
             declarations.right_motor.reset_angle(0)
 
