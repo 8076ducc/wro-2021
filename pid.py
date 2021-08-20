@@ -17,6 +17,20 @@ from pybricks.iodevices import Ev3devSensor
 import declarations
 
 
+ev3 = declarations.ev3
+
+left_motor = declarations.left_motor
+right_motor = declarations.right_motor
+left_intake = declarations.left_intake
+right_intake = declarations.right_intake
+
+# nxt_color_sensor = pybricks.nxtdevices.ColorSensor(Port.S1)
+ht_color_sensor = declarations.ht_color_sensor
+left_color_sensor = declarations.left_color_sensor
+right_color_sensor = declarations.right_color_sensor
+gyro_sensor = declarations.gyro_sensor
+
+
 def pid_color(threshold: int, speed: int, sensor: int, target: int):
     kp = 0.07
     ki = 0.000
@@ -78,8 +92,7 @@ def pid_gyro_straight_angle(threshold: float, speed: float, target: int):
     declarations.left_motor.reset_angle(0)
     declarations.right_motor.reset_angle(0)
 
-    # while declarations.right_motor.angle() < target:
-    while True:
+    while declarations.right_motor.angle() < target:
 
         error = threshold - declarations.gyro_sensor.angle()
         # speed_percentage = 1 - (right_motor.angle() / target)
@@ -98,7 +111,9 @@ def pid_gyro_straight_angle(threshold: float, speed: float, target: int):
     brake()
 
 
-def pid_gyro_straight_color(threshold: float, speed: float, target: int):
+def gyro_straight_color_lower(
+    threshold: float, speed: float, target_sensor: int, target: int
+):
     kp = 0.7
     ki = 0.0
     kd = 0.0
@@ -110,10 +125,49 @@ def pid_gyro_straight_color(threshold: float, speed: float, target: int):
     last_error = 0.0
     error = 0.0
 
-    while declarations.left_color_sensor.reflection() > target:
+    if target_sensor == 2:
+        sensor = declarations.left_color_sensor
+    elif target_sensor == 3:
+        sensor = declarations.right_color_sensor
+
+    while sensor.reflection() > target:
 
         error = threshold - declarations.gyro_sensor.angle()
-        # speed_percentage = 1 - (right_motor.angle() / target)
+        proportional = error * kp
+        integral += error
+        derivative = (error - last_error) * kd
+
+        correction = (integral * ki) + proportional + derivative
+        declarations.left_motor.run(speed + (correction * 10))
+        declarations.right_motor.run(speed - (correction * 10))
+
+        last_error = error
+
+    brake()
+
+
+def gyro_straight_color_higher(
+    threshold: float, speed: float, target_sensor: int, target: int
+):
+    kp = 0.7
+    ki = 0.0
+    kd = 0.0
+
+    proportional = 0.0
+    integral = 0.0
+    derivative = 0.0
+
+    last_error = 0.0
+    error = 0.0
+
+    if target_sensor == 2:
+        sensor = declarations.left_color_sensor
+    elif target_sensor == 3:
+        sensor = declarations.right_color_sensor
+
+    while sensor.reflection() < target:
+
+        error = threshold - declarations.gyro_sensor.angle()
         proportional = error * kp
         integral += error
         derivative = (error - last_error) * kd
@@ -129,9 +183,13 @@ def pid_gyro_straight_color(threshold: float, speed: float, target: int):
 
 def pid_gyro_turn(threshold: float):
 
-    kp = 0.7
-    ki = 0.002
-    kd = 0.05
+    # kp = 0.7
+    # ki = 0.002
+    # kd = 0.05
+
+    kp = 0.92
+    ki = 0.00
+    kd = 3.0
 
     proportional = 0.0
     integral = 0.0

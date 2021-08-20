@@ -20,43 +20,75 @@ import pid
 import calibrate
 
 
+ev3 = declarations.ev3
+
+left_motor = declarations.left_motor
+right_motor = declarations.right_motor
+left_intake = declarations.left_intake
+right_intake = declarations.right_intake
+
+# nxt_color_sensor = pybricks.nxtdevices.ColorSensor(Port.S1)
+ht_color_sensor = declarations.ht_color_sensor
+left_color_sensor = declarations.left_color_sensor
+right_color_sensor = declarations.right_color_sensor
+gyro_sensor = declarations.gyro_sensor
+
+
 def start():
 
     declarations.gyro_sensor.reset_angle(0)
 
-    # while declarations.gyro_sensor.angle() > -3:
-    #     declarations.right_motor.run(900)
-    #     declarations.left_motor.run(300)
+    right_motor.run(800)
+    left_motor.run(800)
 
-    declarations.right_motor.run(800)
-    declarations.left_motor.run(800)
+    left_intake.run(-500)
+    right_intake.run(-500)
 
-    wait(300)
+    wait(250)
 
-    pid.pid_gyro_straight_color(0, 800, 20)
+    pid.gyro_straight_color_lower(-10, 800, 2, 20)
+    pid.gyro_straight_color_lower(-10, 800, 2, 40)
 
-    pid.pid_gyro_straight_color(0, 800, 40)
+    left_intake.run(0)
+    right_intake.run(0)
+
     brake()
 
-    declarations.right_motor.run(800)
-    declarations.left_motor.run(800)
+    right_motor.run(800)
+    left_motor.run(800)
 
-    wait(40)
+    wait(45)
 
     pid.pid_gyro_turn(-90)
 
-    declarations.right_motor.run(-800)
-    declarations.left_motor.run(-800)
+    left_intake.run(1000)
+    right_intake.run(1000)
+
+    right_motor.run(-800)
+    left_motor.run(-800)
 
     wait(300)
 
-    declarations.left_intake.run(800)
-    declarations.right_intake.run(800)
+    left_motor.run(0)
+    right_motor.run(0)
+    left_intake.run(0)
+    right_intake.run(0)
 
-    wait(200)
+    left_intake.run(-800)
+    right_intake.run(-800)
 
-    declarations.left_intake.run(0)
-    declarations.right_intake.run(0)
+    wait(600)
+
+    left_intake.run(0)
+    right_intake.run(0)
+
+    left_intake.hold()
+    right_intake.hold()
+
+    pid.gyro_straight_color_higher(-90, 800, 2, 70)
+    pid.pid_gyro_turn(-60)
+    # pid.gyro_straight_color_higher(-60, 800, 2, 90)
+    # pid.gyro_straight_color_lower(-60, 800, 3, 20)
 
 
 def detect_cars():
@@ -80,7 +112,7 @@ def detect_cars():
 
     while len(declarations.car_order) < 6:
 
-        reading = declarations.right_color_sensor.rgb()[2]
+        reading = right_color_sensor.rgb()[2]
 
         error = threshold - reading
         proportional = error * kp
@@ -89,8 +121,8 @@ def detect_cars():
 
         correction = (integral * ki) + proportional + derivative
 
-        declarations.left_motor.run(speed - (correction * 10))
-        declarations.right_motor.run(speed + (correction * 10))
+        left_motor.run(speed - (correction * 10))
+        right_motor.run(speed + (correction * 10))
 
         last_error = error
 
@@ -147,7 +179,7 @@ def detect_cars():
 
     while detect_first_color < 2:
 
-        reading = declarations.right_color_sensor.rgb()[2]
+        reading = right_color_sensor.rgb()[2]
 
         error = threshold - reading
         proportional = error * kp
@@ -156,8 +188,8 @@ def detect_cars():
 
         correction = (integral * ki) + proportional + derivative
 
-        declarations.left_motor.run(speed + (correction * 10))
-        declarations.right_motor.run(speed - (correction * 10))
+        left_motor.run(speed + (correction * 10))
+        right_motor.run(speed - (correction * 10))
 
         last_error = error
 
@@ -179,8 +211,8 @@ def detect_cars():
         last_color = color
 
     while declarations.gyro_sensor.angle() < 84:
-        declarations.left_motor.run(500)
-        declarations.right_motor.run(200)
+        left_motor.run(500)
+        right_motor.run(200)
 
     declarations.gyro_sensor.reset_angle(0)
     pid.pid_gyro_straight_angle(0, -800, -300)
@@ -189,13 +221,29 @@ def detect_cars():
 
 
 def brake():
-    declarations.left_motor.brake()
-    declarations.right_motor.brake()
+    left_motor.brake()
+    right_motor.brake()
 
 
 # Write your program here.
 
 start()
+
+# gyro_sensor.reset_angle(0)
+# pid.pid_gyro_turn(90)
+# brake()
+# gyro_sensor.reset_angle(0)
+# pid.pid_gyro_turn(90)
+# gyro_sensor.reset_angle(0)
+# pid.pid_gyro_turn(90)
+# gyro_sensor.reset_angle(0)
+# pid.pid_gyro_turn(90)
+
+# while True:
+#     print(gyro_sensor.angle())
+
+# calibrate.right_color_cali()
+
 # pid.pid_gyro_straight_angle(0, 200, 0)
 
 # while True:

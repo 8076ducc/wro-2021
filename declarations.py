@@ -18,7 +18,7 @@ ev3 = EV3Brick()
 
 left_motor = Motor(Port.B, Direction.COUNTERCLOCKWISE)
 right_motor = Motor(Port.C)
-left_intake = Motor(Port.A)
+left_intake = Motor(Port.A, Direction.COUNTERCLOCKWISE)
 right_intake = Motor(Port.D)
 
 # nxt_color_sensor = pybricks.nxtdevices.ColorSensor(Port.S1)
