@@ -32,10 +32,15 @@ def right_color_cali():
         )
 
 
+def right_color_rgb_cali():
+    while True:
+        declarations.ev3.screen.print(
+            declarations.right_color_sensor.rgb()[2], sep="", end="\n"
+        )
+
+
 # calibrate hitechnic color sensor
 def ht_color_cali():
     while True:
         r, g, b, a = declarations.ht_color_sensor.read("RGB")
-        declarations.ev3.screen.print(
-            "R: {0}\t G: {1}\t B: {2}".format(r, g, b), sep="", end="\n"
-        )
+        print("R: {0}\t G: {1}\t B: {2}".format(r, g, b), sep="", end="\n")
