@@ -97,7 +97,7 @@ class Sensors:
         self.right_color_sensor = right_color_sensor
         self.gyro_sensor = gyro_sensor
 
-    def cali_rli(self, sensor: int):
+    def calibrate_rli(self, sensor: int):
         while True:
             if sensor == 2:
                 ev3.screen.print(self.left_color_sensor.reflection())
@@ -106,7 +106,7 @@ class Sensors:
                 ev3.screen.print(self.right_color_sensor.reflection())
                 print(self.right_color_sensor.reflection())
 
-    def cali_rgb(self, sensor: int):
+    def calibrate_rgb(self, sensor: int):
         while True:
             if sensor == 2:
                 r, g, b = self.left_color_sensor.rgb()
@@ -121,13 +121,13 @@ class Sensors:
                 )
                 print("R: {0}\t G: {1}\t B: {2}".format(r, g, b), sep="", end="\n")
     
-    def cali_ht_rgb(self):
+    def calibrate_ht_rgb(self):
         while True:
             r, g, b, a = self.ht_color_sensor.read("RGB")
             ev3.screen.print("R: {0}\t G: {1}\t B: {2} A: {3}".format(r, g, b, a), sep="", end="\n")
             print("R: {0}\t G: {1}\t B: {2} A: {3}".format(r, g, b, a), sep="", end="\n")
 
-    def cali_gyro(self):
+    def calibrate_gyro(self):
         self.gyro_sensor.reset_angle(0)
 
         while True:

@@ -68,7 +68,7 @@ class PID_LineTrack(PID):
 
             self.loop += 1
             self.last_error = self.error
-        
+
         base.stop()
 
 
@@ -99,7 +99,7 @@ class PID_GyroStraight(PID):
                 speed + side * self.correction, speed - side * self.correction
             )
             self.last_error = self.error
-        
+
         base.stop()
 
 
@@ -107,12 +107,8 @@ class PID_GyroTurn(PID):
     def __init__(self, gyro: GyroSensor):
         self.gyro = gyro
         PID.__init__(self, base, 0.92, 0.00, 3.00)
-    
-    def turn(
-        self,
-        threshold: int,
-        condition=lambda: True
-    ):
+
+    def turn(self, threshold: int, condition=lambda: True):
         while condition():
             self.error = threshold - self.gyro.angle()
             self.proportional = self.error * self.kp
@@ -122,7 +118,7 @@ class PID_GyroTurn(PID):
             self.correction = (
                 (self.integral * self.ki) + self.proportional + self.derivative
             )
-            
+
             base.run(self.correction * 10, -(self.correction * 10))
-        
+
         base.stop()
