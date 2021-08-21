@@ -29,7 +29,16 @@ class PID(object):
         self.ki = ki
         self.kd = kd
         self.base = base
+        self.proportional = 0
         self.integral = 0
+        self.derivative = 0
+        self.last_error = 0
+        self.loop = 0
+
+    def reset_values(self):
+        self.proportional = 0
+        self.integral = 0
+        self.derivative = 0
         self.last_error = 0
         self.loop = 0
 
@@ -47,6 +56,8 @@ class PID_LineTrack(PID):
         condition=lambda: True,
         reset=True,
     ):
+        self.reset_values()
+
         while condition():
             self.error = threshold - sensor.reflection()
             self.proportional = self.error * self.kp
@@ -81,10 +92,11 @@ class PID_GyroStraight(PID):
         self,
         speed: float,
         threshold: int,
-        side=1,
         condition=lambda: True,
         reset=True,
     ):
+        self.reset_values()
+
         while condition():
             self.error = threshold - self.gyro.angle()
             self.proportional = self.error * self.kp
@@ -95,9 +107,7 @@ class PID_GyroStraight(PID):
                 (self.integral * self.ki) + self.proportional + self.derivative
             )
 
-            self.base.run(
-                speed + side * self.correction, speed - side * self.correction
-            )
+            self.base.run(speed + self.correction, speed - self.correction)
             self.last_error = self.error
 
         base.stop()
@@ -109,6 +119,8 @@ class PID_GyroTurn(PID):
         PID.__init__(self, base, 0.92, 0.00, 3.00)
 
     def turn(self, threshold: int, condition=lambda: True):
+        self.reset_values()
+
         while condition():
             self.error = threshold - self.gyro.angle()
             self.proportional = self.error * self.kp
