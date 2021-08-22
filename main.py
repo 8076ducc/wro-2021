@@ -28,7 +28,7 @@ def start():
     gyro_sensor.reset_angle(0)
 
     base.run(800, 800)
-    intake.run(-500, -500)
+    intake.close()
     wait(250)
     gyro_straight.move(800, -10, left_color_sensor.reflection() > 20)
     gyro_straight.move(800, -10, left_color_sensor.reflection() > 40)
@@ -38,15 +38,15 @@ def start():
 
     gyro_turn.turn(-90)
 
-    intake.run(1000, 1000)
+    intake.open()
     base.run(800, 800)
     wait(300)
-    base.run(0, 0)
-    intake.run(0, 0)
-    intake.run(-800, -800)
+    base.stop()
+    intake.stop()
+    intake.close()
     wait(600)
-    intake.run(0, 0)
-    intake.hold
+    intake.stop()
+    intake.hold()
 
     gyro_straight.move(800, -90, left_color_sensor.reflection() < 70)
     gyro_turn.turn(-60)

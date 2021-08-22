@@ -80,6 +80,26 @@ class Intake:
         self.left_intake.run(left_speed)
         self.right_intake.run(right_speed)
 
+    def stop(self):
+        self.left_intake.brake()
+        self.right_intake.brake()
+
+    def open(self):
+        self.left_intake.run(1000)
+        self.right_intake.run(1000)
+
+    def close(self):
+        self.left_intake.run(-1000)
+        self.right_intake.run(-1000)
+
+    def open_left(self):
+        self.left_intake.run(1000)
+        self.right_intake.hold()
+
+    def open_right(self):
+        self.left_intake.hold()
+        self.right_intake.run(1000)
+
 
 intake = Intake(left_intake, right_intake)
 
@@ -120,12 +140,16 @@ class Sensors:
                     "R: {0}\t G: {1}\t B: {2}".format(r, g, b), sep="", end="\n"
                 )
                 print("R: {0}\t G: {1}\t B: {2}".format(r, g, b), sep="", end="\n")
-    
+
     def calibrate_ht_rgb(self):
         while True:
             r, g, b, a = self.ht_color_sensor.read("RGB")
-            ev3.screen.print("R: {0}\t G: {1}\t B: {2} A: {3}".format(r, g, b, a), sep="", end="\n")
-            print("R: {0}\t G: {1}\t B: {2} A: {3}".format(r, g, b, a), sep="", end="\n")
+            ev3.screen.print(
+                "R: {0}\t G: {1}\t B: {2} A: {3}".format(r, g, b, a), sep="", end="\n"
+            )
+            print(
+                "R: {0}\t G: {1}\t B: {2} A: {3}".format(r, g, b, a), sep="", end="\n"
+            )
 
     def calibrate_gyro(self):
         self.gyro_sensor.reset_angle(0)
