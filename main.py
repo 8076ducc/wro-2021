@@ -30,8 +30,8 @@ def start():
     base.run(800, 800)
     intake.close()
     wait(250)
-    gyro_straight.move(800, -10, left_color_sensor.reflection() > 20)
-    gyro_straight.move(800, -10, left_color_sensor.reflection() > 40)
+    gyro_straight.move(800, -10, lambda: left_color_sensor.reflection() > 20)
+    gyro_straight.move(800, -10, lambda: left_color_sensor.reflection() > 40)
     intake.run(0, 0)
     base.run(800, 800)
     wait(45)
@@ -39,8 +39,8 @@ def start():
     gyro_turn.turn(-90)
 
     intake.open()
-    base.run(800, 800)
-    wait(300)
+    base.run(-800, -800)
+    wait(400)
     base.stop()
     intake.stop()
     intake.close()
@@ -48,10 +48,11 @@ def start():
     intake.stop()
     intake.hold()
 
-    gyro_straight.move(800, -90, left_color_sensor.reflection() < 70)
-    gyro_turn.turn(-60)
-    # pid.gyro_straight_color_higher(-60, 800, 2, 90)
-    # pid.gyro_straight_color_lower(-60, 800, 3, 20)
+    gyro_straight.move(800, -90, lambda: left_color_sensor.reflection() < 90)
+    gyro_turn.turn(-65)
+    gyro_straight.move(800, -65, lambda: right_color_sensor.rgb()[1] != 30)
+
+    gyro_turn.turn(-90)
 
 
 def detect_cars():
@@ -157,11 +158,15 @@ def detect_cars():
 
         last_color = color
 
-    while gyro_sensor.angle() < 84:
-        base.run(500, 200)
+    while gyro_sensor.angle() < 0:
+        base.run(500, 100)
 
-    gyro_sensor.reset_angle(0)
-    gyro_straight.move(-800, 0, left_motor.angle() > -300)
+    intake.open()
+
+    left_motor.reset_angle(0)
+    gyro_straight.move(-800, 0, lambda: left_motor.angle() > -300)
+
+    intake.close()
 
     base.stop()
 
@@ -169,3 +174,10 @@ def detect_cars():
 # Write your program here.
 
 start()
+detect_cars()
+
+# while True:
+#     print(right_color_sensor.rgb()[1])
+
+# gyro_sensor.reset_angle(0)
+# gyro_turn.turn(-90)

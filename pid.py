@@ -116,12 +116,12 @@ class PID_GyroStraight(PID):
 class PID_GyroTurn(PID):
     def __init__(self, gyro: GyroSensor):
         self.gyro = gyro
-        PID.__init__(self, base, 0.92, 0.00, 3.00)
+        PID.__init__(self, base, 0.92, 0.00, 0.00)
 
-    def turn(self, threshold: int, condition=lambda: True):
+    def turn(self, threshold: int):
         self.reset_values()
 
-        while condition():
+        while self.gyro.angle() != threshold:
             self.error = threshold - self.gyro.angle()
             self.proportional = self.error * self.kp
             self.integral += self.error
