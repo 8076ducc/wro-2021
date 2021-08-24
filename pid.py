@@ -116,7 +116,7 @@ class PID_GyroStraight(PID):
 class PID_GyroTurn(PID):
     def __init__(self, gyro: GyroSensor):
         self.gyro = gyro
-        PID.__init__(self, base, 0.92, 0.00, 0.00)
+        PID.__init__(self, base, 0.86, 0.000003, 0.0004)
 
     def turn(self, threshold: int):
         self.reset_values()
