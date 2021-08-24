@@ -134,3 +134,34 @@ class PID_GyroTurn(PID):
             base.run(self.correction * 10, -(self.correction * 10))
 
         base.stop()
+
+    def single_motor_turn(
+        self,
+        threshold: int,
+        left_speed: int,
+        right_speed: int,
+        kp=0.00,
+        ki=0.00,
+        kd=0.00,
+    ):
+        self.reset_values()
+        self.kp = kp
+        self.ki = ki
+        self.kd = kd
+
+        while self.gyro.angle() != threshold:
+            self.error = threshold - self.gyro.angle()
+            self.proportional = self.error * self.kp
+            self.integral += self.error
+            self.derivative = (self.error - self.last_error) * self.kd
+
+            self.correction = (
+                (self.integral * self.ki) + self.proportional + self.derivative
+            )
+
+            base.run(
+                (left_speed + self.correction * 10),
+                (right_speed - (self.correction * 10)),
+            )
+
+        base.stop()
