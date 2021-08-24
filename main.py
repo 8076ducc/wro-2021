@@ -158,9 +158,12 @@ def detect_cars():
 
         last_color = color
 
-    while gyro_sensor.angle() < 0:
-        base.run(500, 100)
+    print(gyro_sensor.angle())
 
+    # while gyro_sensor.angle() < 10:
+    #     base.run(500, 100)
+
+    gyro_turn.turn(0)
     intake.open()
 
     left_motor.reset_angle(0)
@@ -174,10 +177,12 @@ def detect_cars():
 # Write your program here.
 
 start()
-detect_cars()
+# detect_cars()
 
 # while True:
 #     print(right_color_sensor.rgb()[1])
 
 # gyro_sensor.reset_angle(0)
 # gyro_turn.turn(-90)
+
+ev3.speaker.beep()
