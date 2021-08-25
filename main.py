@@ -16,11 +16,14 @@ from pybricks.media.ev3dev import SoundFile, ImageFile
 from pybricks.iodevices import Ev3devSensor
 from devices import *
 from pid import *
+from localise import *
 import constants
 
 
 gyro_straight = PID_GyroStraight(gyro_sensor)
 gyro_turn = PID_GyroTurn(gyro_sensor)
+line_track = PID_LineTrack()
+sensors = Sensors(ht_color_sensor, left_color_sensor, right_color_sensor, gyro_sensor)
 
 
 def start():
@@ -50,7 +53,7 @@ def start():
 
     gyro_straight.move(800, -90, lambda: left_color_sensor.reflection() < 90)
     gyro_turn.turn(-65)
-    gyro_straight.move(800, -65, lambda: right_color_sensor.rgb()[1] != 30)
+    gyro_straight.move(800, -65, lambda: right_color_sensor.rgb()[1] != 32)
 
     gyro_turn.turn(-90)
 
@@ -158,18 +161,18 @@ def detect_cars():
 
         last_color = color
 
-    print(gyro_sensor.angle())
+    gyro_turn.turn(-45)
 
-    # while gyro_sensor.angle() < 10:
-    #     base.run(500, 100)
+    # while True:
+    #     print(gyro_sensor.angle())
 
-    gyro_turn.turn(0)
-    intake.open()
+    # gyro_turn.single_motor_turn(-40, -500, 0)
+    # intake.open()
 
-    left_motor.reset_angle(0)
-    gyro_straight.move(-800, 0, lambda: left_motor.angle() > -300)
+    # left_motor.reset_angle(0)
+    # gyro_straight.move(-800, 0, lambda: left_motor.angle() > -300)
 
-    intake.close()
+    # intake.close()
 
     base.stop()
 
@@ -177,12 +180,16 @@ def detect_cars():
 # Write your program here.
 
 start()
-# detect_cars()
+detect_cars()
+
+# line_track.move(left_color_sensor, 500, 50)
 
 # while True:
 #     print(right_color_sensor.rgb()[1])
 
 # gyro_sensor.reset_angle(0)
+# gyro_turn.single_motor_turn(-90, 200, 500)
 # gyro_turn.turn(-90)
+
 
 ev3.speaker.beep()
