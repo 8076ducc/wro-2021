@@ -116,7 +116,7 @@ class PID_GyroStraight(PID):
 class PID_GyroTurn(PID):
     def __init__(self, gyro: GyroSensor):
         self.gyro = gyro
-        PID.__init__(self, base, 0.86, 0.000003, 0.0004)
+        PID.__init__(self, base, 0.86, 0.0000035, 0.0004)
 
     def turn(self, threshold: int):
         self.reset_values()
@@ -140,9 +140,9 @@ class PID_GyroTurn(PID):
         threshold: int,
         left_speed: int,
         right_speed: int,
-        kp=0.00,
-        ki=0.00,
-        kd=0.00,
+        kp=1.00,
+        ki=0.000005,
+        kd=0.0004,
     ):
         self.reset_values()
         self.kp = kp
@@ -159,9 +159,30 @@ class PID_GyroTurn(PID):
                 (self.integral * self.ki) + self.proportional + self.derivative
             )
 
-            base.run(
-                (left_speed + self.correction * 10),
-                (right_speed - (self.correction * 10)),
-            )
+            if left_speed == 0:
+                base.run(
+                    0,
+                    -(self.correction * 10),
+                )
+            elif right_speed == 0:
+                base.run(
+                    self.correction * 10,
+                    0,
+                )
+            elif abs(left_speed) > abs(right_speed):
+                print(right_speed / left_speed)
+                
+                base.run(
+                    (self.correction * 10),
+                    (-(right_speed / left_speed) * self.correction * 10),
+                )
+            elif abs(left_speed) < abs(right_speed):
+                print(left_speed / right_speed)
+                base.run(
+                    (-(left_speed / right_speed) * self.correction * 10),
+                    (-self.correction * 10),
+                )
+                
+            print(left_motor.speed(), right_motor.speed())
 
         base.stop()
