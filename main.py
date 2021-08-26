@@ -51,6 +51,9 @@ def start():
     intake.stop()
     intake.hold()
 
+    left_intake_possessions.update(battery=True)
+    right_intake_possessions.update(battery=True)
+
     gyro_straight.move(800, -90, lambda: left_color_sensor.reflection() < 90)
     gyro_turn.turn(-65)
     gyro_straight.move(800, -65, lambda: right_color_sensor.rgb()[1] != 32)
