@@ -12,7 +12,7 @@ from pybricks.tools import wait, StopWatch, DataLog
 from pybricks.robotics import DriveBase
 from pybricks.media.ev3dev import SoundFile, ImageFile
 from pybricks.iodevices import Ev3devSensor
-import enum
+# from enum import Enum
 
 ev3 = EV3Brick()
 
@@ -101,30 +101,30 @@ class Intake:
 intake = Intake(left_intake, right_intake)
 
 
-class IntakePossessions:
-    def __init__(self, car_color=None, car_type=None, battery=False):
-        self.car_color = car_color
-        self.car_type = car_type
-        self.battery = battery
+# class IntakePossessions:
+#     def __init__(self, car_color=None, car_type=None, battery=False):
+#         self.car_color = car_color
+#         self.car_type = car_type
+#         self.battery = battery
 
-    def update(self, car_color=None, car_type=None, battery=None):
-        if car_color != None:
-            self.car_color = car_color
+#     def update(self, car_color=None, car_type=None, battery=None):
+#         if car_color != None:
+#             self.car_color = car_color
 
-        if car_type != None:
-            self.car_type = car_type
+#         if car_type != None:
+#             self.car_type = car_type
 
-        if battery != None:
-            self.battery = battery
-
-
-class CarType(enum.Enum):
-    WAITING = 0
-    PARKED = 1
+#         if battery != None:
+#             self.battery = battery
 
 
-left_intake_possessions = IntakePossessions()
-right_intake_possessions = IntakePossessions()
+# class CarType(Enum):
+#     WAITING = 0
+#     PARKED = 1
+
+
+# left_intake_possessions = IntakePossessions()
+# right_intake_possessions = IntakePossessions()
 
 
 class Sensors:

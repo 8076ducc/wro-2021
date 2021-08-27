@@ -33,8 +33,8 @@ def start():
     base.run(800, 800)
     intake.close()
     wait(250)
-    gyro_straight.move(800, -10, lambda: left_color_sensor.reflection() > 20)
-    gyro_straight.move(800, -10, lambda: left_color_sensor.reflection() > 40)
+    gyro_straight.move(800, -12, lambda: left_color_sensor.reflection() > 20)
+    gyro_straight.move(800, -12, lambda: left_color_sensor.reflection() > 40)
     intake.run(0, 0)
     base.run(800, 800)
     wait(45)
@@ -51,14 +51,17 @@ def start():
     intake.stop()
     intake.hold()
 
-    left_intake_possessions.update(battery=True)
-    right_intake_possessions.update(battery=True)
+    # left_intake_possessions.update(battery=True)
+    # right_intake_possessions.update(battery=True)
 
     gyro_straight.move(800, -90, lambda: left_color_sensor.reflection() < 90)
     gyro_turn.turn(-65)
-    gyro_straight.move(800, -65, lambda: right_color_sensor.rgb()[1] != 32)
+    gyro_straight.move(00, -65, lambda: right_color_sensor.color() != Color.GREEN)
+    gyro_straight.move(00, -65, lambda: right_color_sensor.color() != Color.WHITE)
 
     gyro_turn.turn(-90)
+
+    # 15 31 11
 
 
 def detect_cars():
@@ -166,16 +169,19 @@ def detect_cars():
 
     gyro_turn.turn(-45)
 
-    # while True:
-    #     print(gyro_sensor.angle())
+    gyro_straight.move(800, -45, lambda: left_color_sensor.reflection() < 70)
+    gyro_straight.move(800, -45, lambda: left_color_sensor.reflection() > 20)
+    gyro_straight.move(800, -45, lambda: left_color_sensor.reflection() < 70)
+    gyro_straight.move(800, -45, lambda: left_color_sensor.reflection() > 40)
 
-    # gyro_turn.single_motor_turn(-40, -500, 0)
-    # intake.open()
+    gyro_turn.single_motor_turn(0, -500, 0)
+    intake.open()
 
-    # left_motor.reset_angle(0)
-    # gyro_straight.move(-800, 0, lambda: left_motor.angle() > -300)
+    left_motor.reset_angle(0)
+    gyro_straight.move(-900, 0, lambda: left_motor.angle() > -400)
 
-    # intake.close()
+    intake.close()
+    intake.hold()
 
     base.stop()
 
@@ -185,14 +191,17 @@ def detect_cars():
 start()
 detect_cars()
 
+# gyro_sensor.reset_angle(0)
+# gyro_straight.move(800, 0, lambda: True)
+
 # line_track.move(left_color_sensor, 500, 50)
 
 # while True:
-#     print(right_color_sensor.rgb()[1])
+#     print(right_color_sensor.rgb())
 
 # gyro_sensor.reset_angle(0)
 # gyro_turn.single_motor_turn(-90, 200, 500)
-# gyro_turn.turn(-90)
+# gyro_turn.turn(-65)
 
 
 ev3.speaker.beep()

@@ -74,7 +74,8 @@ class PID_LineTrack(PID):
                 )
             else:
                 self.base.run(
-                    speed + side * self.correction, speed - side * self.correction
+                    speed + (side * self.correction * 10),
+                    speed - (side * self.correction * 10),
                 )
 
             self.loop += 1
@@ -107,7 +108,9 @@ class PID_GyroStraight(PID):
                 (self.integral * self.ki) + self.proportional + self.derivative
             )
 
-            self.base.run(speed + self.correction, speed - self.correction)
+            self.base.run(
+                speed + (self.correction * 10), speed - (self.correction * 10)
+            )
             self.last_error = self.error
 
         base.stop()
@@ -116,7 +119,7 @@ class PID_GyroStraight(PID):
 class PID_GyroTurn(PID):
     def __init__(self, gyro: GyroSensor):
         self.gyro = gyro
-        PID.__init__(self, base, 0.86, 0.0000035, 0.0004)
+        PID.__init__(self, base, 0.86, 0.000005, 0.0004)
 
     def turn(self, threshold: int):
         self.reset_values()
@@ -171,7 +174,7 @@ class PID_GyroTurn(PID):
                 )
             elif abs(left_speed) > abs(right_speed):
                 print(right_speed / left_speed)
-                
+
                 base.run(
                     (self.correction * 10),
                     (-(right_speed / left_speed) * self.correction * 10),
@@ -182,7 +185,7 @@ class PID_GyroTurn(PID):
                     (-(left_speed / right_speed) * self.correction * 10),
                     (-self.correction * 10),
                 )
-                
+
             print(left_motor.speed(), right_motor.speed())
 
         base.stop()
