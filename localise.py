@@ -19,7 +19,7 @@ import constants
 
 class ParkingLot:
     def __init__(
-        self, x: int, y: int, barrier: bool, parked_color: Color, parked_type: CarType
+        self, x: int, y: int, barrier: bool, parked_color: Color, parked_type: int
     ):
         self.x = x
         self.y = y
@@ -27,7 +27,7 @@ class ParkingLot:
         self.parked_color = parked_color
         self.parked_type = parked_type
 
-    def update(self, barrier: bool, parked_color: Color, parked_type: CarType):
+    def update(self, barrier: bool, parked_color: Color, parked_type: int):
         if barrier != None:
             self.barrier = barrier
 
