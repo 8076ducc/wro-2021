@@ -28,7 +28,7 @@ class ParkingLot:
         # 0: parked, 1: waiting
         self.parked_type = parked_type
 
-    def update(self, barrier: bool, parked_color: Color, parked_type: int):
+    def update(self, barrier=None, parked_color=None, parked_type=None):
         if barrier != None:
             self.barrier = barrier
 

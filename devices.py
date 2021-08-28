@@ -102,7 +102,7 @@ intake = Intake(left_intake, right_intake)
 
 
 class IntakePossessions:
-    def __init__(self, car_color=None, car_type=None, battery=False):
+    def __init__(self, car_color: Color, car_type: int, battery: bool):
         self.car_color = car_color
         self.car_type = car_type
         self.battery = battery
@@ -118,8 +118,8 @@ class IntakePossessions:
             self.battery = battery
 
 
-left_intake_possessions = IntakePossessions()
-right_intake_possessions = IntakePossessions()
+left_intake_possessions = IntakePossessions(None, None, None)
+right_intake_possessions = IntakePossessions(None, None, None)
 
 
 class Sensors:

@@ -45,8 +45,8 @@ def start():
     intake.stop()
     intake.hold()
 
-    # left_intake_possessions.update(battery=True)
-    # right_intake_possessions.update(battery=True)
+    left_intake_possessions.update(battery=True)
+    right_intake_possessions.update(battery=True)
 
     gyro_straight.move(800, -90, lambda: left_color_sensor.reflection() < 90)
     gyro_turn.turn(-65)
@@ -237,9 +237,11 @@ def check_parking_lot(parking_lot: int):
         parked_color = None
 
     if parked_color == Color.YELLOW:
-        parking_lots[parking_lot].update(True, None, None)
+        parking_lots[parking_lot].update(True)
     elif parked_color != None:
         parking_lots[parking_lot].update(False, parked_color, 0)
+    else:
+        parking_lots[parking_lot].update(False)
 
 
 # Write your program here.
