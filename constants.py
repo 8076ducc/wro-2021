@@ -13,9 +13,10 @@ blue_waiting = [0, 0, 80]
 # red 18 10 6
 # green 15 15 15
 # blue 9 12 20
-red_parked = []
-green_parked = []
-blue_parked = []
+red_parked = [0, 0, 10]
+green_parked = [0, 13, 0]
+blue_parked = [0, 0, 17]
+barrier = [0, 0, 0]
 
 car_order = []
 

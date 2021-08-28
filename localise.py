@@ -25,6 +25,7 @@ class ParkingLot:
         self.y = y
         self.barrier = barrier
         self.parked_color = parked_color
+        # 0: parked, 1: waiting
         self.parked_type = parked_type
 
     def update(self, barrier: bool, parked_color: Color, parked_type: int):
@@ -57,6 +58,22 @@ blue_parking = [
     ParkingLot(1, 0, None, None, None),
     ParkingLot(3, 2, None, None, None),
     ParkingLot(3, 4, None, None, None),
+]
+
+
+parking_lots = [
+    blue_parking[0],
+    blue_parking[1],
+    red_parking[0],
+    green_parking[0],
+    green_parking[1],
+    red_parking[1],
+    green_parking[2],
+    blue_parking[2],
+    red_parking[2],
+    red_parking[3],
+    green_parking[3],
+    blue_parking[3],
 ]
 
 

@@ -64,7 +64,7 @@ def start():
     # 15 31 11
 
 
-def detect_cars():
+def detect_waiting():
 
     kp = 0.07
     ki = 0.000
@@ -178,7 +178,7 @@ def detect_cars():
     intake.open()
 
     left_motor.reset_angle(0)
-    gyro_straight.move(-900, 0, lambda: left_motor.angle() > -400)
+    gyro_straight.move(-900, 0, lambda: left_motor.angle() > -500)
 
     intake.close()
     intake.hold()
@@ -186,10 +186,72 @@ def detect_cars():
     base.stop()
 
 
+def detect_parking():
+    line_track.move(
+        right_color_sensor, 800, 50, -1, lambda: left_color_sensor.reflection() > 20
+    )
+    check_parking_lot(4)
+
+    line_track.move(
+        right_color_sensor, 800, 50, -1, lambda: left_color_sensor.reflection() > 20
+    )
+    check_parking_lot(5)
+
+    line_track.move(
+        right_color_sensor, 800, 50, -1, lambda: left_color_sensor.reflection() > 20
+    )
+    check_parking_lot(6)
+
+    line_track.move(
+        right_color_sensor, 800, 50, -1, lambda: left_color_sensor.reflection() > 20
+    )
+    check_parking_lot(7)
+
+    # TODO: insert 180º turn to go back
+
+    line_track.move(
+        right_color_sensor, 800, 50, -1, lambda: left_color_sensor.reflection() > 20
+    )
+    check_parking_lot(3)
+
+    line_track.move(
+        right_color_sensor, 800, 50, -1, lambda: left_color_sensor.reflection() > 20
+    )
+    check_parking_lot(2)
+
+    line_track.move(
+        right_color_sensor, 800, 50, -1, lambda: left_color_sensor.reflection() > 20
+    )
+    check_parking_lot(1)
+
+    line_track.move(
+        right_color_sensor, 800, 50, -1, lambda: left_color_sensor.reflection() > 20
+    )
+    check_parking_lot(0)
+
+
+def check_parking_lot(parking_lot: int):
+    if ht_color_sensor.read("RGB")[2] < constants.red_parked[2]:
+        parked_color = Color.RED
+    elif ht_color_sensor.read("RGB")[2] > constants.blue_parked[2]:
+        parked_color = Color.BLUE
+    elif ht_color_sensor.read("RGB")[1] > constants.green_parked[1]:
+        parked_color = Color.GREEN
+    elif ht_color_sensor.read("RGB")[1] > constants.barrier[1]:
+        parked_color = Color.YELLOW
+    elif ht_color_sensor.read("RGB")[0] < 5:
+        parked_color = None
+
+    if parked_color == Color.YELLOW:
+        parking_lots[parking_lot].update(True, None, None)
+    elif parked_color != None:
+        parking_lots[parking_lot].update(False, parked_color, 0)
+
+
 # Write your program here.
 
 start()
-detect_cars()
+detect_waiting()
 
 # gyro_sensor.reset_angle(0)
 # gyro_straight.move(800, 0, lambda: True)
