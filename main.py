@@ -20,12 +20,6 @@ from localise import *
 import constants
 
 
-gyro_straight = PID_GyroStraight(gyro_sensor)
-gyro_turn = PID_GyroTurn(gyro_sensor)
-line_track = PID_LineTrack()
-sensors = Sensors(ht_color_sensor, left_color_sensor, right_color_sensor, gyro_sensor)
-
-
 def start():
 
     gyro_sensor.reset_angle(0)

@@ -189,3 +189,8 @@ class PID_GyroTurn(PID):
             print(left_motor.speed(), right_motor.speed())
 
         base.stop()
+
+
+gyro_straight = PID_GyroStraight(gyro_sensor)
+gyro_turn = PID_GyroTurn(gyro_sensor)
+line_track = PID_LineTrack()

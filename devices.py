@@ -175,3 +175,6 @@ class Sensors:
         while True:
             ev3.screen.print(self.gyro_sensor.angle())
             print(self.gyro_sensor.angle())
+
+
+sensors = Sensors(ht_color_sensor, left_color_sensor, right_color_sensor, gyro_sensor)
