@@ -36,6 +36,29 @@ def deposit(motor: Motor):
     )
 
     intake.hold()
+    
+    # TODO: Move further back
 
 
-# def deposit_without_battery(motor: Motor):
+def deposit_without_battery(motor: Motor):
+    if motor == left_intake:
+        intake.open_left()
+    elif motor == right_intake:
+        intake.open_right()
+
+    wait(300)
+
+    line_track.move(
+        right_color_sensor, 800, 50, 1, lambda: left_color_sensor.reflection() > 20
+    )
+    
+    if motor == left_intake:
+        intake.close_left()
+    elif motor == right_intake:
+        intake.close_right()
+    
+    wait(300)
+
+    intake.hold()
+    
+    # TODO: Move further back
