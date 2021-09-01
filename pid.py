@@ -186,8 +186,6 @@ class PID_GyroTurn(PID):
                     (-self.correction * 10),
                 )
 
-            print(left_motor.speed(), right_motor.speed())
-
         base.stop()
 
 

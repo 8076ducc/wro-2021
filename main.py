@@ -37,7 +37,7 @@ def start():
 
     intake.open()
     base.run(-800, -800)
-    wait(400)
+    wait(500)
     base.stop()
     intake.stop()
     intake.close()
@@ -47,13 +47,8 @@ def start():
 
     left_intake_possessions.update(battery=True)
     right_intake_possessions.update(battery=True)
-
-    gyro_straight.move(800, -90, lambda: left_color_sensor.reflection() < 90)
-    gyro_turn.turn(-65)
-    gyro_straight.move(00, -65, lambda: right_color_sensor.color() != Color.GREEN)
-    gyro_straight.move(00, -65, lambda: right_color_sensor.color() != Color.WHITE)
-
-    gyro_turn.turn(-90)
+    gyro_turn.single_motor_turn(-38, 500, 0)
+    gyro_turn.single_motor_turn(-90, 0, 500)
 
     # 15 31 11
 
@@ -71,11 +66,13 @@ def detect_waiting():
     last_error = 0.0
     error = 0.0
 
-    threshold = 27
-    speed = 450
+    threshold = 25
+    speed = 400
 
     color = None
     last_color = None
+
+    loop = 0
 
     while len(constants.car_order) < 6:
 
@@ -87,8 +84,10 @@ def detect_waiting():
         derivative = (error - last_error) * kd
 
         correction = (integral * ki) + proportional + derivative
-
-        base.run(speed - (correction * 10), speed + (correction * 10))
+        if loop < 100:
+            base.run(200 - (correction * 10), 200 + (correction * 10))
+        else:
+            base.run(speed - (correction * 10), speed + (correction * 10))
 
         last_error = error
 
@@ -104,11 +103,11 @@ def detect_waiting():
         if color != None and color != last_color:
 
             constants.car_order.append(color)
-
-            print(ht_color_sensor.read("RGB"))
             print(color)
 
         last_color = color
+
+        loop += 1
 
     base.stop()
     print(constants.car_order)
@@ -131,6 +130,8 @@ def detect_waiting():
     else:
         detect_first_color = 0
 
+    loop = 0
+
     while detect_first_color < 2:
 
         reading = right_color_sensor.rgb()[2]
@@ -142,7 +143,10 @@ def detect_waiting():
 
         correction = (integral * ki) + proportional + derivative
 
-        base.run(speed + (correction * 10), speed - (correction * 10))
+        if loop < 100:
+            base.run(-200 + (correction * 10), -200 - (correction * 10))
+        else:
+            base.run(speed + (correction * 10), speed - (correction * 10))
 
         last_error = error
 
@@ -160,6 +164,8 @@ def detect_waiting():
             print(color)
 
         last_color = color
+
+        loop += 1
 
     gyro_turn.turn(-45)
 
@@ -254,12 +260,9 @@ detect_waiting()
 
 # line_track.move(left_color_sensor, 500, 50)
 
-# while True:
-#     print(right_color_sensor.rgb())
-
 # gyro_sensor.reset_angle(0)
 # gyro_turn.single_motor_turn(-90, 200, 500)
-# gyro_turn.turn(-65)
+# gyro_turn.turn(-90)
 
 
 ev3.speaker.beep()

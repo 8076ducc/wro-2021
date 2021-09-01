@@ -12,7 +12,7 @@ from pybricks.tools import wait, StopWatch, DataLog
 from pybricks.robotics import DriveBase
 from pybricks.media.ev3dev import SoundFile, ImageFile
 from pybricks.iodevices import Ev3devSensor
-from enum import Enum
+# from enum import Enum
 
 ev3 = EV3Brick()
 
