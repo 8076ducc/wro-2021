@@ -27,11 +27,12 @@ def start():
     base.run(800, 800)
     intake.close()
     wait(250)
-    gyro_straight.move(800, -12, lambda: left_color_sensor.reflection() > 20)
-    gyro_straight.move(800, -12, lambda: left_color_sensor.reflection() > 40)
+    gyro_turn.turn(-8)
+    gyro_straight.move(800, -8, lambda: left_color_sensor.reflection() > 20)
+    gyro_straight.move(800, -8, lambda: left_color_sensor.reflection() > 40)
     intake.run(0, 0)
     base.run(800, 800)
-    wait(45)
+    wait(47)
 
     gyro_turn.turn(-90)
 
@@ -47,16 +48,16 @@ def start():
 
     left_intake_possessions.update(battery=True)
     right_intake_possessions.update(battery=True)
-    gyro_turn.single_motor_turn(-38, 500, 0)
-    gyro_turn.single_motor_turn(-90, 0, 500)
+    gyro_turn.single_motor_turn(-36, 200, 0)
+    gyro_turn.single_motor_turn(-90, 0, 200)
 
     # 15 31 11
 
 
 def detect_waiting():
 
-    kp = 0.07
-    ki = 0.000
+    kp = 0.1
+    ki = 0.0003
     kd = 0.8
 
     proportional = 0.0
@@ -93,17 +94,26 @@ def detect_waiting():
 
         if ht_color_sensor.read("RGB")[0] > constants.red_waiting[0]:
             color = Color.RED
-        elif ht_color_sensor.read("RGB")[2] > constants.blue_waiting[2]:
+        elif (
+            ht_color_sensor.read("RGB")[2] > constants.blue_waiting[2]
+            and ht_color_sensor.read("RGB")[1] < constants.blue_waiting[1]
+        ):
             color = Color.BLUE
-        elif ht_color_sensor.read("RGB")[1] > constants.green_waiting[1]:
+        elif (
+            ht_color_sensor.read("RGB")[1] > constants.green_waiting[1]
+            and ht_color_sensor.read("RGB")[2] > constants.green_waiting[2]
+        ):
             color = Color.GREEN
-        elif ht_color_sensor.read("RGB")[0] < 10:
+        # elif ht_color_sensor.read("RGB")[0] < 10:
+        else:
             color = None
 
         if color != None and color != last_color:
 
             constants.car_order.append(color)
+            print(ht_color_sensor.read("RGB"))
             print(color)
+            ev3.speaker.beep()
 
         last_color = color
 
@@ -152,11 +162,18 @@ def detect_waiting():
 
         if ht_color_sensor.read("RGB")[0] > constants.red_waiting[0]:
             color = Color.RED
-        elif ht_color_sensor.read("RGB")[2] > constants.blue_waiting[2]:
+        elif (
+            ht_color_sensor.read("RGB")[2] > constants.blue_waiting[2]
+            and ht_color_sensor.read("RGB")[1] < constants.blue_waiting[1]
+        ):
             color = Color.BLUE
-        elif ht_color_sensor.read("RGB")[1] > constants.green_waiting[1]:
+        elif (
+            ht_color_sensor.read("RGB")[1] > constants.green_waiting[1]
+            and ht_color_sensor.read("RGB")[2] > constants.green_waiting[2]
+        ):
             color = Color.GREEN
-        elif ht_color_sensor.read("RGB")[0] < 10:
+        # elif ht_color_sensor.read("RGB")[0] < 10:
+        else:
             color = None
 
         if color != None and color != last_color and color == constants.car_order[0]:
@@ -178,10 +195,14 @@ def detect_waiting():
     intake.open()
 
     left_motor.reset_angle(0)
-    gyro_straight.move(-900, 0, lambda: left_motor.angle() > -500)
+    gyro_straight.move(-800, 0, lambda: left_motor.angle() > -500)
 
     intake.close()
+    wait(500)
     intake.hold()
+
+    gyro_straight.move(800, 0, lambda: left_color_sensor.reflection() < 70)
+    gyro_straight.move(800, 0, lambda: left_color_sensor.reflection() > 20)
 
     base.stop()
 
@@ -254,6 +275,8 @@ def check_parking_lot(parking_lot: int):
 
 start()
 detect_waiting()
+
+# sensors.calibrate_ht_rgb()
 
 # gyro_sensor.reset_angle(0)
 # gyro_straight.move(800, 0, lambda: True)

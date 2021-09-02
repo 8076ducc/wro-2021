@@ -112,7 +112,7 @@ class PID_GyroStraight(PID):
                 speed + (self.correction * 10), speed - (self.correction * 10)
             )
             self.last_error = self.error
-
+            
         base.stop()
 
 
@@ -152,6 +152,8 @@ class PID_GyroTurn(PID):
         self.ki = ki
         self.kd = kd
 
+        original = self.gyro.angle()
+
         while self.gyro.angle() != threshold:
             self.error = threshold - self.gyro.angle()
             self.proportional = self.error * self.kp
@@ -162,29 +164,42 @@ class PID_GyroTurn(PID):
                 (self.integral * self.ki) + self.proportional + self.derivative
             )
 
-            if left_speed == 0:
+            if original > threshold:
+
                 base.run(
                     0,
                     -(self.correction * 10),
                 )
-            elif right_speed == 0:
+
+                # if self.correction < 0:
+                #     base.run(
+                #         0,
+                #         right_speed - (self.correction * 10),
+                #     )
+                #     print(1)
+                # elif self.correction > 0:
+                #     base.run(
+                #         0,
+                #         -right_speed - (self.correction * 10),
+                #     )
+                #     print(2)
+            elif original < threshold:
+
                 base.run(
                     self.correction * 10,
                     0,
                 )
-            elif abs(left_speed) > abs(right_speed):
-                print(right_speed / left_speed)
 
-                base.run(
-                    (self.correction * 10),
-                    (-(right_speed / left_speed) * self.correction * 10),
-                )
-            elif abs(left_speed) < abs(right_speed):
-                print(left_speed / right_speed)
-                base.run(
-                    (-(left_speed / right_speed) * self.correction * 10),
-                    (-self.correction * 10),
-                )
+                # if self.correction > 0:
+                #     base.run(
+                #         left_speed - (self.correction * 10),
+                #         0,
+                #     )
+                # elif self.correction < 0:
+                #     base.run(
+                #         -left_speed - (self.correction * 10),
+                #         0,
+                #     )
 
         base.stop()
 
