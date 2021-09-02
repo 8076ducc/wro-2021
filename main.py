@@ -104,7 +104,6 @@ def detect_waiting():
             and ht_color_sensor.read("RGB")[2] > constants.green_waiting[2]
         ):
             color = Color.GREEN
-        # elif ht_color_sensor.read("RGB")[0] < 10:
         else:
             color = None
 
@@ -124,12 +123,12 @@ def detect_waiting():
 
     gyro_straight.move(-400, -90, lambda: left_color_sensor.reflection() < 70)
 
-    gyro_turn.turn(-55)
+    gyro_turn.turn(-53)
 
-    gyro_straight.move(800, -55, lambda: left_color_sensor.reflection() < 70)
-    gyro_straight.move(800, -55, lambda: left_color_sensor.reflection() > 20)
-    gyro_straight.move(800, -55, lambda: left_color_sensor.reflection() < 70)
-    gyro_straight.move(800, -55, lambda: left_color_sensor.reflection() > 40)
+    gyro_straight.move(800, -53, lambda: left_color_sensor.reflection() < 70)
+    gyro_straight.move(800, -53, lambda: left_color_sensor.reflection() > 20)
+    gyro_straight.move(800, -53, lambda: left_color_sensor.reflection() < 70)
+    gyro_straight.move(800, -53, lambda: left_color_sensor.reflection() > 40)
 
     gyro_turn.single_motor_turn(0, 500, 0)
 
@@ -216,20 +215,5 @@ def check_parking_lot(parking_lot: int):
 
 start()
 detect_waiting()
-
-# gyro_sensor.reset_angle(0)
-# gyro_straight.move(-800, 0, lambda: True)
-
-# sensors.calibrate_ht_rgb()
-
-# gyro_sensor.reset_angle(0)
-# gyro_straight.move(800, 0, lambda: True)
-
-# line_track.move(left_color_sensor, 500, 50)
-
-# gyro_sensor.reset_angle(0)
-# gyro_turn.single_motor_turn(-90, 200, 500)
-# gyro_turn.turn(-90)
-
 
 ev3.speaker.beep()
