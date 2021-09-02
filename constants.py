@@ -7,8 +7,8 @@ white_right = 0
 # green 31 56 45
 # blue 28 43 73
 red_waiting = [70, 0, 0]
-green_waiting = [0, 50, 0]
-blue_waiting = [0, 0, 80]
+green_waiting = [0, 45, 33]
+blue_waiting = [0, 63, 60]
 
 # red 18 10 6
 # green 15 15 15
