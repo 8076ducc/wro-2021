@@ -112,7 +112,7 @@ class PID_GyroStraight(PID):
                 speed + (self.correction * 10), speed - (self.correction * 10)
             )
             self.last_error = self.error
-            
+
         base.stop()
 
 
