@@ -112,22 +112,19 @@ intake = Intake(left_intake, right_intake)
 class IntakePossessions:
     def __init__(self, car_color: Color, car_type: int, battery: bool):
         self.car_color = car_color
+        # 0: waiting, 1: parked
         self.car_type = car_type
         self.battery = battery
 
     def update(self, car_color=None, car_type=None, battery=None):
-        if car_color != None:
-            self.car_color = car_color
-
-        if car_type != None:
-            self.car_type = car_type
-
+        self.car_color = car_color
+        self.car_type = car_type
         if battery != None:
             self.battery = battery
 
 
-left_intake_possessions = IntakePossessions(None, None, None)
-right_intake_possessions = IntakePossessions(None, None, None)
+left_intake_possessions = IntakePossessions(None, None, False)
+right_intake_possessions = IntakePossessions(None, None, False)
 
 
 class Sensors:

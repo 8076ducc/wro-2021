@@ -19,45 +19,48 @@ import constants
 
 class ParkingLot:
     def __init__(
-        self, x: int, y: int, barrier: bool, parked_color: Color, parked_type: int
+        self,
+        x: int,
+        y: int,
+        color: Color,
+        barrier: bool,
+        parked_color: Color,
+        parked_type: int,
     ):
         self.x = x
         self.y = y
+        self.color = color
         self.barrier = barrier
         self.parked_color = parked_color
-        # 0: parked, 1: waiting
+        # 0: waiting, 1: parked
         self.parked_type = parked_type
 
-    def update(self, barrier=None, parked_color=None, parked_type=None):
+    def update(self, parked_color: Color, parked_type: int, barrier=None):
+        self.parked_color = parked_color
+        self.parked_type = parked_type
         if barrier != None:
             self.barrier = barrier
 
-        if parked_color != None:
-            self.parked_color = parked_color
-
-        if parked_type != None:
-            self.parked_type = parked_type
-
 
 red_parking = [
-    ParkingLot(2, 0, None, None, None),
-    ParkingLot(1, 2, None, None, None),
-    ParkingLot(0, 4, None, None, None),
-    ParkingLot(1, 4, None, None, None),
+    ParkingLot(2, 0, Color.RED, None, None, None),
+    ParkingLot(1, 2, Color.RED, None, None, None),
+    ParkingLot(0, 4, Color.RED, None, None, None),
+    ParkingLot(1, 4, Color.RED, None, None, None),
 ]
 
 green_parking = [
-    ParkingLot(2, 0, None, None, None),
-    ParkingLot(1, 2, None, None, None),
-    ParkingLot(0, 4, None, None, None),
-    ParkingLot(1, 4, None, None, None),
+    ParkingLot(2, 0, Color.GREEN, None, None, None),
+    ParkingLot(1, 2, Color.GREEN, None, None, None),
+    ParkingLot(0, 4, Color.GREEN, None, None, None),
+    ParkingLot(1, 4, Color.GREEN, None, None, None),
 ]
 
 blue_parking = [
-    ParkingLot(0, 0, None, None, None),
-    ParkingLot(1, 0, None, None, None),
-    ParkingLot(3, 2, None, None, None),
-    ParkingLot(3, 4, None, None, None),
+    ParkingLot(0, 0, Color.BLUE, None, None, None),
+    ParkingLot(1, 0, Color.BLUE, None, None, None),
+    ParkingLot(3, 2, Color.BLUE, None, None, None),
+    ParkingLot(3, 4, Color.BLUE, None, None, None),
 ]
 
 

@@ -17,6 +17,7 @@ from pybricks.iodevices import Ev3devSensor
 from devices import *
 from pid import *
 from localise import *
+from deposit import *
 import constants
 
 
@@ -139,6 +140,9 @@ def detect_waiting():
     wait(500)
     intake.hold()
 
+    left_intake_possessions.update(constants.car_order[0], 0)
+    right_intake_possessions.update(constants.car_order[1], 1)
+
     wait(50)
 
     gyro_straight.move(700, 0, lambda: left_color_sensor.reflection() < 70)
@@ -232,16 +236,32 @@ def check_parking_lot(parking_lot: int):
         parked_color = Color.GREEN
 
     if parked_color == Color.YELLOW:
-        parking_lots[parking_lot].update(True)
+        parking_lots[parking_lot].update(None, None, True)
         print("barrier")
     elif parked_color != None:
-        parking_lots[parking_lot].update(False, parked_color, 0)
+        parking_lots[parking_lot].update(parked_color, 1, False)
         print(parked_color)
         ev3.speaker.beep()
     else:
-        parking_lots[parking_lot].update(False)
+        parking_lots[parking_lot].update(None, None, False)
 
     print(reading)
+
+    if (
+        left_intake_possessions.car_color == parking_lots[parking_lot].color
+        and left_intake_possessions.car_type == 0
+    ):
+        deposit(left_intake)
+    elif (
+        right_intake_possessions.car_color == parking_lots[parking_lot].color
+        and right_intake_possessions.car_type == 0
+    ):
+        deposit(right_intake)
+    elif parking_lots[parking_lot].car_type == 1:
+        if left_intake_possessions.car_type == None:
+            collect(left_motor, parking_lots[parking_lot].color)
+        elif right_intake_possessions.car_type == None:
+            collect(right_motor, parking_lots[parking_lot].color)
 
 
 # Write your program here.
