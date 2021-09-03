@@ -45,7 +45,7 @@ class PID(object):
 
 class PID_LineTrack(PID):
     def __init__(self):
-        PID.__init__(self, base, 0.07, 0.00, 0.80)
+        PID.__init__(self, base, 0.1, 0.00, 0.80)
 
     def move(
         self,

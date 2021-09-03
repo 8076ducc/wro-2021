@@ -32,7 +32,7 @@ def start():
     gyro_straight.move(800, -8, lambda: left_color_sensor.reflection() > 40)
     intake.run(0, 0)
     base.run(800, 800)
-    wait(47)
+    wait(65)
 
     gyro_turn.turn(-90)
 
@@ -123,97 +123,137 @@ def detect_waiting():
 
     gyro_straight.move(-400, -90, lambda: left_color_sensor.reflection() < 70)
 
-    gyro_turn.turn(-53)
+    base.stop()
+    wait(50)
 
-    gyro_straight.move(800, -53, lambda: left_color_sensor.reflection() < 70)
-    gyro_straight.move(800, -53, lambda: left_color_sensor.reflection() > 20)
-    gyro_straight.move(800, -53, lambda: left_color_sensor.reflection() < 70)
-    gyro_straight.move(800, -53, lambda: left_color_sensor.reflection() > 40)
-
-    gyro_turn.single_motor_turn(0, 500, 0)
+    gyro_turn.single_motor_turn(10, 0, 0)
+    gyro_turn.single_motor_turn(-90, 0, 0)
+    gyro_turn.single_motor_turn(0, 0, 0)
 
     intake.open()
 
     left_motor.reset_angle(0)
-    gyro_straight.move(-800, 0, lambda: left_motor.angle() > -500)
+    gyro_straight.move(-900, 0, lambda: left_motor.angle() > -600)
 
     intake.close()
     wait(500)
     intake.hold()
 
-    gyro_straight.move(800, 0, lambda: left_color_sensor.reflection() < 70)
-    gyro_straight.move(800, 0, lambda: left_color_sensor.reflection() > 20)
+    wait(50)
+
+    gyro_straight.move(700, 0, lambda: left_color_sensor.reflection() < 70)
+    gyro_straight.move(700, 0, lambda: left_color_sensor.reflection() > 20)
 
     base.stop()
 
 
 def detect_parking():
     line_track.move(
-        right_color_sensor, 800, 50, -1, lambda: left_color_sensor.reflection() > 20
+        right_color_sensor, 500, 50, -1, lambda: left_color_sensor.reflection() > 20
     )
+    line_track.move(
+        right_color_sensor, 500, 50, -1, lambda: left_color_sensor.reflection() < 70
+    )
+    base.stop()
+    wait(50)
     check_parking_lot(4)
 
     line_track.move(
-        right_color_sensor, 800, 50, -1, lambda: left_color_sensor.reflection() > 20
+        right_color_sensor, 500, 50, -1, lambda: left_color_sensor.reflection() > 20
     )
+    line_track.move(
+        right_color_sensor, 500, 50, -1, lambda: left_color_sensor.reflection() < 70
+    )
+    base.stop()
+    wait(50)
     check_parking_lot(5)
 
     line_track.move(
-        right_color_sensor, 800, 50, -1, lambda: left_color_sensor.reflection() > 20
+        right_color_sensor, 500, 50, -1, lambda: left_color_sensor.reflection() > 20
     )
+    line_track.move(
+        right_color_sensor, 500, 50, -1, lambda: left_color_sensor.reflection() < 70
+    )
+    base.stop()
+    wait(50)
     check_parking_lot(6)
 
     line_track.move(
-        right_color_sensor, 800, 50, -1, lambda: left_color_sensor.reflection() > 20
+        right_color_sensor, 500, 50, -1, lambda: left_color_sensor.reflection() > 20
     )
+    line_track.move(
+        right_color_sensor, 500, 50, -1, lambda: left_color_sensor.reflection() < 70
+    )
+    base.stop()
+    wait(50)
     check_parking_lot(7)
 
     # TODO: insert 180º turn to go back
 
-    line_track.move(
-        right_color_sensor, 800, 50, -1, lambda: left_color_sensor.reflection() > 20
-    )
-    check_parking_lot(3)
+    # gyro_turn.turn(180)
+    # base.run(-200, -700)
 
-    line_track.move(
-        right_color_sensor, 800, 50, -1, lambda: left_color_sensor.reflection() > 20
-    )
-    check_parking_lot(2)
+    # wait(1000)
 
-    line_track.move(
-        right_color_sensor, 800, 50, -1, lambda: left_color_sensor.reflection() > 20
-    )
-    check_parking_lot(1)
+    # line_track.move(
+    #     right_color_sensor, 800, 50, -1, lambda: left_color_sensor.reflection() > 20
+    # )
+    # check_parking_lot(3)
 
-    line_track.move(
-        right_color_sensor, 800, 50, -1, lambda: left_color_sensor.reflection() > 20
-    )
-    check_parking_lot(0)
+    # line_track.move(
+    #     right_color_sensor, 800, 50, -1, lambda: left_color_sensor.reflection() > 20
+    # )
+    # check_parking_lot(2)
+
+    # line_track.move(
+    #     right_color_sensor, 800, 50, -1, lambda: left_color_sensor.reflection() > 20
+    # )
+    # check_parking_lot(1)
+
+    # line_track.move(
+    #     right_color_sensor, 800, 50, -1, lambda: left_color_sensor.reflection() > 20
+    # )
+    # check_parking_lot(0)
 
 
 def check_parking_lot(parking_lot: int):
-    if ht_color_sensor.read("RGB")[2] < constants.red_parked[2]:
-        parked_color = Color.RED
-    elif ht_color_sensor.read("RGB")[2] > constants.blue_parked[2]:
-        parked_color = Color.BLUE
-    elif ht_color_sensor.read("RGB")[1] > constants.green_parked[1]:
-        parked_color = Color.GREEN
-    elif ht_color_sensor.read("RGB")[1] > constants.barrier[1]:
-        parked_color = Color.YELLOW
-    elif ht_color_sensor.read("RGB")[0] < 5:
+
+    reading = ht_color_sensor.read("RGB")
+
+    if reading[3] < 5 or reading[0] == 0 or reading[1] == 0 or reading[2] == 0:
         parked_color = None
+    elif reading[3] > 60:
+        parked_color = Color.YELLOW
+    elif reading[0] > reading[2]:
+        parked_color = Color.RED
+    elif reading[2] > reading[0]:
+        parked_color = Color.BLUE
+    elif reading[1] > 10 and reading[0] < 20 and reading[2] < 20:
+        parked_color = Color.GREEN
 
     if parked_color == Color.YELLOW:
         parking_lots[parking_lot].update(True)
+        print("barrier")
     elif parked_color != None:
         parking_lots[parking_lot].update(False, parked_color, 0)
+        print(parked_color)
+        ev3.speaker.beep()
     else:
         parking_lots[parking_lot].update(False)
+
+    print(reading)
 
 
 # Write your program here.
 
-start()
-detect_waiting()
+# start()
+# detect_waiting()
+detect_parking()
+
+# while True:
+#     print(ht_color_sensor.read("RGB"))
+
+# while True:
+# print(left_color_sensor.reflection())
 
 ev3.speaker.beep()
