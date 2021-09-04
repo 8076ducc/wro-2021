@@ -39,19 +39,22 @@ class Base:
         self.left_color_sensor = left_color_sensor
         self.right_color_sensor = right_color_sensor
 
-    def stop(self):
+    def brake(self):
         self.left_motor.brake()
         self.right_motor.brake()
 
     def hold(self):
         self.left_motor.hold()
         self.right_motor.hold()
+    
+    def angle(self):
+        return (self.left_motor.angle() + self.right_motor.angle()) / 2
 
-    def reset(self):
-        self.left_motor.reset_angle(0)
-        self.right_motor.reset_angle(0)
+    def reset_angle(self, angle: int = 0):
+        self.left_motor.reset_angle(angle)
+        self.right_motor.reset_angle(angle)
 
-    def run(self, left_speed: float, right_speed: float):
+    def move(self, left_speed: float, right_speed: float):
         self.left_motor.run(left_speed)
         self.right_motor.run(right_speed)
 

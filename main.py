@@ -25,22 +25,22 @@ def start():
 
     gyro_sensor.reset_angle(0)
 
-    base.run(800, 800)
+    base.move(800, 800)
     intake.close()
     wait(250)
     gyro_turn.turn(-8)
     gyro_straight.move(800, -8, lambda: left_color_sensor.reflection() > 20)
     gyro_straight.move(800, -8, lambda: left_color_sensor.reflection() > 40)
     intake.run(0, 0)
-    base.run(800, 800)
+    base.move(800, 800)
     wait(65)
 
     gyro_turn.turn(-90)
 
     intake.open()
-    base.run(-800, -800)
+    base.move(-800, -800)
     wait(600)
-    base.stop()
+    base.brake()
     intake.stop()
     intake.close()
     wait(600)
@@ -87,9 +87,9 @@ def detect_waiting():
 
         correction = (integral * ki) + proportional + derivative
         if loop < 100:
-            base.run(200 - (correction * 10), 200 + (correction * 10))
+            base.move(200 - (correction * 10), 200 + (correction * 10))
         else:
-            base.run(speed - (correction * 10), speed + (correction * 10))
+            base.move(speed - (correction * 10), speed + (correction * 10))
 
         last_error = error
 
@@ -119,12 +119,12 @@ def detect_waiting():
 
         loop += 1
 
-    base.stop()
+    base.brake()
     print(constants.car_order)
 
     gyro_straight.move(-400, -90, lambda: left_color_sensor.reflection() < 70)
 
-    base.stop()
+    base.brake()
     wait(50)
 
     gyro_turn.single_motor_turn(10, 0, 0)
@@ -133,8 +133,8 @@ def detect_waiting():
 
     intake.open()
 
-    left_motor.reset_angle(0)
-    gyro_straight.move(-900, 0, lambda: left_motor.angle() > -600)
+    base.reset_angle()
+    gyro_straight.move(-900, 0, lambda: base.angle() > -600)
 
     intake.close()
     wait(500)
@@ -148,7 +148,7 @@ def detect_waiting():
     gyro_straight.move(700, 0, lambda: left_color_sensor.reflection() < 70)
     gyro_straight.move(700, 0, lambda: left_color_sensor.reflection() > 20)
 
-    base.stop()
+    base.brake()
 
     gyro_turn.single_motor_turn(110, 0, 0)
     gyro_turn.single_motor_turn(0, 0, 0)
@@ -170,7 +170,7 @@ def detect_parking():
         #     right_color_sensor, 580, 50, -1, lambda: left_color_sensor.reflection() < 80
         # )
         # check_parking_lot(4)
-        base.stop()
+        base.brake()
         wait(100)
 
     move()
@@ -188,10 +188,10 @@ def detect_parking():
     # # TODO: insert 180º turn to go back
 
     # gyro_turn.turn(193)
-    # base.run(-600, -250)
+    # base.move(-600, -250)
     # wait(1300)
 
-    # base.stop()
+    # base.brake()
     # wait(50)
 
     # check_parking_lot(3)

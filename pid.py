@@ -52,9 +52,8 @@ class PID_LineTrack(PID):
         sensor: ColorSensor,
         speed: float,
         threshold: int,
-        side=1,
+        side: int = 1,
         condition=lambda: True,
-        reset=True,
     ):
         self.reset_values()
 
@@ -69,12 +68,12 @@ class PID_LineTrack(PID):
             )
 
             if self.loop < 200:
-                self.base.run(
+                self.base.move(
                     200 + (side * self.correction * 10),
                     200 - (side * self.correction * 10),
                 )
             else:
-                self.base.run(
+                self.base.move(
                     speed + (side * self.correction * 10),
                     speed - (side * self.correction * 10),
                 )
@@ -82,7 +81,7 @@ class PID_LineTrack(PID):
             self.loop += 1
             self.last_error = self.error
 
-        base.stop()
+        base.brake()
 
 
 class PID_GyroStraight(PID):
@@ -95,7 +94,6 @@ class PID_GyroStraight(PID):
         speed: float,
         threshold: int,
         condition=lambda: True,
-        reset=True,
     ):
         self.reset_values()
 
@@ -109,12 +107,12 @@ class PID_GyroStraight(PID):
                 (self.integral * self.ki) + self.proportional + self.derivative
             )
 
-            self.base.run(
+            self.base.move(
                 speed + (self.correction * 10), speed - (self.correction * 10)
             )
             self.last_error = self.error
 
-        base.stop()
+        base.brake()
 
 
 class PID_GyroTurn(PID):
@@ -135,9 +133,9 @@ class PID_GyroTurn(PID):
                 (self.integral * self.ki) + self.proportional + self.derivative
             )
 
-            base.run(self.correction * 10, -(self.correction * 10))
+            base.move(self.correction * 10, -(self.correction * 10))
 
-        base.stop()
+        base.brake()
 
     def single_motor_turn(
         self,
@@ -167,42 +165,42 @@ class PID_GyroTurn(PID):
 
             if original > threshold:
 
-                base.run(
+                base.move(
                     0,
                     -(self.correction * 10),
                 )
 
                 # if self.correction < 0:
-                #     base.run(
+                #     base.move(
                 #         0,
                 #         right_speed - (self.correction * 10),
                 #     )
                 #     print(1)
                 # elif self.correction > 0:
-                #     base.run(
+                #     base.move(
                 #         0,
                 #         -right_speed - (self.correction * 10),
                 #     )
                 #     print(2)
             elif original < threshold:
 
-                base.run(
+                base.move(
                     self.correction * 10,
                     0,
                 )
 
                 # if self.correction > 0:
-                #     base.run(
+                #     base.move(
                 #         left_speed - (self.correction * 10),
                 #         0,
                 #     )
                 # elif self.correction < 0:
-                #     base.run(
+                #     base.move(
                 #         -left_speed - (self.correction * 10),
                 #         0,
                 #     )
 
-        base.stop()
+        base.brake()
 
 
 gyro_straight = PID_GyroStraight(gyro_sensor)
