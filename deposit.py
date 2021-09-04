@@ -20,6 +20,9 @@ import constants
 
 def deposit(motor: Motor):
 
+    right_motor.reset_angle(0)
+    line_track.move(right_color_sensor, 200, 50, -1, lambda: right_motor.angle() < 130)
+
     # TODO: Move forwards
 
     if motor == left_intake:
@@ -49,6 +52,9 @@ def deposit(motor: Motor):
 
 def deposit_without_battery(motor: Motor):
 
+    right_motor.reset_angle(0)
+    line_track.move(right_color_sensor, 200, 50, -1, lambda: right_motor.angle() < 130)
+
     # TODO: Move forwards
 
     if motor == left_intake:
@@ -77,7 +83,17 @@ def deposit_without_battery(motor: Motor):
 
 
 def collect(motor: Motor, car_color: Color):
-    print(1)
+
+    right_motor.reset_angle(0)
+
+    if motor == left_intake:
+        line_track.move(
+            right_color_sensor, 500, 50, -1, lambda: right_motor.angle() < 170
+        )
+    elif motor == right_intake:
+        line_track.move(
+            right_color_sensor, 500, 50, -1, lambda: right_motor.angle() < 90
+        )
 
     if motor == left_intake:
         intake.open_left()
