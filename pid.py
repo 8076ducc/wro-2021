@@ -70,7 +70,8 @@ class PID_LineTrack(PID):
 
             if self.loop < 200:
                 self.base.run(
-                    200 + side * self.correction, 200 - side * self.correction
+                    200 + (side * self.correction * 10),
+                    200 - (side * self.correction * 10),
                 )
             else:
                 self.base.run(
