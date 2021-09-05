@@ -18,12 +18,14 @@ from pid import *
 import constants
 
 
-def deposit(motor: Motor):
+def deposit(motor: Motor, angle: int):
 
     base.reset_angle()
     line_track.move(right_color_sensor, 200, 50, -1, lambda: base.angle() < 130)
+    gyro_turn.turn(angle)
 
-    # TODO: Move forwards
+    base.reset_angle()
+    gyro_straight.move(-500, angle, lambda: base.angle() < 130)
 
     if motor == left_intake:
         intake.open_left()
@@ -50,12 +52,14 @@ def deposit(motor: Motor):
     # TODO: Move further back
 
 
-def deposit_without_battery(motor: Motor):
+def deposit_without_battery(motor: Motor, angle: int):
 
     base.reset_angle()
     line_track.move(right_color_sensor, 200, 50, -1, lambda: base.angle() < 130)
-
-    # TODO: Move forwards
+    gyro_turn.turn(angle)
+    
+    base.reset_angle()
+    gyro_straight.move(-500, angle, lambda: base.angle() < 130)
 
     if motor == left_intake:
         intake.open_left()
@@ -82,27 +86,26 @@ def deposit_without_battery(motor: Motor):
     # TODO: Move further back
 
 
-def collect(motor: Motor, car_color: Color):
+def collect(motor: Motor, angle: int, car_color: Color):
 
     base.reset_angle()
 
     if motor == left_intake:
-        line_track.move(
-            right_color_sensor, 500, 50, -1, lambda: base.angle() < 170
-        )
+        line_track.move(right_color_sensor, 500, 50, -1, lambda: base.angle() < 170)
     elif motor == right_intake:
-        line_track.move(
-            right_color_sensor, 500, 50, -1, lambda: base.angle() < 90
-        )
+        line_track.move(right_color_sensor, 500, 50, -1, lambda: base.angle() < 90)
+
+    gyro_turn.turn(angle)
 
     if motor == left_intake:
         intake.open_left()
-    elif motor == right_intake:
-        intake.open_right()
-
-    if motor == left_intake:
+        gyro_straight.move(-500, angle, lambda: right_color_sensor.reflection() > 30)
+        base.brake()
         intake.close_left()
         left_intake_possessions.update(car_color, 1)
     elif motor == right_intake:
+        intake.open_right()
+        gyro_straight.move(-500, angle, lambda: left_color_sensor.reflection() > 30)
+        base.brake()
         intake.close_right()
         right_intake_possessions.update(car_color, 1)
