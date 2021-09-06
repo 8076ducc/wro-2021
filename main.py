@@ -239,27 +239,36 @@ def check_parking_lot(parking_lot: int):
     else:
         parking_lots[parking_lot].update(None, None, False)
 
-    # if 4 <= parking_lot <= 11:
-    #     angle = 90
-    # elif 0 <= parking_lot <= 3:
-    #     angle = 270
+    if 4 <= parking_lot <= 11:
+        angle = 90
+    elif 0 <= parking_lot <= 3:
+        angle = 270
 
-    # if parked_color == None:
-    #     if (
-    #         left_intake_possessions.car_color == parking_lots[parking_lot].color
-    #         and left_intake_possessions.car_type == 0
-    #     ):
-    #         deposit(left_intake, angle)
-    #     elif (
-    #         right_intake_possessions.car_color == parking_lots[parking_lot].color
-    #         and right_intake_possessions.car_type == 0
-    #     ):
-    #         deposit(right_intake, angle)
-    # elif parking_lots[parking_lot].parked_type == 1:
-    #     if left_intake_possessions.car_type == None:
-    #         collect(left_motor, angle, parking_lots[parking_lot].color)
-    #     elif right_intake_possessions.car_type == None:
-    #         collect(right_motor, angle, parking_lots[parking_lot].color)
+    if (
+        parking_lots[parking_lot].parked_color == None
+        and parking_lots[parking_lot].barrier == False
+    ):
+        if (
+            left_intake_possessions.car_color == parking_lots[parking_lot].color
+            and left_intake_possessions.car_type == 0
+        ):
+            deposit(left_intake, angle)
+        elif (
+            right_intake_possessions.car_color == parking_lots[parking_lot].color
+            and right_intake_possessions.car_type == 0
+        ):
+            deposit(right_intake, angle)
+    elif (
+        parking_lots[parking_lot].parked_type == 1
+        and parking_lots[parking_lot].barrier == False
+    ):
+        if left_intake_possessions.car_type == None:
+            collect(left_intake, angle, parking_lots[parking_lot].color)
+        elif right_intake_possessions.car_type == None:
+            collect(right_intake, angle, parking_lots[parking_lot].color)
+
+
+# def deposit_parked():
 
 
 # Write your program here.

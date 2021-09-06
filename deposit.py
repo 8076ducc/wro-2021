@@ -25,14 +25,16 @@ def deposit(motor: Motor, angle: int):
     gyro_turn.turn(angle)
 
     base.reset_angle()
-    gyro_straight.move(-500, angle, lambda: base.angle() < 130)
+    gyro_straight.move(-500, angle, lambda: base.angle() > -130)
 
     if motor == left_intake:
         intake.open_left()
         left_intake_possessions.update(None, None, False)
+        print(1)
     elif motor == right_intake:
         intake.open_right()
         right_intake_possessions.update(None, None, False)
+        print(2)
 
     wait(300)
 
@@ -61,7 +63,7 @@ def deposit_without_battery(motor: Motor, angle: int):
     gyro_turn.turn(angle)
 
     base.reset_angle()
-    gyro_straight.move(-500, angle, lambda: base.angle() < 130)
+    gyro_straight.move(-500, angle, lambda: base.angle() > -130)
 
     if motor == left_intake:
         intake.open_left()
