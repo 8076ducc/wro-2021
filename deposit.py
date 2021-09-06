@@ -51,13 +51,15 @@ def deposit(motor: Motor, angle: int):
 
     # TODO: Move further back
 
+    gyro_turn.single_motor_turn(angle - 90, 0, 0)
+
 
 def deposit_without_battery(motor: Motor, angle: int):
 
     base.reset_angle()
     line_track.move(right_color_sensor, 200, 50, -1, lambda: base.angle() < 130)
     gyro_turn.turn(angle)
-    
+
     base.reset_angle()
     gyro_straight.move(-500, angle, lambda: base.angle() < 130)
 
@@ -85,6 +87,8 @@ def deposit_without_battery(motor: Motor, angle: int):
 
     # TODO: Move further back
 
+    gyro_turn.single_motor_turn(angle - 90, 0, 0)
+
 
 def collect(motor: Motor, angle: int, car_color: Color):
 
@@ -103,9 +107,15 @@ def collect(motor: Motor, angle: int, car_color: Color):
         base.brake()
         intake.close_left()
         left_intake_possessions.update(car_color, 1)
+        gyro_straight.move(800, angle, lambda: right_color_sensor.reflection() < 70)
+        gyro_straight.move(800, angle, lambda: right_color_sensor.reflection() > 20)
     elif motor == right_intake:
         intake.open_right()
         gyro_straight.move(-500, angle, lambda: left_color_sensor.reflection() > 30)
         base.brake()
         intake.close_right()
         right_intake_possessions.update(car_color, 1)
+        gyro_straight.move(800, angle, lambda: left_color_sensor.reflection() < 70)
+        gyro_straight.move(800, angle, lambda: left_color_sensor.reflection() > 20)
+
+    gyro_turn.single_motor_turn(angle - 90, 0, 0)

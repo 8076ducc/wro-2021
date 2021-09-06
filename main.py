@@ -160,16 +160,8 @@ def detect_parking():
             right_color_sensor, 500, 50, -1, lambda: left_color_sensor.reflection() > 20
         )
         line_track.move(
-            right_color_sensor, 200, 50, -1, lambda: left_color_sensor.reflection() < 70
+            right_color_sensor, 300, 50, -1, lambda: left_color_sensor.reflection() < 70
         )
-        # line_track.move(
-        #     right_color_sensor, 580, 50, -1, lambda: left_color_sensor.reflection() > 20
-        # )
-        # check_parking_lot(4)
-        # line_track.move(
-        #     right_color_sensor, 580, 50, -1, lambda: left_color_sensor.reflection() < 80
-        # )
-        # check_parking_lot(4)
         base.brake()
         wait(100)
 
@@ -185,25 +177,25 @@ def detect_parking():
     move()
     check_parking_lot(7)
 
-    # # TODO: insert 180º turn to go back
+    # go back
 
-    # gyro_turn.turn(193)
-    # base.move(-600, -250)
-    # wait(1300)
+    gyro_turn.turn(193)
+    base.move(-600, -250)
+    wait(1300)
 
-    # base.brake()
-    # wait(50)
+    base.brake()
+    wait(50)
 
-    # check_parking_lot(3)
+    check_parking_lot(3)
 
-    # move()
-    # check_parking_lot(2)
+    move()
+    check_parking_lot(2)
 
-    # move()
-    # check_parking_lot(1)
+    move()
+    check_parking_lot(1)
 
-    # move()
-    # check_parking_lot(0)
+    move()
+    check_parking_lot(0)
 
 
 def check_parking_lot(parking_lot: int):
@@ -215,60 +207,59 @@ def check_parking_lot(parking_lot: int):
     rgb_reading = ht_color_sensor.read("RGB")
     color_reading = ht_color_sensor.read("COLOR")
 
-    if raw_reading[0] > 50:
+    if raw_reading[0] > 3000 and color_reading[0] != 0:
+        parked_color = Color.YELLOW
+        ev3.speaker.beep(frequency=500, duration=100)
+    elif (
+        color_reading[0] == 1
+        or color_reading[0] == 5
+        or color_reading[0] == 7
+        or color_reading[0] == 14
+    ):
         parked_color = Color.RED
-    elif raw_reading[1] > 75:
+        ev3.speaker.beep(frequency=600, duration=100)
+    elif color_reading[0] == 2 or color_reading[0] == 3 or color_reading[0] == 11:
         parked_color = Color.BLUE
-    elif 10 < raw_reading[2] < 50:
+        ev3.speaker.beep(frequency=700, duration=100)
+    elif color_reading[0] == 4 or color_reading[0] == 12 or color_reading[0] == 13:
         parked_color = Color.GREEN
+        ev3.speaker.beep(frequency=800, duration=100)
 
     print(parked_color)
     print(norm_reading)
     print(raw_reading)
     print(rgb_reading)
     print(color_reading)
+    print(" ")
 
-    # if reading[3] < 5 or reading[0] == 0 or reading[1] == 0 or reading[2] == 0:
-    #     parked_color = None
-    # elif reading[3] > 60:
-    #     parked_color = Color.YELLOW
-    # elif reading[0] > reading[2]:
-    #     parked_color = Color.RED
-    #     ev3.speaker.beep(frequency=600, duration=100)
-    # elif reading[2] > reading[0]:
-    #     parked_color = Color.BLUE
-    #     ev3.speaker.beep(frequency=700, duration=100)
-    # elif reading[1] > 10 and reading[0] < 20 and reading[2] < 20:
-    #     parked_color = Color.GREEN
-    #     ev3.speaker.beep(frequency=800, duration=100)
+    if parked_color == Color.YELLOW:
+        parking_lots[parking_lot].update(None, None, True)
+    elif parked_color != None:
+        parking_lots[parking_lot].update(parked_color, 1, False)
+    else:
+        parking_lots[parking_lot].update(None, None, False)
 
-    # if parked_color == Color.YELLOW:
-    #     parking_lots[parking_lot].update(None, None, True)
-    #     ev3.speaker.beep(frequency=500, duration=100)
-    #     print("barrier")
-    # elif parked_color != None:
-    #     parking_lots[parking_lot].update(parked_color, 1, False)
-    #     print(parked_color)
-    # else:
-    #     parking_lots[parking_lot].update(None, None, False)
+    # if 4 <= parking_lot <= 11:
+    #     angle = 90
+    # elif 0 <= parking_lot <= 3:
+    #     angle = 270
 
-    # print(reading)
-
-    # if (
-    #     left_intake_possessions.car_color == parking_lots[parking_lot].color
-    #     and left_intake_possessions.car_type == 0
-    # ):
-    #     deposit(left_intake)
-    # elif (
-    #     right_intake_possessions.car_color == parking_lots[parking_lot].color
-    #     and right_intake_possessions.car_type == 0
-    # ):
-    #     deposit(right_intake)
+    # if parked_color == None:
+    #     if (
+    #         left_intake_possessions.car_color == parking_lots[parking_lot].color
+    #         and left_intake_possessions.car_type == 0
+    #     ):
+    #         deposit(left_intake, angle)
+    #     elif (
+    #         right_intake_possessions.car_color == parking_lots[parking_lot].color
+    #         and right_intake_possessions.car_type == 0
+    #     ):
+    #         deposit(right_intake, angle)
     # elif parking_lots[parking_lot].parked_type == 1:
     #     if left_intake_possessions.car_type == None:
-    #         collect(left_motor, parking_lots[parking_lot].color)
+    #         collect(left_motor, angle, parking_lots[parking_lot].color)
     #     elif right_intake_possessions.car_type == None:
-    #         collect(right_motor, parking_lots[parking_lot].color)
+    #         collect(right_motor, angle, parking_lots[parking_lot].color)
 
 
 # Write your program here.
@@ -276,14 +267,5 @@ def check_parking_lot(parking_lot: int):
 start()
 detect_waiting()
 detect_parking()
-
-# while True:
-#     print(ht_color_sensor.read("NORM"))
-
-# 12 13 14 17
-# 5 6 14
-
-# while True:
-#     print(right_color_sensor.reflection())
 
 ev3.speaker.beep()
