@@ -18,7 +18,7 @@ from pid import *
 import constants
 
 
-def deposit(motor: Motor, angle: int):
+def deposit_waiting(motor: Motor, angle: int):
 
     base.reset_angle()
     line_track.move(right_color_sensor, 200, 50, -1, lambda: base.angle() < 130)
@@ -54,7 +54,7 @@ def deposit(motor: Motor, angle: int):
     gyro_turn.single_motor_turn(angle - 90, 0, 0)
 
 
-def deposit_without_battery(motor: Motor, angle: int):
+def deposit_waiting_without_battery(motor: Motor, angle: int):
 
     base.reset_angle()
     line_track.move(right_color_sensor, 200, 50, -1, lambda: base.angle() < 130)
@@ -90,7 +90,7 @@ def deposit_without_battery(motor: Motor, angle: int):
     gyro_turn.single_motor_turn(angle - 90, 0, 0)
 
 
-def collect(motor: Motor, angle: int, car_color: Color):
+def collect_parked(motor: Motor, angle: int, car_color: Color):
 
     base.reset_angle()
 

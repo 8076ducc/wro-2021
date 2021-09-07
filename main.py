@@ -252,23 +252,51 @@ def check_parking_lot(parking_lot: int):
             left_intake_possessions.car_color == parking_lots[parking_lot].color
             and left_intake_possessions.car_type == 0
         ):
-            deposit(left_intake, angle)
+            if (
+                left_intake_possessions.car_color == Color.RED
+                and left_intake_possessions.battery == True
+            ):
+                deposit_waiting_without_battery(left_intake, angle)
+            else:
+                deposit_waiting(left_intake, angle)
         elif (
             right_intake_possessions.car_color == parking_lots[parking_lot].color
             and right_intake_possessions.car_type == 0
         ):
-            deposit(right_intake, angle)
+            if (
+                right_intake_possessions.car_color == Color.RED
+                and right_intake_possessions.battery == True
+            ):
+                deposit_waiting_without_battery(right_intake, angle)
+            else:
+                deposit_waiting(right_intake, angle)
     elif (
         parking_lots[parking_lot].parked_type == 1
         and parking_lots[parking_lot].barrier == False
     ):
         if left_intake_possessions.car_type == None:
-            collect(left_intake, angle, parking_lots[parking_lot].color)
+            collect_parked(left_intake, angle, parking_lots[parking_lot].color)
         elif right_intake_possessions.car_type == None:
-            collect(right_intake, angle, parking_lots[parking_lot].color)
+            collect_parked(right_intake, angle, parking_lots[parking_lot].color)
 
 
-# def deposit_parked():
+def deposit_parked():
+    line_track.move(
+        right_color_sensor, 800, 50, -1, lambda: left_color_sensor.reflection() > 20
+    )
+    line_track.move(
+        right_color_sensor, 800, 50, -1, lambda: right_color_sensor.reflection() < 90
+    )
+    gyro_turn.single_motor_turn(270, 0, 0)
+
+    line_track.move(
+        right_color_sensor, 800, 50, -1, lambda: left_color_sensor.reflection() > 20
+    )
+    gyro_turn.single_motor_turn(360, 0, 0)
+
+    gyro_straight.move(-800, 360, lambda: left_color_sensor.reflection() > 20)
+
+    # TODO: figure out how much need to move for deposit
 
 
 # Write your program here.
@@ -276,5 +304,6 @@ def check_parking_lot(parking_lot: int):
 start()
 detect_waiting()
 detect_parking()
+# deposit_parked()
 
 ev3.speaker.beep()
