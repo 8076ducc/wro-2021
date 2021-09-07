@@ -30,11 +30,9 @@ def deposit(motor: Motor, angle: int):
     if motor == left_intake:
         intake.open_left()
         left_intake_possessions.update(None, None, False)
-        print(1)
     elif motor == right_intake:
         intake.open_right()
         right_intake_possessions.update(None, None, False)
-        print(2)
 
     wait(300)
 
