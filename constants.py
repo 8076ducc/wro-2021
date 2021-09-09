@@ -1,7 +1,7 @@
-black_left = 0
-black_right = 0
-white_left = 0
-white_right = 0
+black_left = 9
+white_left = 100
+black_right = 5
+white_right = 70
 
 # red 98 37 26
 # green 31 56 45
