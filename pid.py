@@ -140,8 +140,8 @@ class PID_GyroTurn(PID):
     def single_motor_turn(
         self,
         threshold: int,
-        left_speed: int,
-        right_speed: int,
+        left_mode: int,
+        right_mode: int,
         kp=1.00,
         ki=0.000005,
         kd=0.0004,
@@ -164,41 +164,15 @@ class PID_GyroTurn(PID):
             )
 
             if original > threshold:
-
                 base.move(
-                    0,
-                    -(self.correction * 10),
+                    left_mode * self.correction * 10,
+                    right_mode * -(self.correction * 10),
                 )
-
-                # if self.correction < 0:
-                #     base.move(
-                #         0,
-                #         right_speed - (self.correction * 10),
-                #     )
-                #     print(1)
-                # elif self.correction > 0:
-                #     base.move(
-                #         0,
-                #         -right_speed - (self.correction * 10),
-                #     )
-                #     print(2)
             elif original < threshold:
-
                 base.move(
-                    self.correction * 10,
-                    0,
+                    left_mode * self.correction * 10,
+                    right_mode * -(self.correction * 10),
                 )
-
-                # if self.correction > 0:
-                #     base.move(
-                #         left_speed - (self.correction * 10),
-                #         0,
-                #     )
-                # elif self.correction < 0:
-                #     base.move(
-                #         -left_speed - (self.correction * 10),
-                #         0,
-                #     )
 
         base.brake()
 

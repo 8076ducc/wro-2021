@@ -49,8 +49,8 @@ def start():
 
     left_intake_possessions.update(battery=True)
     right_intake_possessions.update(battery=True)
-    gyro_turn.single_motor_turn(-36, 200, 0)
-    gyro_turn.single_motor_turn(-90, 0, 200)
+    gyro_turn.single_motor_turn(-36, 1, 0)
+    gyro_turn.single_motor_turn(-90, 0, 1)
 
     # 15 31 11
 
@@ -127,9 +127,9 @@ def detect_waiting():
     base.brake()
     wait(50)
 
-    gyro_turn.single_motor_turn(10, 0, 0)
-    gyro_turn.single_motor_turn(-95, 0, 0)
-    gyro_turn.single_motor_turn(0, 0, 0)
+    gyro_turn.single_motor_turn(10, 1, 0)
+    gyro_turn.single_motor_turn(-95, 0, 1)
+    gyro_turn.single_motor_turn(0, 1, 0)
 
     intake.open()
 
@@ -150,8 +150,8 @@ def detect_waiting():
 
     base.brake()
 
-    gyro_turn.single_motor_turn(110, 0, 0)
-    gyro_turn.single_motor_turn(0, 0, 0)
+    gyro_turn.single_motor_turn(110, 1, 0)
+    gyro_turn.single_motor_turn(0, 0, 1)
 
 
 def detect_parking():
@@ -287,12 +287,12 @@ def deposit_parked():
     line_track.move(
         right_color_sensor, 800, 50, -1, lambda: right_color_sensor.reflection() < 90
     )
-    gyro_turn.single_motor_turn(270, 0, 0)
+    gyro_turn.single_motor_turn(270, 0, 1)
 
     line_track.move(
         right_color_sensor, 800, 50, -1, lambda: left_color_sensor.reflection() > 20
     )
-    gyro_turn.single_motor_turn(360, 0, 0)
+    gyro_turn.single_motor_turn(360, 1, 0)
 
     gyro_straight.move(-800, 360, lambda: left_color_sensor.reflection() > 20)
 
