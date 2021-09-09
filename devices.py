@@ -91,21 +91,11 @@ class Intake:
         self.left_intake.run(-1000)
         self.right_intake.run(-1000)
 
-    def open_left(self):
-        self.left_intake.run(1000)
-        self.right_intake.hold()
+    def open_side(self, motor: Motor):
+        motor.run(1000)
 
-    def open_right(self):
-        self.left_intake.hold()
-        self.right_intake.run(1000)
-
-    def close_left(self):
-        self.left_intake.run(-1000)
-        self.right_intake.hold()
-
-    def close_right(self):
-        self.left_intake.hold()
-        self.right_intake.run(-1000)
+    def close_side(self, motor: Motor):
+        motor.run(-1000)
 
 
 intake = Intake(left_intake, right_intake)

@@ -331,18 +331,18 @@ def deposit_parked():
     )
     gyro_turn.single_motor_turn(360, 0, 1)
     gyro_straight.move(-800, 360, lambda: left_color_sensor.reflection() > 20)
-    intake.open_left()
+    intake.open_side(left_intake)
     wait(500)
     gyro_straight.move(800, 360, lambda: left_color_sensor.reflection() > 20)
-    intake.close_left()
+    intake.close_side(left_intake)
     left_intake_possessions.update(None, None)
 
     gyro_turn.single_motor_turn(360, 1, 0)
     gyro_straight.move(-800, 360, lambda: left_color_sensor.reflection() > 20)
-    intake.close_left()
+    intake.open_side(right_intake)
     wait(500)
     gyro_straight.move(800, 360, lambda: left_color_sensor.reflection() > 20)
-    intake.close_right()
+    intake.close_side(right_intake)
     right_intake_possessions.update(None, None)
 
     # TODO: figure out how much need to move for deposit
