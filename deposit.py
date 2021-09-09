@@ -95,27 +95,37 @@ def collect_parked(motor: Motor, angle: int, car_color: Color):
     base.reset_angle()
 
     if motor == left_intake:
-        line_track.move(right_color_sensor, 500, 50, -1, lambda: base.angle() < 170)
-    elif motor == right_intake:
         line_track.move(right_color_sensor, 500, 50, -1, lambda: base.angle() < 90)
+    elif motor == right_intake:
+        line_track.move(right_color_sensor, 500, 50, -1, lambda: base.angle() < 10)
 
     gyro_turn.turn(angle)
 
     if motor == left_intake:
         intake.open_left()
-        gyro_straight.move(-500, angle, lambda: right_color_sensor.reflection() > 30)
+        gyro_straight.move(-900, angle, lambda: left_color_sensor.reflection() > 30)
+        gyro_straight.move(-900, angle, lambda: left_color_sensor.reflection() < 70)
+        gyro_straight.move(-900, angle, lambda: left_color_sensor.reflection() > 30)
         base.brake()
+        wait(500)
         intake.close_left()
+        wait(800)
         left_intake_possessions.update(car_color, 1)
-        gyro_straight.move(800, angle, lambda: right_color_sensor.reflection() < 70)
-        gyro_straight.move(800, angle, lambda: right_color_sensor.reflection() > 20)
+        gyro_straight.move(900, angle, lambda: left_color_sensor.reflection() < 70)
+        gyro_straight.move(900, angle, lambda: left_color_sensor.reflection() > 20)
+        gyro_straight.move(900, angle, lambda: left_color_sensor.reflection() < 70)
     elif motor == right_intake:
         intake.open_right()
-        gyro_straight.move(-500, angle, lambda: left_color_sensor.reflection() > 30)
+        gyro_straight.move(-900, angle, lambda: right_color_sensor.reflection() > 30)
+        gyro_straight.move(-900, angle, lambda: right_color_sensor.reflection() < 70)
+        gyro_straight.move(-900, angle, lambda: right_color_sensor.reflection() > 30)
         base.brake()
+        wait(500)
         intake.close_right()
+        wait(800)
         right_intake_possessions.update(car_color, 1)
-        gyro_straight.move(800, angle, lambda: left_color_sensor.reflection() < 70)
-        gyro_straight.move(800, angle, lambda: left_color_sensor.reflection() > 20)
+        gyro_straight.move(900, angle, lambda: right_color_sensor.reflection() < 70)
+        gyro_straight.move(900, angle, lambda: right_color_sensor.reflection() > 20)
+        gyro_straight.move(900, angle, lambda: right_color_sensor.reflection() < 70)
 
-    gyro_turn.single_motor_turn(angle - 90, 0, 0)
+    gyro_turn.turn(angle - 95)
