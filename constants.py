@@ -1,7 +1,10 @@
 black_left = 9
 white_left = 100
+grey_left = 25
+
 black_right = 5
 white_right = 70
+grey_right = 18
 
 # red 98 37 26
 # green 31 56 45

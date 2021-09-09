@@ -14,7 +14,7 @@ from pybricks.robotics import DriveBase
 from pybricks.media.ev3dev import SoundFile, ImageFile
 from pybricks.iodevices import Ev3devSensor
 from devices import *
-import constants
+from constants import *
 
 
 class PID(object):

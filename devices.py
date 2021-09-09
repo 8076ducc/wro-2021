@@ -46,7 +46,7 @@ class Base:
     def hold(self):
         self.left_motor.hold()
         self.right_motor.hold()
-    
+
     def angle(self):
         return (self.left_motor.angle() + self.right_motor.angle()) / 2
 
@@ -115,8 +115,8 @@ class IntakePossessions:
             self.battery = battery
 
 
-left_intake_possessions = IntakePossessions(None, None, False)
-right_intake_possessions = IntakePossessions(None, None, False)
+left_intake_possessions = IntakePossessions(Color.GREEN, 0, False)
+right_intake_possessions = IntakePossessions(Color.BLUE, 0, False)
 
 
 class Sensors:
