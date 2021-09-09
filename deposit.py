@@ -28,10 +28,10 @@ def deposit_waiting(motor: Motor, angle: int):
     gyro_straight.move(-500, angle, lambda: base.angle() > -130)
 
     if motor == left_intake:
-        intake.open_left()
+        intake.open_side(left_intake)
         left_intake_possessions.update(None, None, False)
     elif motor == right_intake:
-        intake.open_right()
+        intake.open_side(right_intake)
         right_intake_possessions.update(None, None, False)
 
     wait(300)
@@ -41,9 +41,9 @@ def deposit_waiting(motor: Motor, angle: int):
     )
 
     if motor == left_intake:
-        intake.close_left()
+        intake.close_side(left_intake)
     elif motor == right_intake:
-        intake.close_right()
+        intake.close_side(right_intake)
 
     wait(300)
 
@@ -64,10 +64,10 @@ def deposit_waiting_without_battery(motor: Motor, angle: int):
     gyro_straight.move(-500, angle, lambda: base.angle() > -130)
 
     if motor == left_intake:
-        intake.open_left()
+        intake.open_side(left_intake)
         left_intake_possessions.update(None, None)
     elif motor == right_intake:
-        intake.open_right()
+        intake.open_side(right_intake)
         right_intake_possessions.update(None, None)
 
     wait(300)
@@ -77,9 +77,9 @@ def deposit_waiting_without_battery(motor: Motor, angle: int):
     )
 
     if motor == left_intake:
-        intake.close_left()
+        intake.close_side(left_intake)
     elif motor == right_intake:
-        intake.close_right()
+        intake.close_side(right_intake)
 
     wait(300)
 
@@ -96,36 +96,26 @@ def collect_parked(motor: Motor, angle: int, car_color: Color):
 
     if motor == left_intake:
         line_track.move(right_color_sensor, 500, 50, -1, lambda: base.angle() < 90)
+        sensor = right_color_sensor
     elif motor == right_intake:
         line_track.move(right_color_sensor, 500, 50, -1, lambda: base.angle() < 10)
+        sensor = left_color_sensor
 
     gyro_turn.turn(angle)
 
-    if motor == left_intake:
-        intake.open_left()
-        gyro_straight.move(-900, angle, lambda: left_color_sensor.reflection() > 30)
-        gyro_straight.move(-900, angle, lambda: left_color_sensor.reflection() < 70)
-        gyro_straight.move(-900, angle, lambda: left_color_sensor.reflection() > 30)
-        base.brake()
-        wait(500)
-        intake.close_left()
-        wait(800)
-        left_intake_possessions.update(car_color, 1)
-        gyro_straight.move(900, angle, lambda: left_color_sensor.reflection() < 70)
-        gyro_straight.move(900, angle, lambda: left_color_sensor.reflection() > 20)
-        gyro_straight.move(900, angle, lambda: left_color_sensor.reflection() < 70)
-    elif motor == right_intake:
-        intake.open_right()
-        gyro_straight.move(-900, angle, lambda: right_color_sensor.reflection() > 30)
-        gyro_straight.move(-900, angle, lambda: right_color_sensor.reflection() < 70)
-        gyro_straight.move(-900, angle, lambda: right_color_sensor.reflection() > 30)
-        base.brake()
-        wait(500)
-        intake.close_right()
-        wait(800)
-        right_intake_possessions.update(car_color, 1)
-        gyro_straight.move(900, angle, lambda: right_color_sensor.reflection() < 70)
-        gyro_straight.move(900, angle, lambda: right_color_sensor.reflection() > 20)
-        gyro_straight.move(900, angle, lambda: right_color_sensor.reflection() < 70)
+    intake.open_side(motor)
+    gyro_straight.move(-900, angle, lambda: sensor.reflection() > 30)
+    gyro_straight.move(-900, angle, lambda: sensor.reflection() < 70)
+    gyro_straight.move(-900, angle, lambda: sensor.reflection() > 30)
+    gyro_straight.move(-900, angle, lambda: sensor.reflection() < 70)
+    gyro_straight.move(-900, angle, lambda: sensor.reflection() > 30)
+    base.brake()
+    wait(500)
+    intake.close_side(motor)
+    wait(800)
+    left_intake_possessions.update(car_color, 1)
+    gyro_straight.move(900, angle, lambda: sensor.reflection() < 70)
+    gyro_straight.move(900, angle, lambda: sensor.reflection() > 20)
+    gyro_straight.move(900, angle, lambda: sensor.reflection() < 70)
 
     gyro_turn.turn(angle - 95)
