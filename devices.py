@@ -115,8 +115,8 @@ class IntakePossessions:
             self.battery = battery
 
 
-left_intake_possessions = IntakePossessions(Color.GREEN, 0, False)
-right_intake_possessions = IntakePossessions(Color.BLUE, 0, False)
+left_intake_possessions = IntakePossessions(None, None, False)
+right_intake_possessions = IntakePossessions(None, None, False)
 
 
 class Sensors:

@@ -187,10 +187,17 @@ def detect_parking():
 
     # go back
 
-    gyro_turn.turn(193)
-    base.move(-600, -250)
-    wait(1300)
-
+    while left_color_sensor.reflection() < (white_left - 5):
+        base.move(500, 0)
+    while left_color_sensor.reflection() > (black_left + 5):
+        base.move(500, 0)
+    while left_color_sensor.reflection() < (white_left - 5):
+        base.move(500, 0)
+    base.brake()
+    wait(50)
+    gyro_turn.turn(180)
+    base.move(-800, -800)
+    wait(1000)
     base.brake()
     wait(50)
 
@@ -220,7 +227,7 @@ def check_parking_lot(parking_lot: int):
         ev3.speaker.beep(frequency=500, duration=100)
     elif (
         color_reading[0] == 1
-        or color_reading[0] == 5
+        # or color_reading[0] == 5
         or color_reading[0] == 7
         or color_reading[0] == 14
     ):
@@ -345,12 +352,9 @@ def deposit_parked():
 
 # Write your program here.
 
-# start()
-# detect_waiting()
+start()
+detect_waiting()
 detect_parking()
-deposit_parked()
-
-# while True:
-#     print(right_color_sensor.reflection())
+deposit_parked(
 
 ev3.speaker.beep()
