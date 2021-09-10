@@ -294,23 +294,33 @@ def deposit_parked():
         800,
         (black_right + white_right / 2),
         -1,
-        lambda: right_color_sensor.reflection() < 30,
+        lambda: left_color_sensor.reflection() > (black_left + 5),
     )
-    gyro_turn.single_motor_turn(260, 1, 0)
+    line_track.move(
+        right_color_sensor,
+        800,
+        (black_right + white_right / 2),
+        -1,
+        lambda: left_color_sensor.reflection() < (white_left - 5),
+    )
+
+    gyro_turn.turn(225)
+    gyro_straight.move(
+        800, 225, lambda: left_color_sensor.reflection() > (black_left + 5)
+    )
+    gyro_straight.move(
+        800, 225, lambda: left_color_sensor.reflection() < (white_left - 5)
+    )
+    gyro_straight.move(800, 225, lambda: left_color_sensor.reflection() > 50)
+    gyro_turn.single_motor_turn(270, 1, 0)
 
     line_track.move(
         right_color_sensor, 800, 50, -1, lambda: left_color_sensor.reflection() > 20
     )
     gyro_turn.single_motor_turn(360, 0, 1)
-    gyro_straight.move(
-        -800, 360, lambda: left_color_sensor.reflection() < (white_left - 5)
-    )
-    gyro_straight.move(
-        -800, 360, lambda: left_color_sensor.reflection() > (black_left + 5)
-    )
-    gyro_straight.move(
-        -800, 360, lambda: left_color_sensor.reflection() < (white_left - 5)
-    )
+    base.move(-800, -800)
+    wait(1000)
+    base.brake()
     intake.open_side(left_intake)
     wait(800)
     gyro_straight.move(
@@ -321,15 +331,10 @@ def deposit_parked():
     gyro_turn.single_motor_turn(240, 0, 1)
 
     gyro_turn.single_motor_turn(360, 1, 0)
-    gyro_straight.move(
-        -800, 360, lambda: left_color_sensor.reflection() < (white_left - 5)
-    )
-    gyro_straight.move(
-        -800, 360, lambda: left_color_sensor.reflection() > (black_left + 5)
-    )
-    gyro_straight.move(
-        -800, 360, lambda: left_color_sensor.reflection() < (white_left - 5)
-    )
+    base.move(-800, -800)
+    wait(1000)
+    base.brake()
+
     intake.open_side(right_intake)
     wait(800)
     gyro_straight.move(
@@ -340,8 +345,8 @@ def deposit_parked():
 
 # Write your program here.
 
-start()
-detect_waiting()
+# start()
+# detect_waiting()
 detect_parking()
 deposit_parked()
 
