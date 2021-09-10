@@ -43,7 +43,6 @@ def deposit_waiting(motor: Motor, angle: int):
     gyro_straight.move(-900, angle, lambda: sensor.reflection() < (white_value - 5))
     gyro_straight.move(-900, angle, lambda: sensor.reflection() > (grey_value + 5))
     base.brake()
-    wait(500)
     intake.open_side(motor)
     wait(800)
     intake_possessions.update(None, None, False)
@@ -79,7 +78,6 @@ def deposit_waiting_without_battery(motor: Motor, angle: int):
     gyro_straight.move(-900, angle, lambda: sensor.reflection() < (white_value - 5))
     gyro_straight.move(-900, angle, lambda: sensor.reflection() > (grey_value + 5))
     base.brake()
-    wait(500)
     intake.open_side(motor)
     wait(800)
     intake_possessions.update(None, None)
@@ -108,14 +106,13 @@ def collect_parked(motor: Motor, angle: int, car_color: Color):
         intake_possessions = right_intake_possessions
         black_value = black_right
         white_value = white_right
-        grey_value = grey_right
+        # grey_value = grey_right
 
     gyro_turn.turn(angle)
 
     gyro_straight.move(-900, angle, lambda: sensor.reflection() > (black_value + 5))
     gyro_straight.move(-900, angle, lambda: sensor.reflection() < (white_value - 5))
     base.brake()
-    wait(500)
     intake.close_side(motor)
     wait(800)
     intake_possessions.update(car_color, 1)
