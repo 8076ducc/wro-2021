@@ -355,6 +355,6 @@ def deposit_parked():
 start()
 detect_waiting()
 detect_parking()
-deposit_parked(
+deposit_parked()
 
 ev3.speaker.beep()
