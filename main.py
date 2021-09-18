@@ -25,20 +25,20 @@ def start():
 
     gyro_sensor.reset_angle(0)
 
-    base.move(800, 800)
+    base.run(800, 800)
     intake.close()
     wait(250)
     gyro_turn.turn(-8)
     gyro_straight.move(800, -8, lambda: left_color_sensor.reflection() > 20)
     gyro_straight.move(800, -8, lambda: left_color_sensor.reflection() > 40)
     intake.run(0, 0)
-    base.move(800, 800)
+    base.run(800, 800)
     wait(65)
 
     gyro_turn.turn(-90)
 
     intake.open()
-    base.move(-800, -800)
+    base.run(-800, -800)
     wait(600)
     base.brake()
     intake.stop()
@@ -87,9 +87,9 @@ def detect_waiting():
 
         correction = (integral * ki) + proportional + derivative
         if loop < 100:
-            base.move(200 - (correction * 10), 200 + (correction * 10))
+            base.run(200 - (correction * 10), 200 + (correction * 10))
         else:
-            base.move(speed - (correction * 10), speed + (correction * 10))
+            base.run(speed - (correction * 10), speed + (correction * 10))
 
         last_error = error
 
@@ -188,15 +188,15 @@ def detect_parking():
     # go back
 
     while left_color_sensor.reflection() < (white_left - 5):
-        base.move(500, 0)
+        base.run(500, 0)
     while left_color_sensor.reflection() > (black_left + 5):
-        base.move(500, 0)
+        base.run(500, 0)
     while left_color_sensor.reflection() < (white_left - 5):
-        base.move(500, 0)
+        base.run(500, 0)
     base.brake()
     wait(50)
     gyro_turn.turn(180)
-    base.move(-800, -800)
+    base.run(-800, -800)
     wait(1000)
     base.brake()
     wait(50)
@@ -325,7 +325,7 @@ def deposit_parked():
         right_color_sensor, 800, 50, -1, lambda: left_color_sensor.reflection() > 20
     )
     gyro_turn.single_motor_turn(360, 0, 1)
-    base.move(-800, -800)
+    base.run(-800, -800)
     wait(1000)
     base.brake()
     intake.open_side(left_intake)
@@ -338,7 +338,7 @@ def deposit_parked():
     gyro_turn.single_motor_turn(240, 0, 1)
 
     gyro_turn.single_motor_turn(360, 1, 0)
-    base.move(-800, -800)
+    base.run(-800, -800)
     wait(1000)
     base.brake()
 

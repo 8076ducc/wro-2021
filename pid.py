@@ -68,12 +68,12 @@ class PID_LineTrack(PID):
             )
 
             if self.loop < 200:
-                self.base.move(
+                self.base.run(
                     200 + (side * self.correction * 10),
                     200 - (side * self.correction * 10),
                 )
             else:
-                self.base.move(
+                self.base.run(
                     speed + (side * self.correction * 10),
                     speed - (side * self.correction * 10),
                 )
@@ -107,7 +107,7 @@ class PID_GyroStraight(PID):
                 (self.integral * self.ki) + self.proportional + self.derivative
             )
 
-            self.base.move(
+            self.base.run(
                 speed + (self.correction * 10), speed - (self.correction * 10)
             )
             self.last_error = self.error
@@ -133,7 +133,7 @@ class PID_GyroTurn(PID):
                 (self.integral * self.ki) + self.proportional + self.derivative
             )
 
-            base.move(self.correction * 10, -(self.correction * 10))
+            base.run(self.correction * 10, -(self.correction * 10))
 
         base.brake()
 
@@ -164,12 +164,12 @@ class PID_GyroTurn(PID):
             )
 
             if original > threshold:
-                base.move(
+                base.run(
                     left_mode * self.correction * 10,
                     right_mode * -(self.correction * 10),
                 )
             elif original < threshold:
-                base.move(
+                base.run(
                     left_mode * self.correction * 10,
                     right_mode * -(self.correction * 10),
                 )

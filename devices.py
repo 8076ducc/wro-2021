@@ -54,7 +54,7 @@ class Base:
         self.left_motor.reset_angle(angle)
         self.right_motor.reset_angle(angle)
 
-    def move(self, left_speed: float, right_speed: float):
+    def run(self, left_speed: float, right_speed: float):
         self.left_motor.run(left_speed)
         self.right_motor.run(right_speed)
 
