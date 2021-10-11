@@ -123,7 +123,7 @@ class PID_GyroTurn(PID):
     def turn(self, threshold: int):
         self.reset_values()
 
-        while self.gyro.angle() != threshold:
+        while self.gyro.angle() is not threshold:
             self.error = threshold - self.gyro.angle()
             self.proportional = self.error * self.kp
             self.integral += self.error
@@ -153,7 +153,7 @@ class PID_GyroTurn(PID):
 
         original = self.gyro.angle()
 
-        while self.gyro.angle() != threshold:
+        while self.gyro.angle() is not threshold:
             self.error = threshold - self.gyro.angle()
             self.proportional = self.error * self.kp
             self.integral += self.error

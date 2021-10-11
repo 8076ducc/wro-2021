@@ -22,14 +22,14 @@ def deposit_waiting(motor: Motor, angle: int):
 
     base.reset_angle()
 
-    if motor == left_intake:
+    if motor is left_intake:
         line_track.move(right_color_sensor, 500, 50, -1, lambda: base.angle() < 90)
         sensor = left_color_sensor
         intake_possessions = left_intake_possessions
         black_value = black_left
         white_value = white_left
         grey_value = grey_left
-    elif motor == right_intake:
+    elif motor is right_intake:
         line_track.move(right_color_sensor, 500, 50, -1, lambda: base.angle() < 10)
         sensor = left_color_sensor
         intake_possessions = right_intake_possessions
@@ -57,14 +57,14 @@ def deposit_waiting_without_battery(motor: Motor, angle: int):
 
     base.reset_angle()
 
-    if motor == left_intake:
+    if motor is left_intake:
         line_track.move(right_color_sensor, 500, 50, -1, lambda: base.angle() < 90)
         sensor = left_color_sensor
         intake_possessions = left_intake_possessions
         black_value = black_left
         white_value = white_left
         grey_value = grey_left
-    elif motor == right_intake:
+    elif motor is right_intake:
         line_track.move(right_color_sensor, 500, 50, -1, lambda: base.angle() < 10)
         sensor = left_color_sensor
         intake_possessions = right_intake_possessions
@@ -93,14 +93,14 @@ def collect_parked(motor: Motor, angle: int, car_color: Color):
     base.reset_angle()
     intake.open_side(motor)
 
-    if motor == left_intake:
+    if motor is left_intake:
         line_track.move(right_color_sensor, 500, 50, -1, lambda: base.angle() < 90)
         sensor = left_color_sensor
         intake_possessions = left_intake_possessions
         black_value = black_left
         white_value = white_left
         # grey_value = grey_left
-    elif motor == right_intake:
+    elif motor is right_intake:
         line_track.move(right_color_sensor, 500, 50, -1, lambda: base.angle() < 10)
         sensor = left_color_sensor
         intake_possessions = right_intake_possessions

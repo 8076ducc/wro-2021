@@ -49,7 +49,7 @@ def start():
 
     left_intake_possessions.update(battery=True)
     right_intake_possessions.update(battery=True)
-    gyro_turn.single_motor_turn(-36, 1, 0)
+    gyro_turn.single_motor_turn(-37, 1, 0)
     gyro_turn.single_motor_turn(-90, 0, 1)
 
     # 15 31 11
@@ -108,7 +108,7 @@ def detect_waiting():
         else:
             color = None
 
-        if color != None and color != last_color:
+        if color is not None and color is not last_color:
 
             car_order.append(color)
             print(ht_color_sensor.read("RGB"))
@@ -222,21 +222,21 @@ def check_parking_lot(parking_lot: int):
     rgb_reading = ht_color_sensor.read("RGB")
     color_reading = ht_color_sensor.read("COLOR")
 
-    if raw_reading[0] > 3000 and color_reading[0] != 0:
+    if raw_reading[0] > 3000 and color_reading[0] is not 0:
         parked_color = Color.YELLOW
         ev3.speaker.beep(frequency=500, duration=100)
     elif (
-        color_reading[0] == 1
-        # or color_reading[0] == 5
-        or color_reading[0] == 7
-        or color_reading[0] == 14
+        color_reading[0] is 1
+        # or color_reading[0] is 5
+        or color_reading[0] is 7
+        or color_reading[0] is 14
     ):
         parked_color = Color.RED
         ev3.speaker.beep(frequency=600, duration=100)
-    elif color_reading[0] == 2 or color_reading[0] == 3 or color_reading[0] == 11:
+    elif color_reading[0] is 2 or color_reading[0] is 3 or color_reading[0] is 11:
         parked_color = Color.BLUE
         ev3.speaker.beep(frequency=700, duration=100)
-    elif color_reading[0] == 4 or color_reading[0] == 12 or color_reading[0] == 13:
+    elif color_reading[0] is 4 or color_reading[0] is 12 or color_reading[0] is 13:
         parked_color = Color.GREEN
         ev3.speaker.beep(frequency=800, duration=100)
 
@@ -247,9 +247,9 @@ def check_parking_lot(parking_lot: int):
     print(color_reading)
     print(" ")
 
-    if parked_color == Color.YELLOW:
+    if parked_color is Color.YELLOW:
         parking_lots[parking_lot].update(None, None, True)
-    elif parked_color != None:
+    elif parked_color is not None:
         parking_lots[parking_lot].update(parked_color, 1, False)
     else:
         parking_lots[parking_lot].update(None, None, False)
@@ -260,38 +260,38 @@ def check_parking_lot(parking_lot: int):
         angle = 270
 
     if (
-        parking_lots[parking_lot].parked_color == None
-        and parking_lots[parking_lot].barrier == False
+        parking_lots[parking_lot].parked_color is None
+        and parking_lots[parking_lot].barrier is False
     ):
         if (
-            left_intake_possessions.car_color == parking_lots[parking_lot].color
-            and left_intake_possessions.car_type == 0
+            left_intake_possessions.car_color is parking_lots[parking_lot].color
+            and left_intake_possessions.car_type is 0
         ):
             if (
-                left_intake_possessions.car_color == Color.RED
-                and left_intake_possessions.battery == True
+                left_intake_possessions.car_color is Color.RED
+                and left_intake_possessions.battery is True
             ):
                 deposit_waiting_without_battery(left_intake, angle)
             else:
                 deposit_waiting(left_intake, angle)
         elif (
-            right_intake_possessions.car_color == parking_lots[parking_lot].color
-            and right_intake_possessions.car_type == 0
+            right_intake_possessions.car_color is parking_lots[parking_lot].color
+            and right_intake_possessions.car_type is 0
         ):
             if (
-                right_intake_possessions.car_color == Color.RED
-                and right_intake_possessions.battery == True
+                right_intake_possessions.car_color is Color.RED
+                and right_intake_possessions.battery is True
             ):
                 deposit_waiting_without_battery(right_intake, angle)
             else:
                 deposit_waiting(right_intake, angle)
     elif (
-        parking_lots[parking_lot].parked_type == 1
-        and parking_lots[parking_lot].barrier == False
+        parking_lots[parking_lot].parked_type is 1
+        and parking_lots[parking_lot].barrier is False
     ):
-        if left_intake_possessions.car_type == None:
+        if left_intake_possessions.car_type is None:
             collect_parked(left_intake, angle, parking_lots[parking_lot].color)
-        elif right_intake_possessions.car_type == None:
+        elif right_intake_possessions.car_type is None:
             collect_parked(right_intake, angle, parking_lots[parking_lot].color)
 
 

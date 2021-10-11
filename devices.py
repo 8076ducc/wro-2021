@@ -111,7 +111,7 @@ class IntakePossessions:
     def update(self, car_color=None, car_type=None, battery=None):
         self.car_color = car_color
         self.car_type = car_type
-        if battery != None:
+        if battery is not None:
             self.battery = battery
 
 
@@ -134,22 +134,22 @@ class Sensors:
 
     def calibrate_rli(self, sensor: int):
         while True:
-            if sensor == 2:
+            if sensor is 2:
                 ev3.screen.print(self.left_color_sensor.reflection())
                 print(self.left_color_sensor.reflection())
-            elif sensor == 3:
+            elif sensor is 3:
                 ev3.screen.print(self.right_color_sensor.reflection())
                 print(self.right_color_sensor.reflection())
 
     def calibrate_rgb(self, sensor: int):
         while True:
-            if sensor == 2:
+            if sensor is 2:
                 r, g, b = self.left_color_sensor.rgb()
                 ev3.screen.print(
                     "R: {0}\t G: {1}\t B: {2}".format(r, g, b), sep="", end="\n"
                 )
                 print("R: {0}\t G: {1}\t B: {2}".format(r, g, b), sep="", end="\n")
-            elif sensor == 3:
+            elif sensor is 3:
                 r, g, b = self.right_color_sensor.rgb()
                 ev3.screen.print(
                     "R: {0}\t G: {1}\t B: {2}".format(r, g, b), sep="", end="\n"
