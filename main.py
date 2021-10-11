@@ -141,7 +141,7 @@ def detect_waiting():
     intake.hold()
 
     left_intake_possessions.update(car_order[0], 0)
-    right_intake_possessions.update(car_order[1], 1)
+    right_intake_possessions.update(car_order[1], 0)
 
     wait(50)
 
