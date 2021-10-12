@@ -26,16 +26,16 @@ def deposit_waiting(motor: Motor, angle: int):
         line_track.move(right_color_sensor, 500, 50, -1, lambda: base.angle() < 90)
         sensor = left_color_sensor
         intake_possessions = left_intake_possessions
-        black_value = black_left
-        white_value = white_left
-        grey_value = grey_left
+        black_value = BLACK_LEFT
+        white_value = WHITE_LEFT
+        grey_value = GREY_LEFT
     elif motor is right_intake:
         line_track.move(right_color_sensor, 500, 50, -1, lambda: base.angle() < 10)
         sensor = right_color_sensor
         intake_possessions = right_intake_possessions
-        black_value = black_right
-        white_value = white_right
-        grey_value = grey_right
+        black_value = BLACK_RIGHT
+        white_value = WHITE_RIGHT
+        grey_value = GREY_RIGHT
 
     gyro_turn.turn(angle)
 
@@ -61,16 +61,16 @@ def deposit_waiting_without_battery(motor: Motor, angle: int):
         line_track.move(right_color_sensor, 500, 50, -1, lambda: base.angle() < 90)
         sensor = left_color_sensor
         intake_possessions = left_intake_possessions
-        black_value = black_left
-        white_value = white_left
-        grey_value = grey_left
+        black_value = BLACK_LEFT
+        white_value = WHITE_LEFT
+        grey_value = GREY_LEFT
     elif motor is right_intake:
         line_track.move(right_color_sensor, 500, 50, -1, lambda: base.angle() < 10)
         sensor = right_color_sensor
         intake_possessions = right_intake_possessions
-        black_value = black_right
-        white_value = white_right
-        grey_value = grey_right
+        black_value = BLACK_RIGHT
+        white_value = WHITE_RIGHT
+        grey_value = GREY_RIGHT
 
     gyro_turn.turn(angle)
 
@@ -97,16 +97,16 @@ def collect_parked(motor: Motor, angle: int, car_color: Color):
         line_track.move(right_color_sensor, 500, 50, -1, lambda: base.angle() < 90)
         sensor = left_color_sensor
         intake_possessions = left_intake_possessions
-        black_value = black_left
-        white_value = white_left
-        # grey_value = grey_left
+        black_value = BLACK_LEFT
+        white_value = WHITE_LEFT
+        # grey_value = GREY_LEFT
     elif motor is right_intake:
         line_track.move(right_color_sensor, 500, 50, -1, lambda: base.angle() < 10)
         sensor = right_color_sensor
         intake_possessions = right_intake_possessions
-        black_value = black_right
-        white_value = white_right
-        # grey_value = grey_right
+        black_value = BLACK_RIGHT
+        white_value = WHITE_RIGHT
+        # grey_value = GREY_RIGHT
 
     gyro_turn.turn(angle)
 
