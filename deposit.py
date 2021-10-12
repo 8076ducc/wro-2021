@@ -41,7 +41,7 @@ def deposit_waiting(motor: Motor, angle: int):
 
     gyro_straight.move(-900, angle, lambda: sensor.reflection() > (black_value + 5))
     gyro_straight.move(-900, angle, lambda: sensor.reflection() < (white_value - 5))
-    gyro_straight.move(-900, angle, lambda: sensor.reflection() > (grey_value + 5))
+    # gyro_straight.move(-900, angle, lambda: sensor.reflection() > (grey_value + 5))
     base.brake()
     intake.open_side(motor)
     wait(800)
@@ -76,7 +76,7 @@ def deposit_waiting_without_battery(motor: Motor, angle: int):
 
     gyro_straight.move(-900, angle, lambda: sensor.reflection() > (black_value + 5))
     gyro_straight.move(-900, angle, lambda: sensor.reflection() < (white_value - 5))
-    gyro_straight.move(-900, angle, lambda: sensor.reflection() > (grey_value + 5))
+    # gyro_straight.move(-900, angle, lambda: sensor.reflection() > (grey_value + 5))
     base.brake()
     intake.open_side(motor)
     wait(800)
