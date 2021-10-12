@@ -134,7 +134,7 @@ def detect_waiting():
     intake.open()
 
     base.reset_angle()
-    gyro_straight.move(-900, 0, lambda: base.angle() > -600)
+    gyro_straight.move(-700, 0, lambda: base.angle() > -650)
 
     intake.close()
     wait(500)
@@ -143,18 +143,18 @@ def detect_waiting():
     left_intake_possessions.update(car_order[0], 0)
     right_intake_possessions.update(car_order[1], 0)
 
-    wait(50)
+    wait(500)
 
-    gyro_straight.move(700, 0, lambda: left_color_sensor.reflection() < 70)
-    gyro_straight.move(700, 0, lambda: left_color_sensor.reflection() > 20)
+    gyro_straight.move(900, 0, lambda: left_color_sensor.reflection() < 70)
+    gyro_straight.move(900, 0, lambda: left_color_sensor.reflection() > 20)
 
     base.brake()
 
-    gyro_turn.single_motor_turn(110, 1, 0)
+    gyro_turn.single_motor_turn(100, 1, 0)
     gyro_turn.single_motor_turn(0, 0, 1)
 
 
-def detect_parking():
+def deposit_waiting_1():
     def move():
         line_track.move(
             right_color_sensor,
@@ -184,6 +184,10 @@ def detect_parking():
 
     move()
     check_parking_lot(7)
+
+    gyro_straight.move(
+        -500, 0, lambda: left_color_sensor.reflection() > (black_left + 5)
+    )
 
     # go back
 
@@ -298,14 +302,21 @@ def check_parking_lot(parking_lot: int):
 def deposit_parked():
     line_track.move(
         right_color_sensor,
-        800,
+        900,
+        (black_right + white_right / 2),
+        -1,
+        lambda: left_color_sensor.reflection() < (white_left - 5),
+    )
+    line_track.move(
+        right_color_sensor,
+        900,
         (black_right + white_right / 2),
         -1,
         lambda: left_color_sensor.reflection() > (black_left + 5),
     )
     line_track.move(
         right_color_sensor,
-        800,
+        900,
         (black_right + white_right / 2),
         -1,
         lambda: left_color_sensor.reflection() < (white_left - 5),
@@ -350,11 +361,22 @@ def deposit_parked():
     right_intake_possessions.update(None, None)
 
 
+# def deposit_waiting_2():
+
+
+# def deposit_waiting_3():
+
+
 # Write your program here.
 
-start()
-detect_waiting()
-detect_parking()
+# start()
+# detect_waiting()
+
+left_intake_possessions.update(Color.RED, 0)
+right_intake_possessions.update(Color.GREEN, 0)
+deposit_waiting_1()
 deposit_parked()
+# deposit_waiting_2()
+# deposit_waiting_3()
 
 ev3.speaker.beep()
