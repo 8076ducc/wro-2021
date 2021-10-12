@@ -55,7 +55,7 @@ def start():
     # 15 31 11
 
 
-def detect_waiting():
+def collect_waiting_1():
 
     kp = 0.2
     ki = 0.0003
@@ -134,7 +134,7 @@ def detect_waiting():
     intake.open()
 
     base.reset_angle()
-    gyro_straight.move(-700, 0, lambda: base.angle() > -650)
+    gyro_straight.move(-700, 0, lambda: base.angle() > -600)
 
     intake.close()
     wait(500)
@@ -322,7 +322,7 @@ def deposit_parked():
         lambda: left_color_sensor.reflection() < (white_left - 5),
     )
 
-    gyro_turn.turn(225)
+    gyro_turn.turn(220)
     gyro_straight.move(
         800, 225, lambda: left_color_sensor.reflection() > (black_left + 5)
     )
@@ -361,7 +361,80 @@ def deposit_parked():
     right_intake_possessions.update(None, None)
 
 
-# def deposit_waiting_2():
+def collect_waiting_2():
+    gyro_turn.single_motor_turn(470, 1, 0)
+    gyro_turn.turn(180)
+
+    intake.open()
+
+    base.reset_angle()
+    gyro_straight.move(-600, 180, lambda: base.angle() > -700)
+
+    intake.close()
+    wait(500)
+    intake.hold()
+
+    left_intake_possessions.update(car_order[3], 0)
+    right_intake_possessions.update(car_order[2], 0)
+
+    wait(500)
+
+    gyro_turn.turn(0)
+
+
+def deposit_waiting_2():
+    def move():
+        line_track.move(
+            right_color_sensor,
+            500,
+            (black_right + white_right / 2),
+            -1,
+            lambda: left_color_sensor.reflection() > (black_left + 5),
+        )
+        line_track.move(
+            right_color_sensor,
+            300,
+            (black_right + white_right / 2),
+            -1,
+            lambda: left_color_sensor.reflection() < (white_left - 5),
+        )
+        base.brake()
+        wait(100)
+
+    move()
+    check_parking_lot(8)
+
+    move()
+    check_parking_lot(9)
+
+    move()
+    check_parking_lot(10)
+
+    move()
+    check_parking_lot(11)
+
+    gyro_straight.move(
+        -500, 0, lambda: left_color_sensor.reflection() > (black_left + 5)
+    )
+
+    # go back
+
+    while left_color_sensor.reflection() < (white_left - 5):
+        base.run(500, 0)
+    while left_color_sensor.reflection() > (black_left + 5):
+        base.run(500, 0)
+    while left_color_sensor.reflection() < (white_left - 5):
+        base.run(500, 0)
+    base.brake()
+    wait(50)
+    gyro_turn.turn(180)
+    base.run(-800, -800)
+    wait(1000)
+    base.brake()
+    wait(50)
+
+
+# def collect_waiting_3():
 
 
 # def deposit_waiting_3():
@@ -370,13 +443,15 @@ def deposit_parked():
 # Write your program here.
 
 # start()
-# detect_waiting()
-
-left_intake_possessions.update(Color.RED, 0)
-right_intake_possessions.update(Color.GREEN, 0)
-deposit_waiting_1()
-deposit_parked()
-# deposit_waiting_2()
+# collect_waiting_1()
+# # left_intake_possessions.update(Color.GREEN, 0)
+# # right_intake_possessions.update(Color.GREEN, 0)
+# deposit_waiting_1()
+# deposit_parked()
+gyro_sensor.reset_angle(360)
+collect_waiting_2()
+deposit_waiting_2()
+# collect_waiting_3()
 # deposit_waiting_3()
 
 ev3.speaker.beep()
