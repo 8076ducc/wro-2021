@@ -31,7 +31,7 @@ def deposit_waiting(motor: Motor, angle: int):
         grey_value = grey_left
     elif motor is right_intake:
         line_track.move(right_color_sensor, 500, 50, -1, lambda: base.angle() < 10)
-        sensor = left_color_sensor
+        sensor = right_color_sensor
         intake_possessions = right_intake_possessions
         black_value = black_right
         white_value = white_right
@@ -66,7 +66,7 @@ def deposit_waiting_without_battery(motor: Motor, angle: int):
         grey_value = grey_left
     elif motor is right_intake:
         line_track.move(right_color_sensor, 500, 50, -1, lambda: base.angle() < 10)
-        sensor = left_color_sensor
+        sensor = right_color_sensor
         intake_possessions = right_intake_possessions
         black_value = black_right
         white_value = white_right
@@ -102,7 +102,7 @@ def collect_parked(motor: Motor, angle: int, car_color: Color):
         # grey_value = grey_left
     elif motor is right_intake:
         line_track.move(right_color_sensor, 500, 50, -1, lambda: base.angle() < 10)
-        sensor = left_color_sensor
+        sensor = right_color_sensor
         intake_possessions = right_intake_possessions
         black_value = black_right
         white_value = white_right
