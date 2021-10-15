@@ -27,13 +27,7 @@ gyro_sensor = GyroSensor(Port.S4)
 
 
 class Base:
-    def __init__(
-        self,
-        left_motor: Motor,
-        right_motor: Motor,
-        left_color_sensor: ColorSensor,
-        right_color_sensor: ColorSensor,
-    ):
+    def __init__(self):
         self.left_motor = left_motor
         self.right_motor = right_motor
         self.left_color_sensor = left_color_sensor
@@ -59,11 +53,11 @@ class Base:
         self.right_motor.run(right_speed)
 
 
-base = Base(left_motor, right_motor, left_color_sensor, right_color_sensor)
+base = Base()
 
 
 class Intake:
-    def __init__(self, left_intake: Motor, right_intake: Motor):
+    def __init__(self):
         self.left_intake = left_intake
         self.right_intake = right_intake
 
@@ -83,30 +77,30 @@ class Intake:
         self.left_intake.brake()
         self.right_intake.brake()
 
-    def open(self):
-        self.left_intake.run(1000)
-        self.right_intake.run(1000)
+    def open(self, motor: Motor = None):
+        if motor is None:
+            self.left_intake.run(1000)
+            self.right_intake.run(1000)
+        else:
+            motor.run(1000)
 
-    def close(self):
-        self.left_intake.run(-1000)
-        self.right_intake.run(-1000)
-
-    def open_side(self, motor: Motor):
-        motor.run(1000)
-
-    def close_side(self, motor: Motor):
-        motor.run(-1000)
+    def close(self, motor: Motor = None):
+        if motor is None:
+            self.left_intake.run(-1000)
+            self.right_intake.run(-1000)
+        else:
+            motor.run(-1000)
 
 
-intake = Intake(left_intake, right_intake)
+intake = Intake()
 
 
 class IntakePossessions:
-    def __init__(self, car_color: Color, car_type: int, battery: bool):
-        self.car_color = car_color
+    def __init__(self):
+        self.car_color = None
         # 0: waiting, 1: parked
-        self.car_type = car_type
-        self.battery = battery
+        self.car_type = None
+        self.battery = False
 
     def update(self, car_color=None, car_type=None, battery=None):
         self.car_color = car_color
@@ -115,18 +109,12 @@ class IntakePossessions:
             self.battery = battery
 
 
-left_intake_possessions = IntakePossessions(None, None, False)
-right_intake_possessions = IntakePossessions(None, None, False)
+left_intake_possessions = IntakePossessions()
+right_intake_possessions = IntakePossessions()
 
 
 class Sensors:
-    def __init__(
-        self,
-        ht_color_sensor: Ev3devSensor,
-        left_color_sensor: ColorSensor,
-        right_color_sensor: ColorSensor,
-        gyro_sensor: GyroSensor,
-    ):
+    def __init__(self):
         self.ht_color_sensor = ht_color_sensor
         self.left_color_sensor = left_color_sensor
         self.right_color_sensor = right_color_sensor
@@ -174,4 +162,4 @@ class Sensors:
             print(self.gyro_sensor.angle())
 
 
-sensors = Sensors(ht_color_sensor, left_color_sensor, right_color_sensor, gyro_sensor)
+sensors = Sensors()
