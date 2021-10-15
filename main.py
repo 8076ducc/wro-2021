@@ -226,7 +226,7 @@ def check_parking_lot(parking_lot: int):
     rgb_reading = ht_color_sensor.read("RGB")
     color_reading = ht_color_sensor.read("COLOR")
 
-    if raw_reading[0] > 3000 and color_reading[0] is not 0:
+    if color_reading[0] is 6:
         parked_color = Color.YELLOW
         ev3.speaker.beep(frequency=500, duration=100)
     elif (
@@ -444,14 +444,22 @@ def deposit_waiting_2():
 
 # start()
 # collect_waiting_1()
-# # left_intake_possessions.update(Color.GREEN, 0)
-# # right_intake_possessions.update(Color.GREEN, 0)
-# deposit_waiting_1()
-# deposit_parked()
-gyro_sensor.reset_angle(360)
-car_order = [Color.RED, Color.GREEN, Color.RED, Color.BLUE, Color.BLUE, Color.GREEN]
-collect_waiting_2()
-deposit_waiting_2()
+
+gyro_sensor.reset_angle(0)
+
+wait(1000)
+intake.close()
+wait(1000)
+intake.hold()
+left_intake_possessions.update(Color.RED, 0, True)
+right_intake_possessions.update(Color.GREEN, 0, True)
+deposit_waiting_1()
+deposit_parked()
+
+# gyro_sensor.reset_angle(360)
+# car_order = [Color.RED, Color.GREEN, Color.RED, Color.BLUE, Color.BLUE, Color.GREEN]
+# collect_waiting_2()
+# deposit_waiting_2()
 # collect_waiting_3()
 # deposit_waiting_3()
 
