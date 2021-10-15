@@ -32,7 +32,9 @@ class PID(object):
         self.proportional = 0
         self.integral = 0
         self.derivative = 0
+        self.error = 0
         self.last_error = 0
+        self.correction = 0
         self.loop = 0
 
     def reset_values(self):
