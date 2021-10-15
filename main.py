@@ -174,16 +174,16 @@ def deposit_waiting_1():
         wait(100)
 
     move()
-    check_parking_lot(4)
+    check_parking_lot(4, 90)
 
     move()
-    check_parking_lot(5)
+    check_parking_lot(5, 90)
 
     move()
-    check_parking_lot(6)
+    check_parking_lot(6, 90)
 
     move()
-    check_parking_lot(7)
+    check_parking_lot(7, 90)
 
     gyro_straight.move(
         -500, 0, lambda: left_color_sensor.reflection() > (BLACK_LEFT + 5)
@@ -205,98 +205,16 @@ def deposit_waiting_1():
     base.brake()
     wait(50)
 
-    check_parking_lot(3)
+    check_parking_lot(3, 270)
 
     move()
-    check_parking_lot(2)
+    check_parking_lot(2, 270)
 
     move()
-    check_parking_lot(1)
+    check_parking_lot(1, 270)
 
     move()
-    check_parking_lot(0)
-
-
-def check_parking_lot(parking_lot: int):
-
-    parked_color = None
-
-    norm_reading = ht_color_sensor.read("NORM")
-    raw_reading = ht_color_sensor.read("RAW")
-    rgb_reading = ht_color_sensor.read("RGB")
-    color_reading = ht_color_sensor.read("COLOR")
-
-    if color_reading[0] is 6:
-        parked_color = Color.YELLOW
-        ev3.speaker.beep(frequency=500, duration=100)
-    elif (
-        color_reading[0] is 1
-        # or color_reading[0] is 5
-        or color_reading[0] is 7
-        or color_reading[0] is 14
-    ):
-        parked_color = Color.RED
-        ev3.speaker.beep(frequency=600, duration=100)
-    elif color_reading[0] is 2 or color_reading[0] is 3 or color_reading[0] is 11:
-        parked_color = Color.BLUE
-        ev3.speaker.beep(frequency=700, duration=100)
-    elif color_reading[0] is 4 or color_reading[0] is 12 or color_reading[0] is 13:
-        parked_color = Color.GREEN
-        ev3.speaker.beep(frequency=800, duration=100)
-
-    print(parked_color)
-    print(norm_reading)
-    print(raw_reading)
-    print(rgb_reading)
-    print(color_reading)
-    print(" ")
-
-    if parked_color is Color.YELLOW:
-        parking_lots[parking_lot].update(None, None, True)
-    elif parked_color is not None:
-        parking_lots[parking_lot].update(parked_color, 1, False)
-    else:
-        parking_lots[parking_lot].update(None, None, False)
-
-    if 4 <= parking_lot <= 11:
-        angle = 90
-    elif 0 <= parking_lot <= 3:
-        angle = 270
-
-    if (
-        parking_lots[parking_lot].parked_color is None
-        and parking_lots[parking_lot].barrier is False
-    ):
-        if (
-            left_intake_possessions.car_color is parking_lots[parking_lot].color
-            and left_intake_possessions.car_type is 0
-        ):
-            if (
-                left_intake_possessions.car_color is Color.RED
-                and left_intake_possessions.battery is True
-            ):
-                deposit_waiting_without_battery(left_intake, angle)
-            else:
-                deposit_waiting(left_intake, angle)
-        elif (
-            right_intake_possessions.car_color is parking_lots[parking_lot].color
-            and right_intake_possessions.car_type is 0
-        ):
-            if (
-                right_intake_possessions.car_color is Color.RED
-                and right_intake_possessions.battery is True
-            ):
-                deposit_waiting_without_battery(right_intake, angle)
-            else:
-                deposit_waiting(right_intake, angle)
-    elif (
-        parking_lots[parking_lot].parked_type is 1
-        and parking_lots[parking_lot].barrier is False
-    ):
-        if left_intake_possessions.car_type is None:
-            collect_parked(left_intake, angle, parking_lots[parking_lot].color)
-        elif right_intake_possessions.car_type is None:
-            collect_parked(right_intake, angle, parking_lots[parking_lot].color)
+    check_parking_lot(0, 270)
 
 
 def deposit_parked():
@@ -339,7 +257,7 @@ def deposit_parked():
     base.run(-800, -800)
     wait(1000)
     base.brake()
-    intake.open_side(left_intake)
+    intake.open(left_intake)
     wait(800)
     gyro_straight.move(
         800, 360, lambda: left_color_sensor.reflection() > (BLACK_LEFT + 5)
@@ -348,21 +266,23 @@ def deposit_parked():
 
     gyro_turn.single_motor_turn(240, 0, 1)
 
-    gyro_turn.single_motor_turn(360, 1, 0)
-    base.run(-800, -800)
-    wait(1000)
-    base.brake()
+    if collected_green_parked is True and collected_blue_parked is True:
+        gyro_turn.single_motor_turn(360, 1, 0)
+        base.run(-800, -800)
+        wait(1000)
+        base.brake()
 
-    intake.open_side(right_intake)
-    wait(800)
-    gyro_straight.move(
-        800, 360, lambda: left_color_sensor.reflection() > (BLACK_LEFT + 5)
-    )
-    right_intake_possessions.update(None, None)
+        intake.open(right_intake)
+        wait(800)
+        gyro_straight.move(
+            800, 360, lambda: left_color_sensor.reflection() > (BLACK_LEFT + 5)
+        )
+        right_intake_possessions.update(None, None)
+
+        gyro_turn.single_motor_turn(470, 1, 0)
 
 
 def collect_waiting_2():
-    gyro_turn.single_motor_turn(470, 1, 0)
     gyro_turn.turn(180)
 
     intake.open()
@@ -402,16 +322,16 @@ def deposit_waiting_2():
         wait(100)
 
     move()
-    check_parking_lot(8)
+    check_parking_lot(8, 90)
 
     move()
-    check_parking_lot(9)
+    check_parking_lot(9, 90)
 
     move()
-    check_parking_lot(10)
+    check_parking_lot(10, 90)
 
     move()
-    check_parking_lot(11)
+    check_parking_lot(11, 90)
 
     gyro_straight.move(
         -500, 0, lambda: left_color_sensor.reflection() > (BLACK_LEFT + 5)
@@ -433,11 +353,109 @@ def deposit_waiting_2():
     base.brake()
     wait(50)
 
+    move()
+    parking_lot_action(7, 270)
+
+    move()
+    parking_lot_action(6, 270)
+
+    move()
+    parking_lot_action(5, 270)
+
+    move()
+    parking_lot_action(4, 270)
+
 
 # def collect_waiting_3():
 
 
 # def deposit_waiting_3():
+
+
+def check_parking_lot(parking_lot: int, angle: int):
+
+    parked_color = None
+
+    norm_reading = ht_color_sensor.read("NORM")
+    raw_reading = ht_color_sensor.read("RAW")
+    rgb_reading = ht_color_sensor.read("RGB")
+    color_reading = ht_color_sensor.read("COLOR")
+
+    if color_reading[0] is 6:
+        parked_color = Color.YELLOW
+        ev3.speaker.beep(frequency=500, duration=100)
+    elif (
+        color_reading[0] is 1
+        # or color_reading[0] is 5
+        or color_reading[0] is 7
+        or color_reading[0] is 14
+    ):
+        parked_color = Color.RED
+        ev3.speaker.beep(frequency=600, duration=100)
+    elif color_reading[0] is 2 or color_reading[0] is 3 or color_reading[0] is 11:
+        parked_color = Color.BLUE
+        ev3.speaker.beep(frequency=700, duration=100)
+    elif color_reading[0] is 4 or color_reading[0] is 12 or color_reading[0] is 13:
+        parked_color = Color.GREEN
+        ev3.speaker.beep(frequency=800, duration=100)
+
+    print(parked_color)
+    print(norm_reading)
+    print(raw_reading)
+    print(rgb_reading)
+    print(color_reading)
+    print(" ")
+
+    if parked_color is Color.YELLOW:
+        parking_lots[parking_lot].update(None, None, True)
+    elif parked_color is not None:
+        parking_lots[parking_lot].update(parked_color, 1, False)
+    else:
+        parking_lots[parking_lot].update(None, None, False)
+
+    parking_lot_action(parking_lot, angle)
+
+
+def parking_lot_action(parking_lot: int, angle: int):
+    if (
+        parking_lots[parking_lot].parked_color is None
+        and parking_lots[parking_lot].barrier is False
+    ):
+        if left_intake_possessions.car_color is parking_lots[parking_lot].color and (
+            left_intake_possessions.car_type is 0
+            or left_intake_possessions.car_color is Color.RED
+        ):
+            if (
+                left_intake_possessions.car_color is Color.RED
+                and left_intake_possessions.battery is True
+            ):
+                deposit_waiting_without_battery(left_intake, angle)
+            else:
+                deposit_waiting(left_intake, angle)
+        elif right_intake_possessions.car_color is parking_lots[parking_lot].color and (
+            right_intake_possessions.car_type is 0
+            or right_intake_possessions.car_color is Color.RED
+        ):
+            if (
+                right_intake_possessions.car_color is Color.RED
+                and right_intake_possessions.battery is True
+            ):
+                deposit_waiting_without_battery(right_intake, angle)
+            else:
+                deposit_waiting(right_intake, angle)
+
+        parking_lots[parking_lot].update(None, None, False)
+
+    elif (
+        parking_lots[parking_lot].parked_type is 1
+        and parking_lots[parking_lot].barrier is False
+    ):
+        if left_intake_possessions.car_type is None:
+            collect_parked(left_intake, angle, parking_lots[parking_lot].color)
+        elif right_intake_possessions.car_type is None:
+            collect_parked(right_intake, angle, parking_lots[parking_lot].color)
+
+        parking_lots[parking_lot].update(None, None, False)
 
 
 # Write your program here.
@@ -457,7 +475,7 @@ deposit_waiting_1()
 deposit_parked()
 
 # gyro_sensor.reset_angle(360)
-# car_order = [Color.RED, Color.GREEN, Color.RED, Color.BLUE, Color.BLUE, Color.GREEN]
+# car_order = [Color.RED, Color.GREEN, Color.RED, Color.BLUE, Color.BLUE, Color.GREEN]s
 # collect_waiting_2()
 # deposit_waiting_2()
 # collect_waiting_3()

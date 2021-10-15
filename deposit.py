@@ -43,7 +43,7 @@ def deposit_waiting(motor: Motor, angle: int):
     gyro_straight.move(-900, angle, lambda: sensor.reflection() < (white_value - 5))
     gyro_straight.move(-900, angle, lambda: sensor.reflection() > (grey_value + 5))
     base.brake()
-    intake.open_side(motor)
+    intake.open(motor)
     wait(800)
     intake_possessions.update(None, None, False)
     gyro_straight.move(900, angle, lambda: sensor.reflection() < (white_value - 5))
@@ -79,13 +79,13 @@ def deposit_waiting_without_battery(motor: Motor, angle: int):
     gyro_straight.move(-900, angle, lambda: sensor.reflection() < (white_value - 5))
     gyro_straight.move(-900, angle, lambda: sensor.reflection() > (grey_value + 5))
     base.brake()
-    intake.open_side(motor)
+    intake.open(motor)
     wait(800)
     intake_possessions.update(None, None)
     gyro_straight.move(900, angle, lambda: sensor.reflection() < (white_value - 5))
     gyro_straight.move(900, angle, lambda: sensor.reflection() > (black_value + 5))
     base.brake()
-    intake.close_side(motor)
+    intake.close(motor)
     wait(500)
     intake.hold()
     gyro_straight.move(900, angle, lambda: sensor.reflection() < (white_value - 5))
@@ -98,8 +98,12 @@ def deposit_waiting_without_battery(motor: Motor, angle: int):
 
 def collect_parked(motor: Motor, angle: int, car_color: Color):
 
+    global collected_red_parked
+    global collected_green_parked
+    global collected_blue_parked
+
     base.reset_angle()
-    intake.open_side(motor)
+    intake.open(motor)
 
     if motor is left_intake:
         line_track.move(right_color_sensor, 500, 50, -1, lambda: base.angle() < 95)
@@ -121,9 +125,17 @@ def collect_parked(motor: Motor, angle: int, car_color: Color):
     gyro_straight.move(-900, angle, lambda: sensor.reflection() > (black_value + 5))
     gyro_straight.move(-900, angle, lambda: sensor.reflection() < (white_value - 5))
     base.brake()
-    intake.close_side(motor)
+    intake.close(motor)
     wait(800)
     intake_possessions.update(car_color, 1)
+
+    if car_color is Color.RED:
+        collected_red_parked = True
+    elif car_color is Color.GREEN:
+        collected_green_parked = True
+    elif car_color is Color.BLUE:
+        collected_blue_parked = True
+
     gyro_straight.move(900, angle, lambda: sensor.reflection() < (white_value - 5))
     gyro_straight.move(900, angle, lambda: sensor.reflection() > (black_value + 5))
     # gyro_straight.move(900, angle, lambda: sensor.reflection() < (white_value - 5))

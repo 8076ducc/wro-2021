@@ -1,6 +1,6 @@
 BLACK_LEFT = 9
 WHITE_LEFT = 100
-GREY_LEFT = 25
+GREY_LEFT = 24
 GREEN_LEFT = 0
 GREEN_RGB_LEFT = 0
 GREY_RGB_LEFT = 0
@@ -28,5 +28,9 @@ BLUE_PARKED = [0, 0, 17]
 BARRIER = [0, 0, 0]
 
 car_order = []
+
+collected_red_parked = False
+collected_green_parked = False
+collected_blue_parked = False
 
 robot_position = None
