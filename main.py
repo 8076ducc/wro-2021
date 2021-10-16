@@ -152,13 +152,13 @@ def deposit_waiting_1():
         )
         line_track.move(
             right_color_sensor,
-            300,
+            500,
             (BLACK_RIGHT + WHITE_RIGHT / 2),
             -1,
             lambda: left_color_sensor.reflection() < (WHITE_LEFT - 5),
         )
-        base.brake()
-        wait(100)
+        # base.brake()
+        # wait(100)
 
     move()
     check_parking_lot(4, 90)
@@ -204,7 +204,7 @@ def deposit_waiting_1():
     check_parking_lot(0, 270)
 
 
-def deposit_parked():
+def deposit_parked_1():
     line_track.move(
         right_color_sensor,
         900,
@@ -353,6 +353,33 @@ def deposit_waiting_2():
     parking_lot_action(4, 270)
 
 
+def deposit_parked_2():
+    gyro_straight.move(
+        800, 180, lambda: left_color_sensor.reflection() > (BLACK_LEFT + 5)
+    )
+    gyro_turn.turn(270)
+
+    gyro_turn.single_motor_turn(360, 1, 0)
+    base.run(-800, -800)
+    wait(1000)
+    base.brake()
+
+    if left_intake_possessions.car_type is 1:
+        intake.open(left_intake)
+        wait(800)
+        gyro_straight.move(
+            800, 360, lambda: left_color_sensor.reflection() > (BLACK_LEFT + 5)
+        )
+        left_intake_possessions.update(None, None)
+    elif right_intake_possessions.car_type is 1:
+        intake.open(right_intake)
+        wait(800)
+        gyro_straight.move(
+            800, 360, lambda: left_color_sensor.reflection() > (BLACK_LEFT + 5)
+        )
+        right_intake_possessions.update(None, None)
+
+
 # def collect_waiting_3():
 
 
@@ -360,6 +387,10 @@ def deposit_waiting_2():
 
 
 def check_parking_lot(parking_lot: int, angle: int):
+
+    global red_parked_position
+    global green_parked_position
+    global blue_parked_position
 
     parked_color = None
 
@@ -379,12 +410,15 @@ def check_parking_lot(parking_lot: int, angle: int):
     ):
         parked_color = Color.RED
         ev3.speaker.beep(frequency=600, duration=100)
+        red_parked_position = parking_lot
     elif color_reading[0] is 2 or color_reading[0] is 3 or color_reading[0] is 11:
         parked_color = Color.BLUE
         ev3.speaker.beep(frequency=700, duration=100)
+        blue_parked_position = parking_lot
     elif color_reading[0] is 4 or color_reading[0] is 12 or color_reading[0] is 13:
         parked_color = Color.GREEN
         ev3.speaker.beep(frequency=800, duration=100)
+        green_parked_position = parking_lot
 
     print(parked_color)
     print(norm_reading)
@@ -449,20 +483,8 @@ def parking_lot_action(parking_lot: int, angle: int):
 
 # start()
 # collect_waiting_1()
-
-gyro_sensor.reset_angle(0)
-
-wait(1000)
-intake.close()
-wait(1000)
-intake.hold()
-left_intake_possessions.update(Color.RED, 0, True)
-right_intake_possessions.update(Color.GREEN, 0, True)
 deposit_waiting_1()
-deposit_parked()
-
-# gyro_sensor.reset_angle(360)
-# car_order = [Color.RED, Color.GREEN, Color.RED, Color.BLUE, Color.BLUE, Color.GREEN]s
+deposit_parked_1()
 # collect_waiting_2()
 # deposit_waiting_2()
 # collect_waiting_3()
