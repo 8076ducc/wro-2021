@@ -94,13 +94,18 @@ class IntakePossessions:
         self.car_color = None
         # 0: waiting, 1: parked
         self.car_type = None
-        self.battery = False
+        self.number_of_batteries = 0
 
-    def update(self, car_color=None, car_type=None, battery=None):
+    def update(
+        self,
+        car_color=None,
+        car_type=None,
+        number_of_batteries=None,
+    ):
         self.car_color = car_color
         self.car_type = car_type
-        if battery is not None:
-            self.battery = battery
+        if number_of_batteries is not None:
+            self.number_of_batteries = number_of_batteries
 
 
 left_intake_possessions = IntakePossessions()

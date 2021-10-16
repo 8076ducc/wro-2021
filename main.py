@@ -15,15 +15,56 @@ def start():
     base.run(800, 800)
     intake.close()
     wait(250)
-    gyro_turn.turn(-8)
-    gyro_straight.move(800, -8, lambda: left_color_sensor.reflection() > (BLACK_LEFT + 5))
-    gyro_straight.move(800, -8, lambda: left_color_sensor.reflection() > (GREY_LEFT + 5))
-    intake.run(0, 0)
-    base.run(800, 800)
-    wait(65)
-
+    gyro_turn.turn(-10)
+    gyro_straight.move(
+        800,
+        -10,
+        lambda: left_color_sensor.reflection() < (WHITE_LEFT - 5),
+    )
+    ev3.speaker.beep()
+    base.brake()
+    intake.open()
     gyro_turn.turn(-90)
+    base.run(-800, -800)
+    wait(600)
+    base.brake()
+    intake.stop()
+    intake.close()
+    wait(600)
+    intake.stop()
+    intake.hold()
+    left_intake_possessions.update(number_of_batteries=1)
+    right_intake_possessions.update(number_of_batteries=1)
 
+    gyro_straight.move(
+        800,
+        -90,
+        lambda: left_color_sensor.reflection() < (WHITE_LEFT - 5),
+    )
+    gyro_straight.move(
+        800,
+        -90,
+        lambda: left_color_sensor.reflection() > (BLACK_LEFT + 5),
+    )
+    gyro_straight.move(
+        800,
+        -90,
+        lambda: left_color_sensor.reflection() < (WHITE_LEFT - 5),
+    )
+    gyro_turn.single_motor_turn(-8, 0, 1)
+    gyro_straight.move(
+        800,
+        -8,
+        lambda: left_color_sensor.reflection() > (BLACK_LEFT + 5),
+    )
+    gyro_straight.move(
+        800,
+        -8,
+        lambda: left_color_sensor.reflection() > (GREY_LEFT + 5),
+    )
+    base.run(800, 800)
+    wait(55)
+    gyro_turn.turn(-90)
     intake.open()
     base.run(-800, -800)
     wait(600)
@@ -33,9 +74,8 @@ def start():
     wait(600)
     intake.stop()
     intake.hold()
-
-    left_intake_possessions.update(battery=True)
-    right_intake_possessions.update(battery=True)
+    left_intake_possessions.update(number_of_batteries=2)
+    right_intake_possessions.update(number_of_batteries=2)
     gyro_turn.single_motor_turn(-37, 1, 0)
     gyro_turn.single_motor_turn(-90, 0, 1)
 
@@ -293,8 +333,8 @@ def collect_waiting_2():
     intake.stop()
     intake.hold()
 
-    left_intake_possessions.update(battery=True)
-    right_intake_possessions.update(battery=True)
+    # left_intake_possessions.update(battery=True)
+    # right_intake_possessions.update(battery=True)
 
     gyro_turn.single_motor_turn(200, 0, 1)
     gyro_turn.single_motor_turn(270, 1, 0)
@@ -485,7 +525,7 @@ def parking_lot_action(parking_lot: int, angle: int):
         ):
             if (
                 left_intake_possessions.car_color is Color.RED
-                and left_intake_possessions.battery is True
+                and left_intake_possessions.number_of_batteries > 0
             ):
                 deposit_waiting_without_battery(left_intake, angle)
             else:
@@ -496,7 +536,7 @@ def parking_lot_action(parking_lot: int, angle: int):
         ):
             if (
                 right_intake_possessions.car_color is Color.RED
-                and right_intake_possessions.battery is True
+                and right_intake_possessions.number_of_batteries > 0
             ):
                 deposit_waiting_without_battery(right_intake, angle)
             else:
@@ -518,8 +558,8 @@ def parking_lot_action(parking_lot: int, angle: int):
 
 # Write your program here.
 
-# start()
-# collect_waiting_1()
+start()
+collect_waiting_1()
 deposit_waiting_1()
 deposit_parked_1()
 # collect_waiting_2()
