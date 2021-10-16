@@ -64,6 +64,28 @@ parking_lots = [
 ]
 
 
+class ParkingBay:
+    def __init__(
+        self,
+        # occupied: bool,
+        # parked_color: Color,
+    ):
+        self.occupied = False
+        self.parked_color = None
+
+    def update(
+        self,
+        occupied: bool,
+        parked_color: Color,
+    ):
+        self.occupied = occupied
+        self.parked_color = parked_color
+
+
+left_parking_bay = ParkingBay()
+right_parking_bay = ParkingBay()
+
+
 # def find_closest_parking(color: Color):
 
 

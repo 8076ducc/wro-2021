@@ -16,8 +16,8 @@ def start():
     intake.close()
     wait(250)
     gyro_turn.turn(-8)
-    gyro_straight.move(800, -8, lambda: left_color_sensor.reflection() > 20)
-    gyro_straight.move(800, -8, lambda: left_color_sensor.reflection() > 40)
+    gyro_straight.move(800, -8, lambda: left_color_sensor.reflection() > (BLACK_LEFT + 5))
+    gyro_straight.move(800, -8, lambda: left_color_sensor.reflection() > (GREY_LEFT + 5))
     intake.run(0, 0)
     base.run(800, 800)
     wait(65)
@@ -246,14 +246,15 @@ def deposit_parked_1():
     base.brake()
     intake.open(left_intake)
     wait(800)
+    left_parking_bay.update(True, left_intake_possessions.car_color)
+    left_intake_possessions.update(None, None)
+
     gyro_straight.move(
         800, 360, lambda: left_color_sensor.reflection() > (BLACK_LEFT + 5)
     )
-    left_intake_possessions.update(None, None)
-
-    gyro_turn.single_motor_turn(240, 0, 1)
 
     if collected_green_parked is True and collected_blue_parked is True:
+        gyro_turn.single_motor_turn(240, 0, 1)
         gyro_turn.single_motor_turn(360, 1, 0)
         base.run(-800, -800)
         wait(1000)
@@ -261,16 +262,52 @@ def deposit_parked_1():
 
         intake.open(right_intake)
         wait(800)
+        right_parking_bay.update(True, right_intake_possessions.car_color)
+        right_intake_possessions.update(None, None)
+
         gyro_straight.move(
             800, 360, lambda: left_color_sensor.reflection() > (BLACK_LEFT + 5)
         )
-        right_intake_possessions.update(None, None)
-
-        gyro_turn.single_motor_turn(470, 1, 0)
 
 
 def collect_waiting_2():
-    gyro_turn.turn(180)
+    gyro_turn.single_motor_turn(450, 1, 0)
+    line_track.move(
+        left_color_sensor,
+        800,
+        (BLACK_LEFT + WHITE_LEFT / 2),
+        1,
+        lambda: left_color_sensor.reflection() < (WHITE_LEFT - 5),
+    )
+    gyro_turn.single_motor_turn(270, 0, 1)
+    intake.open()
+    gyro_straight.move(
+        -800, 270, lambda: left_color_sensor.reflection() > (BLACK_LEFT + 5)
+    )
+    base.run(-800, -800)
+    wait(1000)
+    base.brake()
+    intake.stop()
+    intake.close()
+    wait(600)
+    intake.stop()
+    intake.hold()
+
+    left_intake_possessions.update(battery=True)
+    right_intake_possessions.update(battery=True)
+
+    gyro_turn.single_motor_turn(200, 0, 1)
+    gyro_turn.single_motor_turn(270, 1, 0)
+
+    line_track.move(
+        left_color_sensor,
+        800,
+        (BLACK_LEFT + WHITE_LEFT / 2),
+        1,
+        lambda: right_color_sensor.reflection() > (BLACK_RIGHT + 5),
+    )
+
+    gyro_turn.single_motor_turn(180, 0, 1)
 
     intake.open()
 

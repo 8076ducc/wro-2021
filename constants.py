@@ -33,4 +33,8 @@ collected_red_parked = False
 collected_green_parked = False
 collected_blue_parked = False
 
+red_parked_position = None
+green_parked_position = None
+blue_parked_position = None
+
 robot_position = None
