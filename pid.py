@@ -30,7 +30,7 @@ class PID(object):
         self.loop = 0
 
 
-class PID_LineTrack(PID):
+class LineTrack(PID):
     def __init__(self):
         PID.__init__(self, base, 0.1, 0.00, 0.80)
 
@@ -71,7 +71,7 @@ class PID_LineTrack(PID):
         base.brake()
 
 
-class PID_GyroStraight(PID):
+class GyroStraight(PID):
     def __init__(self, gyro: GyroSensor):
         self.gyro = gyro
         PID.__init__(self, base, 0.70, 0.00, 0.00)
@@ -102,7 +102,7 @@ class PID_GyroStraight(PID):
         base.brake()
 
 
-class PID_GyroTurn(PID):
+class GyroTurn(PID):
     def __init__(self, gyro: GyroSensor):
         self.gyro = gyro
         PID.__init__(self, base, 0.86, 0.000005, 0.0004)
@@ -164,6 +164,6 @@ class PID_GyroTurn(PID):
         base.brake()
 
 
-gyro_straight = PID_GyroStraight(gyro_sensor)
-gyro_turn = PID_GyroTurn(gyro_sensor)
-line_track = PID_LineTrack()
+gyro_straight = GyroStraight(gyro_sensor)
+gyro_turn = GyroTurn(gyro_sensor)
+line_track = LineTrack()
