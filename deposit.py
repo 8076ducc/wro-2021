@@ -10,7 +10,7 @@ def deposit_waiting(motor: Motor, angle: int):
     base.reset_angle()
 
     if motor is left_intake:
-        line_track.move(right_color_sensor, 500, 50, -1, lambda: base.angle() < 95)
+        line_track.move(right_color_sensor, 500, 50, -1, lambda: base.angle() < 100)
         sensor = left_color_sensor
         intake_possessions = left_intake_possessions
         black_value = BLACK_LEFT
@@ -32,13 +32,26 @@ def deposit_waiting(motor: Motor, angle: int):
     base.brake()
     intake.open(motor)
     wait(800)
-    intake_possessions.update(None, None, intake_possessions.number_of_batteries - 1)
     gyro_straight.move(900, angle, lambda: sensor.reflection() < (white_value - 5))
     gyro_straight.move(500, angle, lambda: sensor.reflection() > (black_value + 5))
     gyro_straight.move(500, angle, lambda: sensor.reflection() < (white_value - 15))
+
+    if intake_possessions.number_of_batteries is 2:
+        ev3.speaker.beep()
+        base.brake()
+        intake.close(motor)
+        wait(500)
+        intake.hold()
+
+        gyro_straight.move(500, angle, lambda: sensor.reflection() < (white_value - 5))
+        gyro_straight.move(500, angle, lambda: sensor.reflection() > (grey_value + 5))
+    else:
+        gyro_straight.move(500, angle, lambda: sensor.reflection() < (white_value - 5))
+
     base.brake()
-    gyro_turn.turn(angle - 95)
+    gyro_turn.turn(angle - 98)
     base.brake()
+    intake_possessions.update(None, None, intake_possessions.number_of_batteries - 1)
 
 
 def deposit_waiting_without_battery(motor: Motor, angle: int):
@@ -46,7 +59,7 @@ def deposit_waiting_without_battery(motor: Motor, angle: int):
     base.reset_angle()
 
     if motor is left_intake:
-        line_track.move(right_color_sensor, 500, 50, -1, lambda: base.angle() < 95)
+        line_track.move(right_color_sensor, 500, 50, -1, lambda: base.angle() < 100)
         sensor = left_color_sensor
         intake_possessions = left_intake_possessions
         black_value = BLACK_LEFT
