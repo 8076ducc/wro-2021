@@ -13,7 +13,6 @@ def start():
     gyro_sensor.reset_angle(0)
 
     base.run(800, 800)
-    intake.close()
     wait(250)
     gyro_turn.turn(-10)
     gyro_straight.move(
@@ -251,6 +250,7 @@ def deposit_parked_1():
         (BLACK_RIGHT + WHITE_RIGHT / 2),
         -1,
         lambda: left_color_sensor.reflection() < (WHITE_LEFT - 5),
+        200,
     )
     line_track.move(
         right_color_sensor,
@@ -258,6 +258,7 @@ def deposit_parked_1():
         (BLACK_RIGHT + WHITE_RIGHT / 2),
         -1,
         lambda: left_color_sensor.reflection() > (BLACK_LEFT + 5),
+        200,
     )
     line_track.move(
         right_color_sensor,
@@ -265,6 +266,7 @@ def deposit_parked_1():
         (BLACK_RIGHT + WHITE_RIGHT / 2),
         -1,
         lambda: left_color_sensor.reflection() < (WHITE_LEFT - 5),
+        200,
     )
 
     gyro_turn.turn(220)
@@ -558,8 +560,13 @@ def parking_lot_action(parking_lot: int, angle: int):
 
 # Write your program here.
 
-start()
-collect_waiting_1()
+# start()
+# collect_waiting_1()
+left_intake_possessions.update(Color.GREEN, 0, 1)
+right_intake_possessions.update(Color.GREEN, 0, 2)
+intake.close()
+wait(800)
+intake.hold()
 deposit_waiting_1()
 deposit_parked_1()
 # collect_waiting_2()

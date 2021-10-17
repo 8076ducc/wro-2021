@@ -41,8 +41,10 @@ class LineTrack(PID):
         threshold: int,
         side: int = 1,
         condition=lambda: True,
+        loop=0,
     ):
         self.reset_values()
+        self.loop = loop
 
         while condition():
             self.error = threshold - sensor.reflection()
