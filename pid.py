@@ -42,8 +42,11 @@ class LineTrack(PID):
         side: int = 1,
         condition=lambda: True,
         loop=0,
+        reset=True,
     ):
-        self.reset_values()
+        if reset is True:
+            self.reset_values()
+
         self.loop = loop
 
         while condition():
