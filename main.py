@@ -188,6 +188,7 @@ def deposit_waiting_1():
             (BLACK_RIGHT + WHITE_RIGHT / 2),
             -1,
             lambda: left_color_sensor.reflection() > (BLACK_LEFT + 5),
+            0,
         )
         line_track.move(
             right_color_sensor,
@@ -195,6 +196,8 @@ def deposit_waiting_1():
             (BLACK_RIGHT + WHITE_RIGHT / 2),
             -1,
             lambda: left_color_sensor.reflection() < (WHITE_LEFT - 5),
+            200,
+            False,
         )
         # base.brake()
         # wait(100)
@@ -249,16 +252,8 @@ def deposit_parked_1():
         900,
         (BLACK_RIGHT + WHITE_RIGHT / 2),
         -1,
-        lambda: left_color_sensor.reflection() < (WHITE_LEFT - 5),
-        200,
-    )
-    line_track.move(
-        right_color_sensor,
-        900,
-        (BLACK_RIGHT + WHITE_RIGHT / 2),
-        -1,
         lambda: left_color_sensor.reflection() > (BLACK_LEFT + 5),
-        200,
+        -100,
     )
     line_track.move(
         right_color_sensor,
@@ -266,7 +261,7 @@ def deposit_parked_1():
         (BLACK_RIGHT + WHITE_RIGHT / 2),
         -1,
         lambda: left_color_sensor.reflection() < (WHITE_LEFT - 5),
-        200,
+        0,
     )
 
     gyro_turn.turn(220)
@@ -314,47 +309,12 @@ def deposit_parked_1():
 
 def collect_waiting_2():
     gyro_turn.single_motor_turn(450, 1, 0)
-    line_track.move(
-        left_color_sensor,
-        800,
-        (BLACK_LEFT + WHITE_LEFT / 2),
-        1,
-        lambda: left_color_sensor.reflection() < (WHITE_LEFT - 5),
-    )
-    gyro_turn.single_motor_turn(270, 0, 1)
-    intake.open()
-    gyro_straight.move(
-        -800, 270, lambda: left_color_sensor.reflection() > (BLACK_LEFT + 5)
-    )
-    base.run(-800, -800)
-    wait(1000)
-    base.brake()
-    intake.stop()
-    intake.close()
-    wait(600)
-    intake.stop()
-    intake.hold()
-
-    # left_intake_possessions.update(battery=True)
-    # right_intake_possessions.update(battery=True)
-
-    gyro_turn.single_motor_turn(200, 0, 1)
-    gyro_turn.single_motor_turn(270, 1, 0)
-
-    line_track.move(
-        left_color_sensor,
-        800,
-        (BLACK_LEFT + WHITE_LEFT / 2),
-        1,
-        lambda: right_color_sensor.reflection() > (BLACK_RIGHT + 5),
-    )
-
-    gyro_turn.single_motor_turn(180, 0, 1)
+    gyro_turn.turn(180)
 
     intake.open()
 
     base.reset_angle()
-    gyro_straight.move(-600, 180, lambda: base.angle() > -700)
+    gyro_straight.move(-600, 180, lambda: base.angle() > -600)
 
     intake.close()
     wait(500)
@@ -363,9 +323,8 @@ def collect_waiting_2():
     left_intake_possessions.update(car_order[3], 0)
     right_intake_possessions.update(car_order[2], 0)
 
-    wait(500)
-
-    gyro_turn.turn(0)
+    gyro_turn.single_motor_turn(80, 1, 0)
+    gyro_turn.single_motor_turn(-3, 0, 1)
 
 
 def deposit_waiting_2():
@@ -379,7 +338,7 @@ def deposit_waiting_2():
         )
         line_track.move(
             right_color_sensor,
-            300,
+            500,
             (BLACK_RIGHT + WHITE_RIGHT / 2),
             -1,
             lambda: left_color_sensor.reflection() < (WHITE_LEFT - 5),
@@ -431,11 +390,32 @@ def deposit_waiting_2():
     move()
     parking_lot_action(4, 270)
 
+    line_track.move(
+        right_color_sensor,
+        800,
+        (BLACK_RIGHT + WHITE_RIGHT / 2),
+        -1,
+        lambda: left_color_sensor.reflection() < (WHITE_LEFT - 5),
+    )
+    line_track.move(
+        right_color_sensor,
+        800,
+        (BLACK_RIGHT + WHITE_RIGHT / 2),
+        -1,
+        lambda: left_color_sensor.reflection() > (BLACK_LEFT + 5),
+        200,
+        False,
+    )
+    gyro_straight.move(
+        800, 180, lambda: left_color_sensor.reflection() < (WHITE_LEFT - 5)
+    )
+
 
 def deposit_parked_2():
     gyro_straight.move(
         800, 180, lambda: left_color_sensor.reflection() > (BLACK_LEFT + 5)
     )
+    ev3.speaker.beep()
     gyro_turn.turn(270)
 
     gyro_turn.single_motor_turn(360, 1, 0)
@@ -560,17 +540,12 @@ def parking_lot_action(parking_lot: int, angle: int):
 
 # Write your program here.
 
-# start()
-# collect_waiting_1()
-left_intake_possessions.update(Color.GREEN, 0, 1)
-right_intake_possessions.update(Color.GREEN, 0, 2)
-intake.close()
-wait(800)
-intake.hold()
+start()
+collect_waiting_1()
 deposit_waiting_1()
 deposit_parked_1()
-# collect_waiting_2()
-# deposit_waiting_2()
+collect_waiting_2()
+deposit_waiting_2()
 # collect_waiting_3()
 # deposit_waiting_3()
 
