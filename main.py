@@ -62,7 +62,7 @@ def start():
         lambda: left_color_sensor.reflection() > (GREY_LEFT + 5),
     )
     base.run(800, 800)
-    wait(55)
+    wait(80)
     gyro_turn.turn(-90)
     intake.open()
     base.run(-800, -800)
@@ -531,9 +531,9 @@ def parking_lot_action(parking_lot: int, angle: int):
         and parking_lots[parking_lot].barrier is False
     ):
         if left_intake_possessions.car_type is None:
-            collect_parked(left_intake, angle, parking_lots[parking_lot].color)
+            collect_parked(left_intake, angle, parking_lots[parking_lot].car_color)
         elif right_intake_possessions.car_type is None:
-            collect_parked(right_intake, angle, parking_lots[parking_lot].color)
+            collect_parked(right_intake, angle, parking_lots[parking_lot].car_color)
 
         parking_lots[parking_lot].update(None, None, False)
 
