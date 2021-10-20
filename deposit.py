@@ -129,12 +129,12 @@ def collect_parked(motor: Motor, angle: int, car_color: Color):
     wait(800)
     intake_possessions.update(car_color, 1)
 
-    if car_color is Color.RED:
-        collected_red_parked = True
-    elif car_color is Color.GREEN:
-        collected_green_parked = True
-    elif car_color is Color.BLUE:
-        collected_blue_parked = True
+    # if car_color is Color.RED:
+    #     collected_red_parked = True
+    # elif car_color is Color.GREEN:
+    #     collected_green_parked = True
+    # elif car_color is Color.BLUE:
+    #     collected_blue_parked = True
 
     gyro_straight.move(900, angle, lambda: sensor.reflection() < (white_value - 5))
     gyro_straight.move(900, angle, lambda: sensor.reflection() > (black_value + 5))
