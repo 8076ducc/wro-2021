@@ -73,7 +73,8 @@ class LineTrack(PID):
             self.loop += 1
             self.last_error = self.error
 
-        base.brake()
+        # TODO: determine whether brake jerking is worthy tradeoff
+        # base.brake()
 
 
 class GyroStraight(PID):

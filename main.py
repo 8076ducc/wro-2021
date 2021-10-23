@@ -13,6 +13,7 @@ def start():
     gyro_sensor.reset_angle(0)
 
     base.run(800, 800)
+    intake.open()
     wait(250)
     gyro_turn.turn(-10)
     gyro_straight.move(
@@ -22,7 +23,7 @@ def start():
     )
     ev3.speaker.beep()
     base.brake()
-    intake.open()
+    # intake.open()
     gyro_turn.turn(-90)
     base.run(-800, -800)
     wait(600)
@@ -188,17 +189,17 @@ def deposit_waiting_1():
             (BLACK_RIGHT + WHITE_RIGHT / 2),
             -1,
             lambda: left_color_sensor.reflection() > (BLACK_LEFT + 5),
-            0,
-        )
-        line_track.move(
-            right_color_sensor,
-            500,
-            (BLACK_RIGHT + WHITE_RIGHT / 2),
-            -1,
-            lambda: left_color_sensor.reflection() < (WHITE_LEFT - 5),
             200,
-            False,
         )
+        # line_track.move(
+        #     right_color_sensor,
+        #     500,
+        #     (BLACK_RIGHT + WHITE_RIGHT / 2),
+        #     -1,
+        #     lambda: left_color_sensor.reflection() < (WHITE_LEFT - 5),
+        #     200,
+        #     False,
+        # )
         # base.brake()
         # wait(100)
 
@@ -610,7 +611,10 @@ def deposit_parked_2():
 # def collect_waiting_3():
 
 
-# def deposit_waiting_3():
+def deposit_waiting_3():
+    empty_red_lots = find_empty_parking(red_parking)
+    empty_green_lots = find_empty_parking(green_parking)
+    empty_blue_lots = find_empty_parking(blue_parking)
 
 
 def check_parking_lot(parking_lot: int):
@@ -697,9 +701,9 @@ def parking_lot_action(parking_lot: int, angle: int):
         and parking_lots[parking_lot].barrier is False
     ):
         if left_intake_possessions.car_type is None:
-            collect_parked(left_intake, angle, parking_lots[parking_lot].car_color)
+            collect_parked(left_intake, angle, parking_lots[parking_lot].parked_color)
         elif right_intake_possessions.car_type is None:
-            collect_parked(right_intake, angle, parking_lots[parking_lot].car_color)
+            collect_parked(right_intake, angle, parking_lots[parking_lot].parked_color)
 
         parking_lots[parking_lot].update(None, None, False)
 
@@ -712,7 +716,8 @@ deposit_waiting_1()
 deposit_parked_1()
 collect_waiting_2()
 deposit_waiting_2()
+deposit_parked_2()
 # collect_waiting_3()
 # deposit_waiting_3()
 
-ev3.speaker.beep()
+# ev3.speaker.beep()
