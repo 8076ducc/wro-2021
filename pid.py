@@ -73,8 +73,55 @@ class LineTrack(PID):
             self.loop += 1
             self.last_error = self.error
 
-        # TODO: determine whether brake jerking is worthy tradeoff
-        # base.brake()
+    def rgb_move(
+        self,
+        sensor: ColorSensor,
+        speed: float,
+        threshold,
+        side: int = 1,
+        condition=lambda: True,
+        loop=0,
+        reset=True,
+        kp = 0.03,
+        ki = 0.0001,
+        kd = 1.0,
+    ):
+        if reset is True:
+            self.reset_values()
+
+        self.kp = kp
+        self.ki = ki
+        self.kd = kd
+
+        self.loop = loop
+
+        while condition():
+            self.error = (
+                (threshold[0] - sensor.rgb()[0])
+                + (threshold[1] - sensor.rgb()[1])
+                + (threshold[2] - sensor.rgb()[2])
+            )
+            self.proportional = self.error * self.kp
+            self.integral += self.error
+            self.derivative = (self.error - self.last_error) * self.kd
+
+            self.correction = (
+                (self.integral * self.ki) + self.proportional + self.derivative
+            )
+
+            if self.loop < 200:
+                self.base.run(
+                    200 + (side * self.correction * 10),
+                    200 - (side * self.correction * 10),
+                )
+            else:
+                self.base.run(
+                    speed + (side * self.correction * 10),
+                    speed - (side * self.correction * 10),
+                )
+
+            self.loop += 1
+            self.last_error = self.error
 
 
 class GyroStraight(PID):
