@@ -82,9 +82,9 @@ class LineTrack(PID):
         condition=lambda: True,
         loop=0,
         reset=True,
-        kp = 0.03,
-        ki = 0.0001,
-        kd = 1.0,
+        kp=0.03,
+        ki=0.0001,
+        kd=1.2,
     ):
         if reset is True:
             self.reset_values()

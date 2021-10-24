@@ -79,8 +79,6 @@ def start():
     gyro_turn.single_motor_turn(-37, 1, 0)
     gyro_turn.single_motor_turn(-90, 0, 1)
 
-    # 15 31 11
-
 
 def collect_waiting_1():
 
@@ -183,25 +181,44 @@ def collect_waiting_1():
 
 def deposit_waiting_1():
     def move():
-        line_track.move(
+        line_track.rgb_move(
             right_color_sensor,
             500,
-            (BLACK_RIGHT + WHITE_RIGHT / 2),
+            [
+                ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+                ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+                ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+            ],
             -1,
-            lambda: left_color_sensor.reflection() > (BLACK_LEFT + 5),
+            lambda: left_color_sensor.rgb()[0] > (BLACK_RGB_LEFT[0] + 5),
             200,
         )
-        # line_track.move(
-        #     right_color_sensor,
-        #     500,
-        #     (BLACK_RIGHT + WHITE_RIGHT / 2),
-        #     -1,
-        #     lambda: left_color_sensor.reflection() < (WHITE_LEFT - 5),
-        #     200,
-        #     False,
-        # )
-        # base.brake()
-        # wait(100)
+
+        line_track.rgb_move(
+            right_color_sensor,
+            500,
+            [
+                ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+                ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+                ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+            ],
+            -1,
+            lambda: left_color_sensor.rgb()[0] < (WHITE_RGB_LEFT[0] - 5),
+            200,
+        )
+
+    line_track.rgb_move(
+        right_color_sensor,
+        500,
+        [
+            ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+            ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+            ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+        ],
+        -1,
+        lambda: left_color_sensor.reflection() > (BLACK_LEFT + 5),
+        0,
+    )
 
     move()
     check_parking_lot(4)
@@ -258,20 +275,29 @@ def deposit_waiting_1():
 
 
 def deposit_parked_1():
-    line_track.move(
+    line_track.rgb_move(
         right_color_sensor,
         900,
-        (BLACK_RIGHT + WHITE_RIGHT / 2),
+        [
+            ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+            ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+            ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+        ],
         -1,
-        lambda: left_color_sensor.reflection() > (BLACK_LEFT + 5),
+        lambda: left_color_sensor.rgb()[0] > (BLACK_RGB_LEFT[0] + 5),
         -100,
     )
-    line_track.move(
+
+    line_track.rgb_move(
         right_color_sensor,
         900,
-        (BLACK_RIGHT + WHITE_RIGHT / 2),
+        [
+            ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+            ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+            ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+        ],
         -1,
-        lambda: left_color_sensor.reflection() < (WHITE_LEFT - 5),
+        lambda: left_color_sensor.rgb()[0] < (WHITE_RGB_LEFT[0] - 5),
         0,
     )
 
@@ -285,9 +311,19 @@ def deposit_parked_1():
     gyro_straight.move(800, 225, lambda: left_color_sensor.reflection() > 50)
     gyro_turn.single_motor_turn(270, 1, 0)
 
-    line_track.move(
-        right_color_sensor, 800, 50, -1, lambda: left_color_sensor.reflection() > 20
+    line_track.rgb_move(
+        right_color_sensor,
+        800,
+        [
+            ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+            ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+            ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+        ],
+        -1,
+        lambda: left_color_sensor.rgb()[0] > (BLACK_RGB_LEFT[0] + 5),
+        0,
     )
+
     gyro_turn.single_motor_turn(360, 0, 1)
     base.run(-800, -800)
     wait(1000)
@@ -346,23 +382,44 @@ def collect_waiting_2():
 
 def deposit_waiting_2():
     def move():
-        line_track.move(
+        line_track.rgb_move(
             right_color_sensor,
             500,
-            (BLACK_RIGHT + WHITE_RIGHT / 2),
+            [
+                ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+                ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+                ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+            ],
             -1,
-            lambda: left_color_sensor.reflection() > (BLACK_LEFT + 5),
-            0,
-        )
-        line_track.move(
-            right_color_sensor,
-            500,
-            (BLACK_RIGHT + WHITE_RIGHT / 2),
-            -1,
-            lambda: left_color_sensor.reflection() < (WHITE_LEFT - 5),
+            lambda: left_color_sensor.rgb()[0] > (BLACK_RGB_LEFT[0] + 5),
             200,
-            False,
         )
+
+        line_track.rgb_move(
+            right_color_sensor,
+            500,
+            [
+                ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+                ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+                ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+            ],
+            -1,
+            lambda: left_color_sensor.rgb()[0] < (WHITE_RGB_LEFT[0] - 5),
+            200,
+        )
+
+    line_track.rgb_move(
+        right_color_sensor,
+        500,
+        [
+            ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+            ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+            ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+        ],
+        -1,
+        lambda: left_color_sensor.reflection() > (BLACK_LEFT + 5),
+        0,
+    )
 
     move()
     check_parking_lot(8)
@@ -400,7 +457,6 @@ def deposit_waiting_2():
     base.brake()
     wait(50)
 
-    move()
     parking_lot_action(7, 270)
 
     move()
@@ -426,10 +482,14 @@ def deposit_waiting_2():
         )
     ):
         base.reset_angle(0)
-        line_track.move(
+        line_track.rgb_move(
             right_color_sensor,
             500,
-            (BLACK_RIGHT + WHITE_RIGHT / 2),
+            [
+                ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+                ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+                ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+            ],
             -1,
             lambda: base.angle() < 300,
         )
@@ -452,6 +512,8 @@ def deposit_waiting_2():
             -500, 0, lambda: left_color_sensor.reflection() > (BLACK_LEFT + 5)
         )
 
+        # go back
+
         while left_color_sensor.reflection() < (WHITE_LEFT - 5):
             base.run(500, 0)
         while left_color_sensor.reflection() > (BLACK_LEFT + 5):
@@ -466,97 +528,43 @@ def deposit_waiting_2():
         base.brake()
         wait(50)
 
-        line_track.move(
-            right_color_sensor,
-            500,
-            (BLACK_RIGHT + WHITE_RIGHT / 2),
-            -1,
-            lambda: left_color_sensor.reflection() > (BLACK_LEFT + 5),
-            0,
-        )
-        line_track.move(
-            right_color_sensor,
-            500,
-            (BLACK_RIGHT + WHITE_RIGHT / 2),
-            -1,
-            lambda: left_color_sensor.reflection() < (WHITE_LEFT - 5),
-            200,
-            False,
-        )
+        parking_lot_action(7, 270)
 
-        line_track.move(
-            right_color_sensor,
-            500,
-            (BLACK_RIGHT + WHITE_RIGHT / 2),
-            -1,
-            lambda: left_color_sensor.reflection() > (BLACK_LEFT + 5),
-            200,
-            False,
-        )
-        line_track.move(
-            right_color_sensor,
-            500,
-            (BLACK_RIGHT + WHITE_RIGHT / 2),
-            -1,
-            lambda: left_color_sensor.reflection() < (WHITE_LEFT - 5),
-            200,
-            False,
-        )
+        move()
+        parking_lot_action(6, 270)
 
-        line_track.move(
-            right_color_sensor,
-            500,
-            (BLACK_RIGHT + WHITE_RIGHT / 2),
-            -1,
-            lambda: left_color_sensor.reflection() > (BLACK_LEFT + 5),
-            200,
-            False,
-        )
-        line_track.move(
-            right_color_sensor,
-            500,
-            (BLACK_RIGHT + WHITE_RIGHT / 2),
-            -1,
-            lambda: left_color_sensor.reflection() < (WHITE_LEFT - 5),
-            200,
-            False,
-        )
+        move()
+        parking_lot_action(5, 270)
 
-        line_track.move(
-            right_color_sensor,
-            500,
-            (BLACK_RIGHT + WHITE_RIGHT / 2),
-            -1,
-            lambda: left_color_sensor.reflection() > (BLACK_LEFT + 5),
-            200,
-            False,
-        )
-        line_track.move(
-            right_color_sensor,
-            500,
-            (BLACK_RIGHT + WHITE_RIGHT / 2),
-            -1,
-            lambda: left_color_sensor.reflection() < (WHITE_LEFT - 5),
-            200,
-            False,
-        )
+        move()
+        parking_lot_action(4, 270)
 
-    line_track.move(
+    line_track.rgb_move(
         right_color_sensor,
         800,
-        (BLACK_RIGHT + WHITE_RIGHT / 2),
+        [
+            ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+            ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+            ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+        ],
         -1,
-        lambda: left_color_sensor.reflection() < (WHITE_LEFT - 5),
+        lambda: left_color_sensor.rgb()[0] < (WHITE_RGB_LEFT[0] - 5),
     )
-    line_track.move(
+
+    line_track.rgb_move(
         right_color_sensor,
         800,
-        (BLACK_RIGHT + WHITE_RIGHT / 2),
+        [
+            ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+            ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+            ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+        ],
         -1,
-        lambda: left_color_sensor.reflection() > (BLACK_LEFT + 5),
+        lambda: left_color_sensor.rgb()[0] > (BLACK_RGB_LEFT[0] + 5),
         200,
         False,
     )
+
     gyro_straight.move(
         800, 180, lambda: left_color_sensor.reflection() < (WHITE_LEFT - 5)
     )
@@ -611,13 +619,15 @@ def deposit_parked_2():
 # def collect_waiting_3():
 
 
-def deposit_waiting_3():
-    empty_red_lots = find_empty_parking(red_parking)
-    empty_green_lots = find_empty_parking(green_parking)
-    empty_blue_lots = find_empty_parking(blue_parking)
+# def deposit_waiting_3():
+#     empty_red_lots = find_empty_parking(red_parking)
+#     empty_green_lots = find_empty_parking(green_parking)
+#     empty_blue_lots = find_empty_parking(blue_parking)
 
 
 def check_parking_lot(parking_lot: int):
+
+    base.brake()
 
     global red_parked_position
     global green_parked_position
@@ -710,13 +720,13 @@ def parking_lot_action(parking_lot: int, angle: int):
 
 # Write your program here.
 
-start()
-collect_waiting_1()
+# start()
+# collect_waiting_1()
 deposit_waiting_1()
-deposit_parked_1()
-collect_waiting_2()
-deposit_waiting_2()
-deposit_parked_2()
+# deposit_parked_1()
+# collect_waiting_2()
+# deposit_waiting_2()
+# deposit_parked_2()
 # collect_waiting_3()
 # deposit_waiting_3()
 
