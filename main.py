@@ -1,5 +1,5 @@
 #!/usr/bin/env pybricks-micropython
-from pybricks.parameters import Color
+from pybricks.parameters import Color, Button
 from pybricks.tools import wait
 from devices import *
 from pid import *
@@ -12,18 +12,27 @@ def start():
 
     gyro_sensor.reset_angle(0)
 
-    base.run(800, 800)
     intake.open()
-    wait(250)
+
     gyro_turn.turn(-10)
     gyro_straight.move(
         800,
         -10,
-        lambda: left_color_sensor.reflection() < (WHITE_LEFT - 5),
+        lambda: left_color_sensor.rgb()[0] < (WHITE_RGB_LEFT[0] - 5),
+    )
+    gyro_straight.move(
+        800,
+        -10,
+        lambda: left_color_sensor.rgb()[0] > (BLACK_RGB_LEFT[0] + 5),
+    )
+    gyro_straight.move(
+        800,
+        -10,
+        lambda: left_color_sensor.rgb()[0] < (WHITE_RGB_LEFT[0] - 5),
     )
     ev3.speaker.beep()
     base.brake()
-    # intake.open()
+
     gyro_turn.turn(-90)
     base.run(-800, -800)
     wait(600)
@@ -36,36 +45,10 @@ def start():
     left_intake_possessions.update(number_of_batteries=1)
     right_intake_possessions.update(number_of_batteries=1)
 
-    gyro_straight.move(
-        800,
-        -90,
-        lambda: left_color_sensor.reflection() < (WHITE_LEFT - 5),
-    )
-    gyro_straight.move(
-        800,
-        -90,
-        lambda: left_color_sensor.reflection() > (BLACK_LEFT + 5),
-    )
-    gyro_straight.move(
-        800,
-        -90,
-        lambda: left_color_sensor.reflection() < (WHITE_LEFT - 5),
-    )
-    gyro_turn.single_motor_turn(-8, 0, 1)
-    gyro_straight.move(
-        800,
-        -8,
-        lambda: left_color_sensor.reflection() > (BLACK_LEFT + 5),
-    )
-    gyro_straight.move(
-        800,
-        -8,
-        lambda: left_color_sensor.reflection() > (GREY_LEFT + 5),
-    )
-    base.run(800, 800)
-    wait(80)
-    gyro_turn.turn(-90)
+    gyro_turn.single_motor_turn(-10, 1, 0)
+    gyro_turn.single_motor_turn(-90, 0, 1)
     intake.open()
+    wait(400)
     base.run(-800, -800)
     wait(600)
     base.brake()
@@ -76,7 +59,7 @@ def start():
     intake.hold()
     left_intake_possessions.update(number_of_batteries=2)
     right_intake_possessions.update(number_of_batteries=2)
-    gyro_turn.single_motor_turn(-37, 1, 0)
+    gyro_turn.single_motor_turn(-35, 1, 0)
     gyro_turn.single_motor_turn(-90, 0, 1)
 
 
@@ -99,10 +82,9 @@ def collect_waiting_1():
     color = None
     last_color = None
 
-    loop = 0
+    loop = 100
 
     while len(car_order) < 6:
-
         reading = right_color_sensor.rgb()[2]
 
         error = threshold - reading
@@ -138,6 +120,7 @@ def collect_waiting_1():
             car_order.append(color)
             print(ht_color_sensor.read("RGB"))
             print(color)
+            print("")
             ev3.speaker.beep()
 
         last_color = color
@@ -147,7 +130,8 @@ def collect_waiting_1():
     base.brake()
     print(car_order)
 
-    gyro_straight.move(-400, -90, lambda: left_color_sensor.reflection() < 70)
+    # TODO: make into computed value
+    gyro_straight.move(-400, -90, lambda: left_color_sensor.rgb()[0] < 70)
 
     base.brake()
     wait(50)
@@ -159,7 +143,7 @@ def collect_waiting_1():
     intake.open()
 
     base.reset_angle()
-    gyro_straight.move(-700, 0, lambda: base.angle() > -600)
+    gyro_straight.move(-900, 0, lambda: base.angle() > -600)
 
     intake.close()
     wait(500)
@@ -170,12 +154,16 @@ def collect_waiting_1():
 
     wait(500)
 
-    gyro_straight.move(900, 0, lambda: left_color_sensor.reflection() < 70)
-    gyro_straight.move(900, 0, lambda: left_color_sensor.reflection() > 20)
+    gyro_straight.move(
+        1400, 0, lambda: left_color_sensor.rgb()[0] < (WHITE_RGB_LEFT[0] - 5)
+    )
+    gyro_straight.move(
+        1400, 0, lambda: left_color_sensor.rgb()[0] > (BLACK_RGB_LEFT[0] + 5)
+    )
 
     base.brake()
 
-    gyro_turn.single_motor_turn(100, 1, 0)
+    gyro_turn.single_motor_turn(110, 1, 0)
     gyro_turn.single_motor_turn(0, 0, 1)
 
 
@@ -207,6 +195,10 @@ def deposit_waiting_1():
             200,
         )
 
+    move()
+    base.brake()
+    parking_lot_action(4, 90)
+
     line_track.rgb_move(
         right_color_sensor,
         500,
@@ -216,37 +208,30 @@ def deposit_waiting_1():
             ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
         ],
         -1,
-        lambda: left_color_sensor.reflection() > (BLACK_LEFT + 5),
-        0,
+        lambda: left_color_sensor.rgb()[0] > (BLACK_RGB_LEFT[0] + 5),
+        200,
     )
-
-    move()
-    check_parking_lot(4)
-    parking_lot_action(4, 90)
-
-    move()
-    check_parking_lot(5)
+    base.brake()
     parking_lot_action(5, 90)
 
     move()
-    check_parking_lot(6)
+    base.brake()
     parking_lot_action(6, 90)
 
     move()
-    check_parking_lot(7)
     parking_lot_action(7, 90)
 
     gyro_straight.move(
-        -500, 0, lambda: left_color_sensor.reflection() > (BLACK_LEFT + 5)
+        -500, 0, lambda: left_color_sensor.rgb()[0] > (BLACK_RGB_LEFT[0] + 5)
     )
 
     # go back
 
-    while left_color_sensor.reflection() < (WHITE_LEFT - 5):
+    while left_color_sensor.rgb()[0] < (WHITE_RGB_LEFT[0] - 5):
         base.run(500, 0)
-    while left_color_sensor.reflection() > (BLACK_LEFT + 5):
+    while left_color_sensor.rgb()[0] > (BLACK_RGB_LEFT[0] + 5):
         base.run(500, 0)
-    while left_color_sensor.reflection() < (WHITE_LEFT - 5):
+    while left_color_sensor.rgb()[0] < (WHITE_RGB_LEFT[0] - 5):
         base.run(500, 0)
     base.brake()
     wait(50)
@@ -256,20 +241,15 @@ def deposit_waiting_1():
     base.brake()
     wait(50)
 
-    check_parking_lot(3)
-    parking_lot_action(3, 270)
-
     move()
-    check_parking_lot(2)
     parking_lot_action(2, 270)
 
     move()
-    check_parking_lot(1)
+    base.hold()
     if parking_lots[1].parked_color is not Color.RED:
         parking_lot_action(1, 270)
 
     move()
-    check_parking_lot(0)
     if parking_lots[0].parked_color is not Color.RED:
         parking_lot_action(0, 270)
 
@@ -277,7 +257,7 @@ def deposit_waiting_1():
 def deposit_parked_1():
     line_track.rgb_move(
         right_color_sensor,
-        900,
+        1400,
         [
             ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
             ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
@@ -285,30 +265,31 @@ def deposit_parked_1():
         ],
         -1,
         lambda: left_color_sensor.rgb()[0] > (BLACK_RGB_LEFT[0] + 5),
-        -100,
+        0,
+        False,
     )
 
-    line_track.rgb_move(
-        right_color_sensor,
-        900,
-        [
-            ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
-            ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
-            ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
-        ],
-        -1,
-        lambda: left_color_sensor.rgb()[0] < (WHITE_RGB_LEFT[0] - 5),
-        0,
-    )
+    # line_track.rgb_move(
+    #     right_color_sensor,
+    #     1400,
+    #     [
+    #         ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+    #         ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+    #         ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+    #     ],
+    #     -1,
+    #     lambda: left_color_sensor.rgb()[0] < (WHITE_RGB_LEFT[0] - 5),
+    #     100,
+    #     False,
+    # )
 
     gyro_turn.turn(220)
     gyro_straight.move(
-        800, 225, lambda: left_color_sensor.reflection() > (BLACK_LEFT + 5)
+        800, 225, lambda: left_color_sensor.rgb()[0] > (BLACK_RGB_LEFT[0] + 5)
     )
     gyro_straight.move(
-        800, 225, lambda: left_color_sensor.reflection() < (WHITE_LEFT - 5)
+        800, 225, lambda: left_color_sensor.rgb()[0] < (WHITE_RGB_LEFT[0] - 5)
     )
-    gyro_straight.move(800, 225, lambda: left_color_sensor.reflection() > 50)
     gyro_turn.single_motor_turn(270, 1, 0)
 
     line_track.rgb_move(
@@ -321,7 +302,7 @@ def deposit_parked_1():
         ],
         -1,
         lambda: left_color_sensor.rgb()[0] > (BLACK_RGB_LEFT[0] + 5),
-        0,
+        200,
     )
 
     gyro_turn.single_motor_turn(360, 0, 1)
@@ -340,8 +321,12 @@ def deposit_parked_1():
         right_intake_possessions.update(None, None)
 
     gyro_straight.move(
-        800, 360, lambda: left_color_sensor.reflection() > (BLACK_LEFT + 5)
+        800, 360, lambda: left_color_sensor.rgb()[0] > (BLACK_RGB_LEFT[0] + 5)
     )
+
+    intake.close()
+    wait(500)
+    intake.hold()
 
     if right_intake_possessions.car_type is 1:
         gyro_turn.single_motor_turn(240, 0, 1)
@@ -356,8 +341,12 @@ def deposit_parked_1():
         right_intake_possessions.update(None, None)
 
         gyro_straight.move(
-            800, 360, lambda: left_color_sensor.reflection() > (BLACK_LEFT + 5)
+            800, 360, lambda: left_color_sensor.rgb()[0] > (BLACK_RGB_LEFT[0] + 5)
         )
+
+        intake.close()
+        wait(500)
+        intake.hold()
 
 
 def collect_waiting_2():
@@ -408,46 +397,30 @@ def deposit_waiting_2():
             200,
         )
 
-    line_track.rgb_move(
-        right_color_sensor,
-        500,
-        [
-            ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
-            ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
-            ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
-        ],
-        -1,
-        lambda: left_color_sensor.reflection() > (BLACK_LEFT + 5),
-        0,
-    )
+    move()
 
     move()
-    check_parking_lot(8)
-    parking_lot_action(8, 90)
-
-    move()
-    check_parking_lot(9)
+    base.brake()
     parking_lot_action(9, 90)
 
     move()
-    check_parking_lot(10)
     parking_lot_action(10, 90)
 
     move()
-    check_parking_lot(11)
+    base.brake()
     parking_lot_action(11, 90)
 
     gyro_straight.move(
-        -500, 0, lambda: left_color_sensor.reflection() > (BLACK_LEFT + 5)
+        -500, 0, lambda: left_color_sensor.rgb()[0] > (BLACK_RGB_LEFT[0] + 5)
     )
 
     # go back
 
-    while left_color_sensor.reflection() < (WHITE_LEFT - 5):
+    while left_color_sensor.rgb()[0] < (WHITE_RGB_LEFT[0] - 5):
         base.run(500, 0)
-    while left_color_sensor.reflection() > (BLACK_LEFT + 5):
+    while left_color_sensor.rgb()[0] > (BLACK_RGB_LEFT[0] + 5):
         base.run(500, 0)
-    while left_color_sensor.reflection() < (WHITE_LEFT - 5):
+    while left_color_sensor.rgb()[0] < (WHITE_RGB_LEFT[0] - 5):
         base.run(500, 0)
     base.brake()
     wait(50)
@@ -457,99 +430,137 @@ def deposit_waiting_2():
     base.brake()
     wait(50)
 
-    parking_lot_action(7, 270)
-
-    move()
-    parking_lot_action(6, 270)
-
-    move()
-    parking_lot_action(5, 270)
-
-    move()
-    parking_lot_action(4, 270)
-
-    if (
-        (left_parking_bay.occupied is False or right_parking_bay.occupied is False)
-        and (
-            left_intake_possessions.car_type is not 1
-            and right_intake_possessions.car_type is not 1
-        )
-    ) or (
-        (left_parking_bay.occupied is False and right_parking_bay.occupied is False)
-        and (
-            left_intake_possessions.car_type is not 1
-            or right_intake_possessions.car_type is not 1
-        )
-    ):
-        base.reset_angle(0)
-        line_track.rgb_move(
-            right_color_sensor,
-            500,
-            [
-                ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
-                ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
-                ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
-            ],
-            -1,
-            lambda: base.angle() < 300,
-        )
-        gyro_turn.single_motor_turn(270, 1, 0)
-        gyro_turn.turn(5)
-
-        move()
-        parking_lot_action(8, 90)
-
-        move()
-        parking_lot_action(9, 90)
-
-        move()
-        parking_lot_action(10, 90)
-
-        move()
-        parking_lot_action(11, 90)
-
-        gyro_straight.move(
-            -500, 0, lambda: left_color_sensor.reflection() > (BLACK_LEFT + 5)
-        )
-
-        # go back
-
-        while left_color_sensor.reflection() < (WHITE_LEFT - 5):
-            base.run(500, 0)
-        while left_color_sensor.reflection() > (BLACK_LEFT + 5):
-            base.run(500, 0)
-        while left_color_sensor.reflection() < (WHITE_LEFT - 5):
-            base.run(500, 0)
-        base.brake()
-        wait(50)
-        gyro_turn.turn(180)
-        base.run(-800, -800)
-        wait(1000)
-        base.brake()
-        wait(50)
-
-        parking_lot_action(7, 270)
-
-        move()
-        parking_lot_action(6, 270)
-
-        move()
-        parking_lot_action(5, 270)
-
-        move()
-        parking_lot_action(4, 270)
+    # cross boundary to collect red
+    base.reset_angle()
 
     line_track.rgb_move(
         right_color_sensor,
-        800,
+        500,
         [
             ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
             ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
             ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
         ],
         -1,
-        lambda: left_color_sensor.rgb()[0] < (WHITE_RGB_LEFT[0] - 5),
+        lambda: base.angle() < 5,
+        200,
     )
+
+    gyro_turn.turn(270)
+    intake.open(right_intake)
+    gyro_straight.move(
+        -900, 270, lambda: right_color_sensor.rgb()[0] > (BLACK_RGB_RIGHT[0] + 5)
+    )
+    gyro_straight.move(
+        -900, 270, lambda: right_color_sensor.rgb()[0] < (WHITE_RGB_RIGHT[0] - 5)
+    )
+    gyro_straight.move(
+        -900, 270, lambda: right_color_sensor.rgb()[0] > (GREY_RGB_RIGHT[0] + 5)
+    )
+    gyro_straight.move(
+        -900, 270, lambda: right_color_sensor.rgb()[0] > (BLACK_RGB_RIGHT[0] + 5)
+    )
+    ev3.speaker.beep()
+    base.brake()
+    gyro_turn.turn(270)
+    gyro_straight.move(
+        -900, 270, lambda: right_color_sensor.rgb()[0] < (WHITE_RGB_RIGHT[0] - 5)
+    )
+    gyro_straight.move(
+        -700, 270, lambda: right_color_sensor.rgb()[0] > (BLACK_RGB_RIGHT[0] + 5)
+    )
+    gyro_straight.move(
+        -300, 270, lambda: right_color_sensor.rgb()[0] < (WHITE_RGB_RIGHT[0] - 5)
+    )
+    base.brake()
+    intake.close(right_intake)
+    wait(600)
+    intake.hold()
+    left_intake_possessions.update(Color.RED, 1)
+
+    gyro_straight.move(
+        900, 270, lambda: right_color_sensor.rgb()[0] < (WHITE_RGB_RIGHT[0] - 5)
+    )
+    gyro_straight.move(
+        900, 270, lambda: right_color_sensor.rgb()[0] > (BLACK_RGB_RIGHT[0] + 5)
+    )
+    gyro_straight.move(
+        900, 270, lambda: right_color_sensor.rgb()[0] < (WHITE_RGB_RIGHT[0] - 5)
+    )
+    gyro_straight.move(
+        900, 270, lambda: right_color_sensor.rgb()[0] > (GREY_RGB_RIGHT[0] + 5)
+    )
+    base.brake()
+    gyro_turn.turn(270)
+    gyro_straight.move(
+        900, 270, lambda: right_color_sensor.rgb()[0] < (WHITE_RGB_RIGHT[0] - 5)
+    )
+    gyro_straight.move(
+        900, 270, lambda: right_color_sensor.rgb()[0] > (BLACK_RGB_RIGHT[0] + 5)
+    )
+
+    base.brake()
+    gyro_turn.turn(180)
+    base.brake()
+
+    move()
+
+    move()
+
+    move()
+    base.brake()
+    base.reset_angle()
+
+    line_track.rgb_move(
+        right_color_sensor,
+        500,
+        [
+            ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+            ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+            ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+        ],
+        -1,
+        lambda: base.angle() < 80,
+        200,
+    )
+    base.brake()
+
+    gyro_turn.turn(90)
+    base.brake()
+
+    gyro_straight.move(
+        -900, 90, lambda: right_color_sensor.rgb()[0] > (BLACK_RGB_RIGHT[0] + 5)
+    )
+    gyro_straight.move(
+        -900, 90, lambda: right_color_sensor.rgb()[0] < (WHITE_RGB_RIGHT[0] - 5)
+    )
+    gyro_straight.move(
+        -900, 90, lambda: right_color_sensor.rgb()[0] > (GREY_RGB_RIGHT[0] + 5)
+    )
+    base.brake()
+    intake.open(right_intake)
+    wait(600)
+    right_intake_possessions.update(None, None)
+    gyro_straight.move(
+        900, 90, lambda: right_color_sensor.rgb()[0] < (WHITE_RGB_RIGHT[0] - 5)
+    )
+    gyro_straight.move(
+        900, 90, lambda: right_color_sensor.rgb()[0] > (BLACK_RGB_RIGHT[0] + 5)
+    )
+    base.brake()
+    intake.close(right_intake)
+    wait(600)
+    intake.hold()
+    gyro_straight.move(
+        900, 90, lambda: right_color_sensor.rgb()[0] < (WHITE_RGB_RIGHT[0] - 5)
+    )
+    gyro_straight.move(
+        500, 90, lambda: right_color_sensor.rgb()[0] > (GREY_RGB_RIGHT[0] + 5)
+    )
+
+    base.brake()
+    gyro_turn.turn(177)
+    base.brake()
 
     line_track.rgb_move(
         right_color_sensor,
@@ -564,15 +575,13 @@ def deposit_waiting_2():
         200,
         False,
     )
-
-    gyro_straight.move(
-        800, 180, lambda: left_color_sensor.reflection() < (WHITE_LEFT - 5)
-    )
+    ev3.speaker.beep()
+    base.brake()
 
 
 def deposit_parked_2():
     gyro_straight.move(
-        800, 180, lambda: left_color_sensor.reflection() > (BLACK_LEFT + 5)
+        800, 180, lambda: left_color_sensor.rgb()[0] > (BLACK_RGB_LEFT[0] + 5)
     )
     ev3.speaker.beep()
     gyro_turn.turn(240)
@@ -588,7 +597,7 @@ def deposit_parked_2():
         left_intake_possessions.update(None, None)
 
         gyro_straight.move(
-            800, 360, lambda: left_color_sensor.reflection() > (BLACK_LEFT + 5)
+            800, 360, lambda: left_color_sensor.rgb()[0] > (BLACK_RGB_LEFT[0] + 5)
         )
 
         gyro_turn.single_motor_turn(240, 0, 1)
@@ -602,7 +611,7 @@ def deposit_parked_2():
         intake.open(left_intake)
         wait(800)
         gyro_straight.move(
-            800, 360, lambda: left_color_sensor.reflection() > (BLACK_LEFT + 5)
+            800, 360, lambda: left_color_sensor.rgb()[0] > (BLACK_RGB_LEFT[0] + 5)
         )
         right_parking_bay.update(True, left_intake_possessions.car_color)
         left_intake_possessions.update(None, None)
@@ -610,70 +619,147 @@ def deposit_parked_2():
         intake.open(right_intake)
         wait(800)
         gyro_straight.move(
-            800, 360, lambda: left_color_sensor.reflection() > (BLACK_LEFT + 5)
+            800, 360, lambda: left_color_sensor.rgb()[0] > (BLACK_RGB_LEFT[0] + 5)
         )
         right_parking_bay.update(True, right_intake_possessions.car_color)
         right_intake_possessions.update(None, None)
 
 
-# def collect_waiting_3():
+def collect_waiting_3():
+    gyro_turn.turn(90)
+    gyro_straight.move(
+        -900, 90, lambda: right_color_sensor.rgb()[0] < (WHITE_RGB_RIGHT[0] - 5)
+    )
+    gyro_straight.move(
+        -900, 90, lambda: right_color_sensor.rgb()[0] > (BLACK_RGB_RIGHT[0] + 5)
+    )
+    gyro_straight.move(
+        -900, 90, lambda: right_color_sensor.rgb()[0] < (WHITE_RGB_RIGHT[0] - 5)
+    )
+    base.brake()
+    gyro_turn.single_motor_turn(0, 1, 0)
+    base.brake()
 
+    intake.open()
 
-# def deposit_waiting_3():
-#     empty_red_lots = find_empty_parking(red_parking)
-#     empty_green_lots = find_empty_parking(green_parking)
-#     empty_blue_lots = find_empty_parking(blue_parking)
+    base.reset_angle()
+    gyro_straight.move(-700, 0, lambda: base.angle() > -600)
 
+    intake.close()
+    wait(500)
+    intake.hold()
 
-def check_parking_lot(parking_lot: int):
+    left_intake_possessions.update(car_order[4], 0)
+    right_intake_possessions.update(car_order[5], 0)
+
+    wait(500)
+
+    base.reset_angle()
+    gyro_straight.move(900, 0, lambda: base.angle() < 600)
 
     base.brake()
 
-    global red_parked_position
-    global green_parked_position
-    global blue_parked_position
+    gyro_turn.single_motor_turn(110, 1, 0)
+    gyro_turn.single_motor_turn(0, 0, 1)
 
-    parked_color = None
 
-    norm_reading = ht_color_sensor.read("NORM")
-    raw_reading = ht_color_sensor.read("RAW")
-    rgb_reading = ht_color_sensor.read("RGB")
-    color_reading = ht_color_sensor.read("COLOR")
+def deposit_waiting_3():
+    def move():
+        line_track.rgb_move(
+            right_color_sensor,
+            500,
+            [
+                ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+                ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+                ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+            ],
+            -1,
+            lambda: left_color_sensor.rgb()[0] > (BLACK_RGB_LEFT[0] + 5),
+            200,
+        )
 
-    if color_reading[0] is 6:
-        parked_color = Color.YELLOW
-        ev3.speaker.beep(frequency=500, duration=100)
-    elif (
-        color_reading[0] is 1
-        # or color_reading[0] is 5
-        or color_reading[0] is 7
-        or color_reading[0] is 14
-    ):
-        parked_color = Color.RED
-        ev3.speaker.beep(frequency=600, duration=100)
-        red_parked_position = parking_lot
-    elif color_reading[0] is 2 or color_reading[0] is 3 or color_reading[0] is 11:
-        parked_color = Color.BLUE
-        ev3.speaker.beep(frequency=700, duration=100)
-        blue_parked_position = parking_lot
-    elif color_reading[0] is 4 or color_reading[0] is 12 or color_reading[0] is 13:
-        parked_color = Color.GREEN
-        ev3.speaker.beep(frequency=800, duration=100)
-        green_parked_position = parking_lot
+        line_track.rgb_move(
+            right_color_sensor,
+            500,
+            [
+                ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+                ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+                ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+            ],
+            -1,
+            lambda: left_color_sensor.rgb()[0] < (WHITE_RGB_LEFT[0] - 5),
+            200,
+        )
 
-    print(parked_color)
-    print(norm_reading)
-    print(raw_reading)
-    print(rgb_reading)
-    print(color_reading)
-    print(" ")
+    move()
+    move()
+    move()
+    move()
 
-    if parked_color is Color.YELLOW:
-        parking_lots[parking_lot].update(None, None, True)
-    elif parked_color is not None:
-        parking_lots[parking_lot].update(parked_color, 1, False)
-    else:
-        parking_lots[parking_lot].update(None, None, False)
+    # go back
+
+    while left_color_sensor.rgb()[0] < (WHITE_RGB_LEFT[0] - 5):
+        base.run(500, 0)
+    while left_color_sensor.rgb()[0] > (BLACK_RGB_LEFT[0] + 5):
+        base.run(500, 0)
+    while left_color_sensor.rgb()[0] < (WHITE_RGB_LEFT[0] - 5):
+        base.run(500, 0)
+    base.brake()
+    wait(50)
+    gyro_turn.turn(180)
+    base.run(-800, -800)
+    wait(1000)
+    base.brake()
+    wait(50)
+
+    parking_lot_action(7, 270)
+
+    move()
+    base.brake()
+    parking_lot_action(6, 270)
+
+    move()
+    parking_lot_action(5, 270)
+
+    move()
+    parking_lot_action(4, 270)
+
+    line_track.rgb_move(
+        right_color_sensor,
+        800,
+        [
+            ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+            ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+            ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+        ],
+        -1,
+        lambda: left_color_sensor.rgb()[0] > (BLACK_RGB_LEFT[0] + 5),
+        200,
+        False,
+    )
+
+
+def end():
+    gyro_turn.turn(315)
+    gyro_straight.move(
+        -900, 315, lambda: right_color_sensor.rgb()[0] > (BLACK_RGB_RIGHT[0] + 5)
+    )
+    gyro_straight.move(
+        -900, 315, lambda: right_color_sensor.rgb()[0] < (WHITE_RGB_RIGHT[0] - 5)
+    )
+    gyro_straight.move(
+        -900, 315, lambda: right_color_sensor.rgb()[0] > (BLACK_RGB_RIGHT[0] + 5)
+    )
+    gyro_straight.move(
+        -900, 315, lambda: right_color_sensor.rgb()[0] < (WHITE_RGB_RIGHT[0] - 5)
+    )
+    # gyro_straight.move(
+    #     -900, 315, lambda: right_color_sensor.rgb()[0] > (BLACK_RGB_RIGHT[0] + 5)
+    # )
+
+    base.run(-900, -700)
+    wait(1000)
+    base.brake()
 
 
 def parking_lot_action(parking_lot: int, angle: int):
@@ -720,14 +806,42 @@ def parking_lot_action(parking_lot: int, angle: int):
 
 # Write your program here.
 
+# while True:
+#     if ev3.buttons.pressed():
+#         if ev3.buttons.pressed()[0] is Button.CENTER:
+#             break
+
+# wait(100)
+# ev3.speaker.beep()
+
+left_intake_possessions.update(Color.GREEN, 0, 2)
+right_intake_possessions.update(Color.RED, 0, 2)
+intake.close()
+wait(400)
+intake.hold()
+
 # start()
 # collect_waiting_1()
 deposit_waiting_1()
-# deposit_parked_1()
-# collect_waiting_2()
-# deposit_waiting_2()
-# deposit_parked_2()
-# collect_waiting_3()
-# deposit_waiting_3()
+deposit_parked_1()
+collect_waiting_2()
+deposit_waiting_2()
+deposit_parked_2()
+collect_waiting_3()
+deposit_waiting_3()
+end()
 
-# ev3.speaker.beep()
+ev3.speaker.beep()
+
+# line_track.rgb_move(
+#     right_color_sensor,
+#     800,
+#     [
+#         ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+#         ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+#         ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+#     ],
+#     -1,
+#     lambda: True,
+#     0,
+# )

@@ -4,6 +4,7 @@ from pybricks.ev3devices import (
     ColorSensor,
     GyroSensor,
 )
+from pybricks import nxtdevices
 from pybricks.parameters import Port, Direction
 from pybricks.iodevices import Ev3devSensor
 
@@ -13,6 +14,11 @@ left_motor = Motor(Port.B, Direction.COUNTERCLOCKWISE)
 right_motor = Motor(Port.C)
 left_intake = Motor(Port.A, Direction.COUNTERCLOCKWISE)
 right_intake = Motor(Port.D)
+
+left_motor.control.limits(1500)
+right_motor.control.limits(1500)
+left_intake.control.limits(1500)
+right_intake.control.limits(1500)
 
 ht_color_sensor = Ev3devSensor(Port.S1)
 left_color_sensor = ColorSensor(Port.S2)

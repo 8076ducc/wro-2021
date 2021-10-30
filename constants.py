@@ -1,7 +1,7 @@
 BLACK_LEFT = 9
 BLACK_RGB_LEFT = [7, 10, 9]
 WHITE_LEFT = 100
-WHITE_RGB_LEFT = [86, 96, 100]
+WHITE_RGB_LEFT = [82, 92, 100]
 GREY_LEFT = 24
 GREY_RGB_LEFT = [22, 28, 41]
 GREEN_LEFT = 0
@@ -10,7 +10,7 @@ GREEN_RGB_LEFT = [18, 34, 19]
 BLACK_RIGHT = 5
 BLACK_RGB_RIGHT = [5, 7, 4]
 WHITE_RIGHT = 70
-WHITE_RGB_RIGHT = [76, 94, 96]
+WHITE_RGB_RIGHT = [72, 89, 93]
 GREY_RIGHT = 18
 GREY_RGB_RIGHT = [19, 25, 23]
 GREEN_RIGHT = 0
@@ -32,13 +32,3 @@ BLUE_PARKED = [0, 0, 17]
 BARRIER = [0, 0, 0]
 
 car_order = []
-
-collected_red_parked = False
-collected_green_parked = False
-collected_blue_parked = False
-
-red_parked_position = None
-green_parked_position = None
-blue_parked_position = None
-
-robot_position = None

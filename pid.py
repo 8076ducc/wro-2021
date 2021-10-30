@@ -34,45 +34,6 @@ class LineTrack(PID):
     def __init__(self):
         PID.__init__(self, base, 0.1, 0.00, 0.80)
 
-    def move(
-        self,
-        sensor: ColorSensor,
-        speed: float,
-        threshold: int,
-        side: int = 1,
-        condition=lambda: True,
-        loop=0,
-        reset=True,
-    ):
-        if reset is True:
-            self.reset_values()
-
-        self.loop = loop
-
-        while condition():
-            self.error = threshold - sensor.reflection()
-            self.proportional = self.error * self.kp
-            self.integral += self.error
-            self.derivative = (self.error - self.last_error) * self.kd
-
-            self.correction = (
-                (self.integral * self.ki) + self.proportional + self.derivative
-            )
-
-            if self.loop < 200:
-                self.base.run(
-                    200 + (side * self.correction * 10),
-                    200 - (side * self.correction * 10),
-                )
-            else:
-                self.base.run(
-                    speed + (side * self.correction * 10),
-                    speed - (side * self.correction * 10),
-                )
-
-            self.loop += 1
-            self.last_error = self.error
-
     def rgb_move(
         self,
         sensor: ColorSensor,
@@ -82,9 +43,9 @@ class LineTrack(PID):
         condition=lambda: True,
         loop=0,
         reset=True,
-        kp=0.03,
+        kp=0.035,
         ki=0.0001,
-        kd=1.2,
+        kd=1.3,
     ):
         if reset is True:
             self.reset_values()
@@ -147,9 +108,15 @@ class GyroStraight(PID):
                 (self.integral * self.ki) + self.proportional + self.derivative
             )
 
+            # if speed > 0:
             self.base.run(
                 speed + (self.correction * 10), speed - (self.correction * 10)
             )
+            # elif speed < 0:
+            #     self.base.run(
+            #         speed - (self.correction * 10), speed + (self.correction * 10)
+            #     )
+
             self.last_error = self.error
 
         base.brake()
@@ -160,8 +127,17 @@ class GyroTurn(PID):
         self.gyro = gyro
         PID.__init__(self, base, 0.86, 0.000005, 0.0004)
 
-    def turn(self, threshold: int):
+    def turn(
+        self,
+        threshold: int,
+        kp=0.9,
+        ki=0.00001,
+        kd=0.0004,
+    ):
         self.reset_values()
+        self.kp = kp
+        self.ki = ki
+        self.kd = kd
 
         while self.gyro.angle() is not threshold:
             self.error = threshold - self.gyro.angle()
@@ -182,8 +158,8 @@ class GyroTurn(PID):
         threshold: int,
         left_mode: int,
         right_mode: int,
-        kp=1.00,
-        ki=0.000005,
+        kp=1.50,
+        ki=0.00001,
         kd=0.0004,
     ):
         self.reset_values()

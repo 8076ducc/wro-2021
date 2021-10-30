@@ -27,24 +27,24 @@ class ParkingLot:
 
 
 red_parking = [
-    ParkingLot(2, 0, Color.RED, None, None, None),
-    ParkingLot(1, 2, Color.RED, None, None, None),
-    ParkingLot(0, 4, Color.RED, None, None, None),
-    ParkingLot(1, 4, Color.RED, None, None, None),
+    ParkingLot(2, 0, Color.RED, True, None, None),
+    ParkingLot(1, 2, Color.RED, False, None, None),
+    ParkingLot(0, 4, Color.RED, False, None, None),
+    ParkingLot(1, 4, Color.RED, False, None, None),
 ]
 
 green_parking = [
-    ParkingLot(2, 0, Color.GREEN, None, None, None),
-    ParkingLot(1, 2, Color.GREEN, None, None, None),
-    ParkingLot(0, 4, Color.GREEN, None, None, None),
-    ParkingLot(1, 4, Color.GREEN, None, None, None),
+    ParkingLot(3, 0, Color.GREEN, False, Color.RED, 1),
+    ParkingLot(0, 2, Color.GREEN, False, None, None),
+    ParkingLot(2, 2, Color.GREEN, False, Color.GREEN, 1),
+    ParkingLot(2, 4, Color.GREEN, True, None, None),
 ]
 
 blue_parking = [
-    ParkingLot(0, 0, Color.BLUE, None, None, None),
-    ParkingLot(1, 0, Color.BLUE, None, None, None),
-    ParkingLot(3, 2, Color.BLUE, None, None, None),
-    ParkingLot(3, 4, Color.BLUE, None, None, None),
+    ParkingLot(0, 0, Color.BLUE, False, None, None),
+    ParkingLot(1, 0, Color.BLUE, False, Color.BLUE, 1),
+    ParkingLot(3, 2, Color.BLUE, False, None, None),
+    ParkingLot(3, 4, Color.BLUE, False, None, None),
 ]
 
 
@@ -62,6 +62,10 @@ parking_lots = [
     green_parking[3],
     blue_parking[3],
 ]
+
+
+def find_empty_parking():
+    print(1)
 
 
 class ParkingBay:
