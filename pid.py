@@ -5,14 +5,7 @@ from constants import *
 class PID(object):
     def __init__(
         self,
-        base: Base,
-        kp: float,
-        ki: float,
-        kd: float,
     ):
-        self.kp = kp
-        self.ki = ki
-        self.kd = kd
         self.base = base
         self.proportional = 0
         self.integral = 0
@@ -32,7 +25,7 @@ class PID(object):
 
 class LineTrack(PID):
     def __init__(self):
-        PID.__init__(self, base, 0.1, 0.00, 0.80)
+        PID.__init__(self)
 
     def rgb_move(
         self,
@@ -50,10 +43,6 @@ class LineTrack(PID):
         if reset is True:
             self.reset_values()
 
-        self.kp = kp
-        self.ki = ki
-        self.kd = kd
-
         self.loop = loop
 
         while condition():
@@ -62,13 +51,11 @@ class LineTrack(PID):
                 + (threshold[1] - sensor.rgb()[1])
                 + (threshold[2] - sensor.rgb()[2])
             )
-            self.proportional = self.error * self.kp
+            self.proportional = self.error * kp
             self.integral += self.error
-            self.derivative = (self.error - self.last_error) * self.kd
+            self.derivative = (self.error - self.last_error) * kd
 
-            self.correction = (
-                (self.integral * self.ki) + self.proportional + self.derivative
-            )
+            self.correction = (self.integral * ki) + self.proportional + self.derivative
 
             if self.loop < 200:
                 self.base.run(
@@ -86,36 +73,31 @@ class LineTrack(PID):
 
 
 class GyroStraight(PID):
-    def __init__(self, gyro: GyroSensor):
-        self.gyro = gyro
-        PID.__init__(self, base, 0.70, 0.00, 0.00)
+    def __init__(self):
+        PID.__init__(self)
 
     def move(
         self,
         speed: float,
         threshold: int,
         condition=lambda: True,
+        kp=0.70,
+        ki=0.00,
+        kd=0.00,
     ):
         self.reset_values()
 
         while condition():
-            self.error = threshold - self.gyro.angle()
-            self.proportional = self.error * self.kp
+            self.error = threshold - gyro_sensor.angle()
+            self.proportional = self.error * kp
             self.integral += self.error
-            self.derivative = (self.error - self.last_error) * self.kd
+            self.derivative = (self.error - self.last_error) * kd
 
-            self.correction = (
-                (self.integral * self.ki) + self.proportional + self.derivative
-            )
+            self.correction = (self.integral * ki) + self.proportional + self.derivative
 
-            # if speed > 0:
             self.base.run(
                 speed + (self.correction * 10), speed - (self.correction * 10)
             )
-            # elif speed < 0:
-            #     self.base.run(
-            #         speed - (self.correction * 10), speed + (self.correction * 10)
-            #     )
 
             self.last_error = self.error
 
@@ -123,9 +105,8 @@ class GyroStraight(PID):
 
 
 class GyroTurn(PID):
-    def __init__(self, gyro: GyroSensor):
-        self.gyro = gyro
-        PID.__init__(self, base, 0.86, 0.000005, 0.0004)
+    def __init__(self):
+        PID.__init__(self)
 
     def turn(
         self,
@@ -135,21 +116,18 @@ class GyroTurn(PID):
         kd=0.0004,
     ):
         self.reset_values()
-        self.kp = kp
-        self.ki = ki
-        self.kd = kd
 
-        while self.gyro.angle() is not threshold:
-            self.error = threshold - self.gyro.angle()
-            self.proportional = self.error * self.kp
+        while gyro_sensor.angle() is not threshold:
+            self.error = threshold - gyro_sensor.angle()
+            self.proportional = self.error * kp
             self.integral += self.error
-            self.derivative = (self.error - self.last_error) * self.kd
+            self.derivative = (self.error - self.last_error) * kd
 
-            self.correction = (
-                (self.integral * self.ki) + self.proportional + self.derivative
-            )
+            self.correction = (self.integral * ki) + self.proportional + self.derivative
 
             base.run(self.correction * 10, -(self.correction * 10))
+
+            self.last_error = self.error
 
         base.brake()
 
@@ -163,36 +141,25 @@ class GyroTurn(PID):
         kd=0.0004,
     ):
         self.reset_values()
-        self.kp = kp
-        self.ki = ki
-        self.kd = kd
 
-        original = self.gyro.angle()
-
-        while self.gyro.angle() is not threshold:
-            self.error = threshold - self.gyro.angle()
-            self.proportional = self.error * self.kp
+        while gyro_sensor.angle() is not threshold:
+            self.error = threshold - gyro_sensor.angle()
+            self.proportional = self.error * kp
             self.integral += self.error
-            self.derivative = (self.error - self.last_error) * self.kd
+            self.derivative = (self.error - self.last_error) * kd
 
-            self.correction = (
-                (self.integral * self.ki) + self.proportional + self.derivative
+            self.correction = (self.integral * ki) + self.proportional + self.derivative
+
+            base.run(
+                left_mode * self.correction * 10,
+                right_mode * -(self.correction * 10),
             )
 
-            if original > threshold:
-                base.run(
-                    left_mode * self.correction * 10,
-                    right_mode * -(self.correction * 10),
-                )
-            elif original < threshold:
-                base.run(
-                    left_mode * self.correction * 10,
-                    right_mode * -(self.correction * 10),
-                )
+            self.last_error = self.error
 
         base.brake()
 
 
-gyro_straight = GyroStraight(gyro_sensor)
-gyro_turn = GyroTurn(gyro_sensor)
+gyro_straight = GyroStraight()
+gyro_turn = GyroTurn()
 line_track = LineTrack()
