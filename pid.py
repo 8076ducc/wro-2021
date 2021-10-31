@@ -131,7 +131,7 @@ class GyroTurn(PID):
         self,
         threshold: int,
         kp=0.9,
-        ki=0.00001,
+        ki=0.0001,
         kd=0.0004,
     ):
         self.reset_values()
