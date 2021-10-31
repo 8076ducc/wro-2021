@@ -71,6 +71,52 @@ class LineTrack(PID):
             self.loop += 1
             self.last_error = self.error
 
+    def double_sensor_move(
+        self,
+        speed: float,
+        left_threshold,
+        right_threshold,
+        condition=lambda: True,
+        loop=0,
+        reset=True,
+        kp=0.00,
+        ki=0.00,
+        kd=0.00,
+    ):
+        if reset is True:
+            self.reset_values()
+
+        self.loop = loop
+
+        while condition():
+            self.error = (
+                -(left_threshold[0] - left_color_sensor.rgb()[0])
+                - (left_threshold[1] - left_color_sensor.rgb()[1])
+                - (left_threshold[2] - left_color_sensor.rgb()[2])
+                + (right_threshold[0] - right_color_sensor.rgb()[0])
+                + (right_threshold[1] - right_color_sensor.rgb()[1])
+                + (right_threshold[2] - left_color_sensor.rgb()[2])
+            )
+            self.proportional = self.error * kp
+            self.integral += self.error
+            self.derivative = (self.error - self.last_error) * kd
+
+            self.correction = (self.integral * ki) + self.proportional + self.derivative
+
+            if self.loop < 200:
+                self.base.run(
+                    200 + (self.correction * 10),
+                    200 - (self.correction * 10),
+                )
+            else:
+                self.base.run(
+                    speed + (self.correction * 10),
+                    speed - (self.correction * 10),
+                )
+
+            self.loop += 1
+            self.last_error = self.error
+
 
 class GyroStraight(PID):
     def __init__(self):
@@ -126,7 +172,7 @@ class GyroTurn(PID):
             self.correction = (self.integral * ki) + self.proportional + self.derivative
 
             base.run(self.correction * 10, -(self.correction * 10))
-
+            
             self.last_error = self.error
 
         base.brake()
@@ -154,7 +200,7 @@ class GyroTurn(PID):
                 left_mode * self.correction * 10,
                 right_mode * -(self.correction * 10),
             )
-
+            
             self.last_error = self.error
 
         base.brake()
