@@ -79,17 +79,17 @@ class Intake:
 
     def open(self, motor: Motor = None):
         if motor is None:
-            self.left_intake.run(1000)
-            self.right_intake.run(1000)
+            self.left_intake.run(1500)
+            self.right_intake.run(1500)
         else:
-            motor.run(1000)
+            motor.run(1500)
 
     def close(self, motor: Motor = None):
         if motor is None:
-            self.left_intake.run(-1000)
-            self.right_intake.run(-1000)
+            self.left_intake.run(-1500)
+            self.right_intake.run(-1500)
         else:
-            motor.run(-1000)
+            motor.run(-1500)
 
 
 intake = Intake()
