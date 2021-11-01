@@ -127,11 +127,13 @@ class GyroStraight(PID):
         speed: float,
         threshold: int,
         condition=lambda: True,
+        reset = True,
         kp=0.70,
         ki=0.00,
         kd=0.00,
     ):
-        self.reset_values()
+        if reset is True:
+            self.reset_values()
 
         while condition():
             self.error = threshold - gyro_sensor.angle()

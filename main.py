@@ -26,11 +26,13 @@ def start():
         800,
         -10,
         lambda: left_color_sensor.rgb()[0] > (BLACK_RGB_LEFT[0] + 5),
+        False,
     )
     gyro_straight.move(
         600,
         -10,
         lambda: left_color_sensor.rgb()[0] < (WHITE_RGB_LEFT[0] - 5),
+        False,
     )
     ev3.speaker.beep()
     base.brake()
@@ -61,7 +63,7 @@ def start():
     intake.hold()
     left_intake_possessions.update(number_of_batteries=2)
     right_intake_possessions.update(number_of_batteries=2)
-    gyro_turn.single_motor_turn(-37, 1, 0)
+    gyro_turn.single_motor_turn(-38, 1, 0)
     gyro_turn.single_motor_turn(-90, 0, 1)
 
 
@@ -139,28 +141,36 @@ def collect_waiting_1():
     wait(50)
 
     gyro_turn.single_motor_turn(10, 1, 0)
-    gyro_turn.single_motor_turn(-101, 0, 1)
-    gyro_turn.single_motor_turn(0, 1, 0)
+    gyro_turn.single_motor_turn(-99, 0, 1)
+    gyro_turn.single_motor_turn(2, 1, 0)
 
     intake.open()
 
     base.reset_angle()
-    gyro_straight.move(-1400, 2, lambda: base.angle() > -600)
+    gyro_straight.move(-1400, 4, lambda: base.angle() > -600, True, 1.60, 0.005)
 
     intake.close()
-    wait(500)
+    wait(800)
     intake.hold()
 
     left_intake_possessions.update(car_order[0], 0)
     right_intake_possessions.update(car_order[1], 0)
 
-    wait(500)
-
     gyro_straight.move(
-        1400, 0, lambda: left_color_sensor.rgb()[0] < (WHITE_RGB_LEFT[0] - 5)
+        1400,
+        0,
+        lambda: left_color_sensor.rgb()[0] < (WHITE_RGB_LEFT[0] - 5),
+        True,
+        1.60,
+        0.005,
     )
     gyro_straight.move(
-        1400, 0, lambda: left_color_sensor.rgb()[0] > (BLACK_RGB_LEFT[0] + 5)
+        1400,
+        0,
+        lambda: left_color_sensor.rgb()[0] > (BLACK_RGB_LEFT[0] + 5),
+        False,
+        1.60,
+        0.005,
     )
 
     base.brake()
@@ -259,10 +269,11 @@ def deposit_waiting_1():
 def deposit_parked_1():
     gyro_straight.move(
         1400,
-        190,
+        180,
         lambda: left_color_sensor.rgb()[0] > (BLACK_RGB_LEFT[0] + 5),
-        1.50,
-        0.001
+        True,
+        1.60,
+        0.005,
     )
 
     base.reset_angle()
@@ -313,16 +324,10 @@ def deposit_parked_1():
     base.run(-800, -800)
     wait(800)
     base.brake()
-    if left_intake_possessions.car_type is 1:
-        intake.open(left_intake)
-        wait(800)
-        left_parking_bay.update(True, left_intake_possessions.car_color)
-        left_intake_possessions.update(None, None)
-    elif right_intake_possessions.car_type is 1:
-        intake.open(right_intake)
-        wait(800)
-        right_parking_bay.update(True, right_intake_possessions.car_color)
-        right_intake_possessions.update(None, None)
+    intake.open(left_intake)
+    wait(800)
+    left_parking_bay.update(True, left_intake_possessions.car_color)
+    left_intake_possessions.update(None, None)
 
     gyro_straight.move(
         800, 360, lambda: left_color_sensor.rgb()[0] > (BLACK_RGB_LEFT[0] + 5)
@@ -357,8 +362,8 @@ def deposit_parked_1():
 
 
 def collect_waiting_2():
-    gyro_turn.single_motor_turn(480, 1, 0)
-    gyro_turn.turn(183)
+    gyro_turn.single_motor_turn(490, 1, 0)
+    gyro_turn.turn(180)
 
     intake.open()
 
@@ -366,7 +371,7 @@ def collect_waiting_2():
     gyro_straight.move(-1400, 180, lambda: base.angle() > -600)
 
     intake.close()
-    wait(500)
+    wait(800)
     intake.hold()
 
     left_intake_possessions.update(car_order[3], 0)
@@ -455,29 +460,15 @@ def deposit_waiting_2():
 
     gyro_turn.turn(270)
     intake.open(right_intake)
-    gyro_straight.move(
-        -900, 270, lambda: right_color_sensor.rgb()[0] > (BLACK_RGB_RIGHT[0] + 5)
-    )
-    gyro_straight.move(
-        -900, 270, lambda: right_color_sensor.rgb()[0] < (WHITE_RGB_RIGHT[0] - 5)
-    )
-    gyro_straight.move(
-        -900, 270, lambda: right_color_sensor.rgb()[0] > (GREY_RGB_RIGHT[0] + 5)
-    )
-    gyro_straight.move(
-        -900, 270, lambda: right_color_sensor.rgb()[0] > (BLACK_RGB_RIGHT[0] + 5)
-    )
-    ev3.speaker.beep()
+    base.reset_angle()
+    gyro_straight.move(-900, 270, lambda: base.angle() > -600)
     base.brake()
     gyro_turn.turn(270)
     gyro_straight.move(
-        -900, 270, lambda: right_color_sensor.rgb()[0] < (WHITE_RGB_RIGHT[0] - 5)
+        -700, 270, lambda: right_color_sensor.rgb()[0] > (BLACK_RGB_RIGHT[0] + 5), False
     )
     gyro_straight.move(
-        -700, 270, lambda: right_color_sensor.rgb()[0] > (BLACK_RGB_RIGHT[0] + 5)
-    )
-    gyro_straight.move(
-        -300, 270, lambda: right_color_sensor.rgb()[0] < (WHITE_RGB_RIGHT[0] - 5)
+        -300, 270, lambda: right_color_sensor.rgb()[0] < (WHITE_RGB_RIGHT[0] - 5), False
     )
     base.brake()
     intake.close(right_intake)
@@ -485,25 +476,15 @@ def deposit_waiting_2():
     intake.hold()
     left_intake_possessions.update(Color.RED, 1)
 
-    gyro_straight.move(
-        900, 270, lambda: right_color_sensor.rgb()[0] < (WHITE_RGB_RIGHT[0] - 5)
-    )
-    gyro_straight.move(
-        900, 270, lambda: right_color_sensor.rgb()[0] > (BLACK_RGB_RIGHT[0] + 5)
-    )
-    gyro_straight.move(
-        900, 270, lambda: right_color_sensor.rgb()[0] < (WHITE_RGB_RIGHT[0] - 5)
-    )
-    gyro_straight.move(
-        900, 270, lambda: right_color_sensor.rgb()[0] > (GREY_RGB_RIGHT[0] + 5)
-    )
+    base.reset_angle()
+    gyro_straight.move(900, 270, lambda: base.angle() < 600)
     base.brake()
     gyro_turn.turn(270)
     gyro_straight.move(
-        900, 270, lambda: right_color_sensor.rgb()[0] < (WHITE_RGB_RIGHT[0] - 5)
+        900, 270, lambda: right_color_sensor.rgb()[0] < (WHITE_RGB_RIGHT[0] - 5), False
     )
     gyro_straight.move(
-        900, 270, lambda: right_color_sensor.rgb()[0] > (BLACK_RGB_RIGHT[0] + 5)
+        900, 270, lambda: right_color_sensor.rgb()[0] > (BLACK_RGB_RIGHT[0] + 5), False
     )
 
     base.brake()
@@ -634,15 +615,15 @@ def deposit_parked_2():
 
 def collect_waiting_3():
     gyro_turn.turn(90)
-    gyro_straight.move(
-        -900, 90, lambda: right_color_sensor.rgb()[0] < (WHITE_RGB_RIGHT[0] - 5)
-    )
-    gyro_straight.move(
-        -900, 90, lambda: right_color_sensor.rgb()[0] > (BLACK_RGB_RIGHT[0] + 5)
-    )
-    gyro_straight.move(
-        -900, 90, lambda: right_color_sensor.rgb()[0] < (WHITE_RGB_RIGHT[0] - 5)
-    )
+
+    base.reset_angle()
+    gyro_straight.move(-900, 90, lambda: base.angle() > -250)
+    # gyro_straight.move(
+    #     -900, 90, lambda: left_color_sensor.rgb()[0] > (BLACK_RGB_LEFT[0] + 5), False
+    # )
+    # gyro_straight.move(
+    #     -900, 90, lambda: left_color_sensor.rgb()[0] < (WHITE_RGB_LEFT[0] - 5), False
+    # )
     base.brake()
     gyro_turn.single_motor_turn(0, 1, 0)
     base.brake()
@@ -653,13 +634,11 @@ def collect_waiting_3():
     gyro_straight.move(-700, 0, lambda: base.angle() > -600)
 
     intake.close()
-    wait(500)
+    wait(800)
     intake.hold()
 
     left_intake_possessions.update(car_order[4], 0)
     right_intake_possessions.update(car_order[5], 0)
-
-    wait(500)
 
     base.reset_angle()
     gyro_straight.move(900, 0, lambda: base.angle() < 600)
@@ -748,24 +727,15 @@ def deposit_waiting_3():
 
 def end():
     gyro_turn.turn(315)
-    gyro_straight.move(
-        -900, 315, lambda: right_color_sensor.rgb()[0] > (BLACK_RGB_RIGHT[0] + 5)
-    )
-    gyro_straight.move(
-        -900, 315, lambda: right_color_sensor.rgb()[0] < (WHITE_RGB_RIGHT[0] - 5)
-    )
-    gyro_straight.move(
-        -900, 315, lambda: right_color_sensor.rgb()[0] > (BLACK_RGB_RIGHT[0] + 5)
-    )
-    gyro_straight.move(
-        -900, 315, lambda: right_color_sensor.rgb()[0] < (WHITE_RGB_RIGHT[0] - 5)
-    )
+    base.reset_angle()
+    gyro_straight.move(-900, 315, lambda: base.angle() > -500)
     # gyro_straight.move(
     #     -900, 315, lambda: right_color_sensor.rgb()[0] > (BLACK_RGB_RIGHT[0] + 5)
     # )
 
-    base.run(-900, -700)
-    wait(1000)
+    base.run(-900, -600)
+    wait(1500)
+    gyro_turn.turn(-90)
     base.brake()
 
 
@@ -821,14 +791,14 @@ def parking_lot_action(parking_lot: int, angle: int):
 # wait(100)
 # ev3.speaker.beep()
 
-left_intake_possessions.update(Color.GREEN, 0, 2)
-right_intake_possessions.update(Color.RED, 0, 2)
-intake.close()
-wait(400)
-intake.hold()
+# left_intake_possessions.update(Color.RED, 0, 1)
+# right_intake_possessions.update(Color.BLUE, 0, 2)
+# intake.close()
+# wait(400)
+# intake.hold()
 
-# start()
-# collect_waiting_1()
+start()
+collect_waiting_1()
 deposit_waiting_1()
 deposit_parked_1()
 collect_waiting_2()
