@@ -71,7 +71,7 @@ class LineTrack(PID):
             self.loop += 1
             self.last_error = self.error
 
-    def double_sensor_move(
+    def two_sensor_move(
         self,
         speed: float,
         left_threshold,

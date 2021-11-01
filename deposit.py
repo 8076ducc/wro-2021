@@ -30,11 +30,6 @@ def deposit_waiting(motor: Motor, angle: int):
         white_value = WHITE_RGB_LEFT
         grey_value = GREY_RGB_LEFT
     elif motor is right_intake:
-        # gyro_straight.move(
-        #     -400,
-        #     (angle - 90),
-        #     lambda: base.angle() > -3,
-        # )
         base.brake()
         sensor = right_color_sensor
         intake_possessions = right_intake_possessions
@@ -96,12 +91,18 @@ def deposit_waiting_without_battery(motor: Motor, angle: int):
         black_value = BLACK_RGB_LEFT
         white_value = WHITE_RGB_LEFT
         grey_value = GREY_RGB_LEFT
-    elif motor is right_intake:
-        # gyro_straight.move(
-        #     -400,
-        #     (angle - 90),
-        #     lambda: base.angle() > -3,
-        # )
+    elif motor is right_intake:        
+        line_track.rgb_move(
+            right_color_sensor,
+            500,
+            [
+                ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+                ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+                ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
+            ],
+            -1,
+            lambda: base.angle() < 5,
+        )
         base.brake()
         sensor = right_color_sensor
         intake_possessions = right_intake_possessions
