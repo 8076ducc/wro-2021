@@ -79,9 +79,9 @@ class LineTrack(PID):
         condition=lambda: True,
         loop=0,
         reset=True,
-        kp=0.00,
+        kp=0.03,
         ki=0.00,
-        kd=0.00,
+        kd=0.5,
     ):
         if reset is True:
             self.reset_values()
@@ -172,7 +172,7 @@ class GyroTurn(PID):
             self.correction = (self.integral * ki) + self.proportional + self.derivative
 
             base.run(self.correction * 10, -(self.correction * 10))
-            
+
             self.last_error = self.error
 
         base.brake()
@@ -200,7 +200,7 @@ class GyroTurn(PID):
                 left_mode * self.correction * 10,
                 right_mode * -(self.correction * 10),
             )
-            
+
             self.last_error = self.error
 
         base.brake()
