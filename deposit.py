@@ -25,14 +25,30 @@ def deposit_waiting(motor: Motor, angle: int):
         )
         base.brake()
         sensor = left_color_sensor
-        intake_possessions = left_intake_possessions
+
+        def update_intake_posessions(
+            car_color=None,
+            car_type=None,
+            number_of_batteries=None,
+        ):
+            intake.update_left_possessions(car_color, car_type, number_of_batteries)
+        number_of_batteries = intake.left_batteries
+
         black_value = BLACK_RGB_LEFT
         white_value = WHITE_RGB_LEFT
         grey_value = GREY_RGB_LEFT
     elif motor is right_intake:
         base.brake()
         sensor = right_color_sensor
-        intake_possessions = right_intake_possessions
+
+        def update_intake_posessions(
+            car_color=None,
+            car_type=None,
+            number_of_batteries=None,
+        ):
+            intake.update_right_possessions(car_color, car_type, number_of_batteries)
+        number_of_batteries = intake.right_batteries
+
         black_value = BLACK_RGB_RIGHT
         white_value = WHITE_RGB_RIGHT
         grey_value = GREY_RGB_RIGHT
@@ -41,32 +57,39 @@ def deposit_waiting(motor: Motor, angle: int):
     base.brake()
 
     gyro_straight.move(-1400, angle, lambda: sensor.rgb()[0] > (black_value[0] + 5))
-    gyro_straight.move(-1400, angle, lambda: sensor.rgb()[0] < (white_value[0] - 5), False)
-    gyro_straight.move(-1400, angle, lambda: sensor.rgb()[0] > (grey_value[0] + 5), False)
+    gyro_straight.move(
+        -1400, angle, lambda: sensor.rgb()[0] < (white_value[0] - 5), False
+    )
+    gyro_straight.move(
+        -1400, angle, lambda: sensor.rgb()[0] > (grey_value[0] + 5), False
+    )
     base.brake()
     intake.open(motor)
     wait(600)
     gyro_straight.move(1400, angle, lambda: sensor.rgb()[0] < (white_value[0] - 5))
-    gyro_straight.move(1400, angle, lambda: sensor.rgb()[0] > (black_value[0] + 5), False)
-    gyro_straight.move(500, angle, lambda: sensor.rgb()[0] < (white_value[0] - 5), False)
+    gyro_straight.move(
+        1400, angle, lambda: sensor.rgb()[0] > (black_value[0] + 5), False
+    )
+    gyro_straight.move(
+        500, angle, lambda: sensor.rgb()[0] < (white_value[0] - 5), False
+    )
 
-    if intake_possessions.number_of_batteries is 2:
+    if number_of_batteries is 2:
         # ev3.speaker.beep()
         wait(100)
         base.brake()
         intake.close(motor)
         wait(600)
 
-        # gyro_straight.move(1400, angle, lambda: sensor.rgb()[0] < (white_value[0] - 5), False)
-        gyro_straight.move(500, angle, lambda: sensor.rgb()[0] > (grey_value[0] + 5), False)
-    # else:
-    #     gyro_straight.move(500, angle, lambda: sensor.rgb()[0] < (white_value[0] - 5), False)
+        gyro_straight.move(
+            500, angle, lambda: sensor.rgb()[0] > (grey_value[0] + 5), False
+        )
 
     base.brake()
     gyro_turn.turn(angle - 90)
     base.brake()
     intake.hold()
-    intake_possessions.update(None, None, intake_possessions.number_of_batteries - 1)
+    update_intake_posessions(None, None, number_of_batteries - 1)
 
 
 def deposit_waiting_without_battery(motor: Motor, angle: int):
@@ -89,7 +112,15 @@ def deposit_waiting_without_battery(motor: Motor, angle: int):
         )
         base.brake()
         sensor = left_color_sensor
-        intake_possessions = left_intake_possessions
+
+        def update_intake_posessions(
+            car_color=None,
+            car_type=None,
+            number_of_batteries=None,
+        ):
+            intake.update_left_possessions(car_color, car_type, number_of_batteries)
+        number_of_batteries = intake.left_batteries
+
         black_value = BLACK_RGB_LEFT
         white_value = WHITE_RGB_LEFT
         grey_value = GREY_RGB_LEFT
@@ -108,7 +139,15 @@ def deposit_waiting_without_battery(motor: Motor, angle: int):
         )
         base.brake()
         sensor = right_color_sensor
-        intake_possessions = right_intake_possessions
+
+        def update_intake_posessions(
+            car_color=None,
+            car_type=None,
+            number_of_batteries=None,
+        ):
+            intake.update_right_possessions(car_color, car_type, number_of_batteries)
+        number_of_batteries = intake.right_batteries
+
         black_value = BLACK_RGB_RIGHT
         white_value = WHITE_RGB_RIGHT
         grey_value = GREY_RGB_RIGHT
@@ -117,26 +156,36 @@ def deposit_waiting_without_battery(motor: Motor, angle: int):
     base.brake()
 
     gyro_straight.move(-1400, angle, lambda: sensor.rgb()[0] > (black_value[0] + 5))
-    gyro_straight.move(-1400, angle, lambda: sensor.rgb()[0] < (white_value[0] - 5), False)
-    gyro_straight.move(-1400, angle, lambda: sensor.rgb()[0] > (grey_value[0] + 5), False)
+    gyro_straight.move(
+        -1400, angle, lambda: sensor.rgb()[0] < (white_value[0] - 5), False
+    )
+    gyro_straight.move(
+        -1400, angle, lambda: sensor.rgb()[0] > (grey_value[0] + 5), False
+    )
     base.brake()
     intake.open(motor)
     wait(600)
-    intake_possessions.update(None, None)
+    update_intake_posessions(None, None)
     gyro_straight.move(500, angle, lambda: sensor.rgb()[0] < (white_value[0] - 5))
-    if intake_possessions.number_of_batteries is 2:
+    if number_of_batteries is 2:
         ev3.speaker.beep()
         base.brake()
         intake.close(motor)
         wait(600)
-        gyro_straight.move(1400, angle, lambda: sensor.rgb()[0] > (black_value[0] + 5), False)
-    elif intake_possessions.number_of_batteries is 2:
-        gyro_straight.move(1400, angle, lambda: sensor.rgb()[0] > (black_value[0] + 5), False)
+        gyro_straight.move(
+            1400, angle, lambda: sensor.rgb()[0] > (black_value[0] + 5), False
+        )
+    elif number_of_batteries is 1:
+        gyro_straight.move(
+            1400, angle, lambda: sensor.rgb()[0] > (black_value[0] + 5), False
+        )
         ev3.speaker.beep()
         base.brake()
         intake.close(motor)
         wait(600)
-    gyro_straight.move(1400, angle, lambda: sensor.rgb()[0] < (white_value[0] - 5), False)
+    gyro_straight.move(
+        1400, angle, lambda: sensor.rgb()[0] < (white_value[0] - 5), False
+    )
     gyro_straight.move(300, angle, lambda: sensor.rgb()[0] > (grey_value[0] + 5), False)
 
     base.brake()
@@ -164,10 +213,16 @@ def collect_parked(motor: Motor, angle: int, car_color: Color):
         )
         base.brake()
         sensor = left_color_sensor
-        intake_possessions = left_intake_possessions
+
+        def update_intake_posessions(
+            car_color=None,
+            car_type=None,
+            number_of_batteries=None,
+        ):
+            intake.update_left_possessions(car_color, car_type, number_of_batteries)
+
         black_value = BLACK_RGB_LEFT
         white_value = WHITE_RGB_LEFT
-        # grey_value = GREY_LEFT
     elif motor is right_intake:
         line_track.rgb_move(
             right_color_sensor,
@@ -182,10 +237,16 @@ def collect_parked(motor: Motor, angle: int, car_color: Color):
             False,
         )
         sensor = right_color_sensor
-        intake_possessions = right_intake_possessions
+
+        def update_intake_posessions(
+            car_color=None,
+            car_type=None,
+            number_of_batteries=None,
+        ):
+            intake.update_right_possessions(car_color, car_type, number_of_batteries)
+
         black_value = BLACK_RGB_RIGHT
         white_value = WHITE_RGB_RIGHT
-        # grey_value = GREY_RIGHT
 
     gyro_turn.turn(angle)
     base.brake()
@@ -193,15 +254,21 @@ def collect_parked(motor: Motor, angle: int, car_color: Color):
     intake.open(motor)
 
     gyro_straight.move(-1400, angle, lambda: sensor.rgb()[0] > (black_value[0] + 5))
-    gyro_straight.move(-1400, angle, lambda: sensor.rgb()[0] < (white_value[0] - 5), False)
+    gyro_straight.move(
+        -1400, angle, lambda: sensor.rgb()[0] < (white_value[0] - 5), False
+    )
     base.brake()
     intake.close(motor)
     wait(600)
-    intake_possessions.update(car_color, 1)
+    update_intake_posessions(car_color, 1)
 
     gyro_straight.move(1400, angle, lambda: sensor.rgb()[0] < (white_value[0] - 5))
-    gyro_straight.move(1400, angle, lambda: sensor.rgb()[0] > (black_value[0] + 5), False)
-    gyro_straight.move(400, angle, lambda: sensor.rgb()[0] < (white_value[0] - 5), False)
+    gyro_straight.move(
+        1400, angle, lambda: sensor.rgb()[0] > (black_value[0] + 5), False
+    )
+    gyro_straight.move(
+        400, angle, lambda: sensor.rgb()[0] < (white_value[0] - 5), False
+    )
     base.brake()
     gyro_turn.turn(angle - 90)
     base.brake()

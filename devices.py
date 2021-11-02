@@ -37,7 +37,7 @@ class Base:
         self.left_motor.brake()
         self.right_motor.brake()
 
-    def hold(self, motor):
+    def hold(self, motor: Motor = None):
         if motor is None:
             self.left_motor.hold()
             self.right_motor.hold()
@@ -63,6 +63,16 @@ class Intake:
     def __init__(self):
         self.left_intake = left_intake
         self.right_intake = right_intake
+
+        self.left_car_color = None
+        # 0: waiting, 1: parked
+        self.left_car_type = None
+        self.left_batteries = 0
+
+        self.right_car_color = None
+        # 0: waiting, 1: parked
+        self.right_car_type = None
+        self.right_batteries = 0
 
     def hold(self, motor: Motor = None):
         if motor is None:
@@ -97,31 +107,30 @@ class Intake:
         else:
             motor.run(-1500)
 
-
-intake = Intake()
-
-
-class IntakePossessions:
-    def __init__(self):
-        self.car_color = None
-        # 0: waiting, 1: parked
-        self.car_type = None
-        self.number_of_batteries = 0
-
-    def update(
+    def update_left_possessions(
         self,
         car_color=None,
         car_type=None,
         number_of_batteries=None,
     ):
-        self.car_color = car_color
-        self.car_type = car_type
+        self.left_car_color = car_color
+        self.left_car_type = car_type
         if number_of_batteries is not None:
-            self.number_of_batteries = number_of_batteries
+            self.left_batteries = number_of_batteries
+
+    def update_right_possessions(
+        self,
+        car_color=None,
+        car_type=None,
+        number_of_batteries=None,
+    ):
+        self.right_car_color = car_color
+        self.right_car_type = car_type
+        if number_of_batteries is not None:
+            self.right_batteries = number_of_batteries
 
 
-left_intake_possessions = IntakePossessions()
-right_intake_possessions = IntakePossessions()
+intake = Intake()
 
 
 class Sensors:
