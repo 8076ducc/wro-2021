@@ -37,9 +37,12 @@ class Base:
         self.left_motor.brake()
         self.right_motor.brake()
 
-    def hold(self):
-        self.left_motor.hold()
-        self.right_motor.hold()
+    def hold(self, motor):
+        if motor is None:
+            self.left_motor.hold()
+            self.right_motor.hold()
+        else:
+            motor.hold()
 
     def angle(self):
         return (self.left_motor.angle() + self.right_motor.angle()) / 2
@@ -61,9 +64,12 @@ class Intake:
         self.left_intake = left_intake
         self.right_intake = right_intake
 
-    def hold(self):
-        self.left_intake.hold()
-        self.right_intake.hold()
+    def hold(self, motor: Motor = None):
+        if motor is None:
+            self.left_intake.hold()
+            self.right_intake.hold()
+        else:
+            motor.hold()
 
     def reset(self):
         self.left_intake.reset_angle(0)
