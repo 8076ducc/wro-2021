@@ -151,7 +151,6 @@ def collect_waiting_1():
 
     intake.close()
     wait(800)
-    intake.hold()
 
     left_intake_possessions.update(car_order[0], 0)
     right_intake_possessions.update(car_order[1], 0)
@@ -174,7 +173,8 @@ def collect_waiting_1():
     )
 
     base.brake()
-
+    intake.hold()
+    
     gyro_turn.single_motor_turn(105, 1, 0)
     gyro_turn.single_motor_turn(0, 0, 1)
 
@@ -337,7 +337,7 @@ def deposit_parked_1():
     )
 
     intake.close()
-    wait(500)
+    wait(800)
     intake.hold()
 
     if right_intake_possessions.car_type is 1:
@@ -357,7 +357,7 @@ def deposit_parked_1():
         )
 
         intake.close()
-        wait(500)
+        wait(800)
         intake.hold()
 
 
@@ -372,13 +372,13 @@ def collect_waiting_2():
 
     intake.close()
     wait(800)
-    intake.hold()
 
     left_intake_possessions.update(car_order[3], 0)
     right_intake_possessions.update(car_order[2], 0)
 
     gyro_turn.single_motor_turn(80, 1, 0)
     gyro_turn.single_motor_turn(-3, 0, 1)
+    intake.hold()
 
 
 def deposit_waiting_2():
@@ -473,7 +473,6 @@ def deposit_waiting_2():
     base.brake()
     intake.close(right_intake)
     wait(600)
-    intake.hold()
     left_intake_possessions.update(Color.RED, 1)
 
     base.reset_angle()
@@ -488,6 +487,7 @@ def deposit_waiting_2():
     )
 
     base.brake()
+    intake.hold()
     gyro_turn.turn(180)
     base.brake()
 
@@ -635,7 +635,6 @@ def collect_waiting_3():
 
     intake.close()
     wait(800)
-    intake.hold()
 
     left_intake_possessions.update(car_order[4], 0)
     right_intake_possessions.update(car_order[5], 0)
@@ -644,6 +643,7 @@ def collect_waiting_3():
     gyro_straight.move(900, 0, lambda: base.angle() < 600)
 
     base.brake()
+    intake.hold()
 
     gyro_turn.single_motor_turn(110, 1, 0)
     gyro_turn.single_motor_turn(0, 0, 1)
