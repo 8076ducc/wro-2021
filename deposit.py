@@ -32,6 +32,7 @@ def deposit_waiting(motor: Motor, angle: int):
             number_of_batteries=None,
         ):
             intake.update_left_possessions(car_color, car_type, number_of_batteries)
+
         number_of_batteries = intake.left_batteries
 
         black_value = BLACK_RGB_LEFT
@@ -47,6 +48,7 @@ def deposit_waiting(motor: Motor, angle: int):
             number_of_batteries=None,
         ):
             intake.update_right_possessions(car_color, car_type, number_of_batteries)
+
         number_of_batteries = intake.right_batteries
 
         black_value = BLACK_RGB_RIGHT
@@ -81,9 +83,7 @@ def deposit_waiting(motor: Motor, angle: int):
         intake.close(motor)
         wait(600)
 
-        gyro_straight.move(
-            500, angle, lambda: sensor.rgb()[0] > (grey_value[0] + 5), False
-        )
+    gyro_straight.move(500, angle, lambda: sensor.rgb()[0] > (grey_value[0] + 5), False)
 
     base.brake()
     gyro_turn.turn(angle - 90)
@@ -93,7 +93,6 @@ def deposit_waiting(motor: Motor, angle: int):
 
 
 def deposit_waiting_without_battery(motor: Motor, angle: int):
-
     base.reset_angle()
 
     if motor is left_intake:
@@ -119,6 +118,7 @@ def deposit_waiting_without_battery(motor: Motor, angle: int):
             number_of_batteries=None,
         ):
             intake.update_left_possessions(car_color, car_type, number_of_batteries)
+
         number_of_batteries = intake.left_batteries
 
         black_value = BLACK_RGB_LEFT
@@ -146,6 +146,7 @@ def deposit_waiting_without_battery(motor: Motor, angle: int):
             number_of_batteries=None,
         ):
             intake.update_right_possessions(car_color, car_type, number_of_batteries)
+
         number_of_batteries = intake.right_batteries
 
         black_value = BLACK_RGB_RIGHT

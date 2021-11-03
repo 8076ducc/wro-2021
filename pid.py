@@ -127,7 +127,7 @@ class GyroStraight(PID):
         speed: float,
         threshold: int,
         condition=lambda: True,
-        reset = True,
+        reset=True,
         kp=0.70,
         ki=0.00,
         kd=0.00,
@@ -159,7 +159,7 @@ class GyroTurn(PID):
     def turn(
         self,
         threshold: int,
-        kp=0.9,
+        kp=1.0,
         ki=0.0001,
         kd=0.0004,
     ):
@@ -184,7 +184,7 @@ class GyroTurn(PID):
         threshold: int,
         left_mode: int,
         right_mode: int,
-        kp=1.50,
+        kp=1.60,
         ki=0.00001,
         kd=0.0004,
     ):
