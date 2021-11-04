@@ -279,8 +279,6 @@ def deposit_parked_1():
         0.006,
     )
 
-    ev3.speaker.beep()
-
     base.reset_angle()
     gyro_straight.move(
         1400,
@@ -331,6 +329,8 @@ def deposit_parked_1():
         100,
         kp=0.045,
     )
+    
+    base.brake()
 
     gyro_turn.single_motor_turn(360, 0, 1)
     base.run(-1500, -1500)
@@ -342,10 +342,10 @@ def deposit_parked_1():
     intake.update_left_possessions(None, None)
 
     gyro_straight.move(
-        800, 360, lambda: left_color_sensor.rgb()[0] > (BLACK_RGB_LEFT[0] + 5)
+        1400, 360, lambda: left_color_sensor.rgb()[0] > (BLACK_RGB_LEFT[0] + 5)
     )
     gyro_straight.move(
-        800, 360, lambda: left_color_sensor.rgb()[0] < (WHITE_RGB_LEFT[0] - 5)
+        1400, 360, lambda: left_color_sensor.rgb()[0] < (WHITE_RGB_LEFT[0] - 5)
     )
 
     intake.close()
@@ -365,7 +365,7 @@ def deposit_parked_1():
         intake.update_right_possessions(None, None)
 
         gyro_straight.move(
-            800, 360, lambda: left_color_sensor.rgb()[0] > (BLACK_RGB_LEFT[0] + 5)
+            1400, 360, lambda: left_color_sensor.rgb()[0] > (BLACK_RGB_LEFT[0] + 5)
         )
 
         intake.close()
@@ -391,7 +391,7 @@ def collect_waiting_2():
     intake.update_left_possessions(car_order[3], 0)
     intake.update_right_possessions(car_order[2], 0)
 
-    gyro_turn.single_motor_turn(70, 1, 0)
+    gyro_turn.single_motor_turn(65, 1, 0)
     gyro_turn.single_motor_turn(0, 0, 1)
     intake.hold()
 
@@ -435,7 +435,7 @@ def deposit_waiting_2():
     parking_lot_action(10, 90)
 
     move()
-    base.brake()
+    base.hold()
     parking_lot_action(11, 90)
 
     gyro_straight.move(
@@ -482,8 +482,6 @@ def deposit_waiting_2():
         260,
         lambda: base.angle() > -510,
         True,
-        1.60,
-        0.005,
     )
     gyro_straight.move(
         -700,
@@ -505,27 +503,21 @@ def deposit_waiting_2():
     base.reset_angle()
     gyro_straight.move(
         1400,
-        260,
+        250,
         lambda: base.angle() < 480,
         True,
-        1.60,
-        0.005,
     )
     gyro_straight.move(
         1400,
         260,
         lambda: right_color_sensor.rgb()[0] < (WHITE_RGB_RIGHT[0] - 5),
         False,
-        1.60,
-        0.005,
     )
     gyro_straight.move(
         1400,
         260,
         lambda: right_color_sensor.rgb()[0] > (BLACK_RGB_RIGHT[0] + 5),
         False,
-        1.60,
-        0.005,
     )
 
     base.brake()
@@ -673,7 +665,7 @@ def collect_waiting_3():
     base.brake()
     intake.hold()
 
-    gyro_turn.single_motor_turn(95, 1, 0)
+    gyro_turn.single_motor_turn(100, 1, 0)
     gyro_turn.single_motor_turn(0, 0, 1)
 
 
@@ -766,9 +758,9 @@ def deposit_waiting_3():
 
 
 def end():
-    gyro_turn.turn(-43)
+    gyro_turn.turn(-40)
     base.reset_angle()
-    gyro_straight.move(-1400, -43, lambda: base.angle() > -800)
+    gyro_straight.move(-1400, -41, lambda: base.angle() > -1100)
 
 
 def parking_lot_action(parking_lot: int, angle: int):
@@ -809,13 +801,13 @@ def parking_lot_action(parking_lot: int, angle: int):
 
 # Write your program here.
 
-# while True:
-#     if ev3.buttons.pressed():
-#         if ev3.buttons.pressed()[0] is Button.CENTER:
-#             break
+while True:
+    if ev3.buttons.pressed():
+        if ev3.buttons.pressed()[0] is Button.CENTER:
+            break
 
-# wait(100)
-# ev3.speaker.beep()
+wait(100)
+ev3.speaker.beep()
 
 # intake.update_left_possessions(Color.RED, 0, 1)
 # intake.update_right_possessions(Color.BLUE, 0, 2)
@@ -823,15 +815,15 @@ def parking_lot_action(parking_lot: int, angle: int):
 # wait(400)
 # intake.hold()
 
-# start()
-# collect_waiting_1()
-# deposit_waiting_1()
-# deposit_parked_1()
-# collect_waiting_2()
-# deposit_waiting_2()
-# # deposit_parked_2()
-# collect_waiting_3()
-# deposit_waiting_3()
-# end()
+start()
+collect_waiting_1()
+deposit_waiting_1()
+deposit_parked_1()
+collect_waiting_2()
+deposit_waiting_2()
+# deposit_parked_2()
+collect_waiting_3()
+deposit_waiting_3()
+end()
 
-# ev3.speaker.beep()
+ev3.speaker.beep()

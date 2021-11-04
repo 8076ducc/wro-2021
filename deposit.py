@@ -67,7 +67,7 @@ def deposit_waiting(motor: Motor, angle: int):
     )
     base.brake()
     intake.open(motor)
-    wait(600)
+    # wait(600)
     gyro_straight.move(1400, angle, lambda: sensor.rgb()[0] < (white_value[0] - 5))
     gyro_straight.move(
         1400, angle, lambda: sensor.rgb()[0] > (black_value[0] + 5), False
@@ -85,8 +85,17 @@ def deposit_waiting(motor: Motor, angle: int):
 
     gyro_straight.move(500, angle, lambda: sensor.rgb()[0] > (grey_value[0] + 5), False)
 
+    if number_of_batteries is 1:
+        base.reset_angle()
+        gyro_straight.move(500, angle, lambda: base.angle() < 8, False)
+
     base.brake()
-    gyro_turn.turn(angle - 90)
+
+    if number_of_batteries is 1:
+        gyro_turn.turn(angle - 95)
+    else:
+        gyro_turn.turn(angle - 90)
+
     base.brake()
     intake.hold()
     update_intake_posessions(None, None, number_of_batteries - 1)
@@ -165,7 +174,7 @@ def deposit_waiting_without_battery(motor: Motor, angle: int):
     )
     base.brake()
     intake.open(motor)
-    wait(600)
+    # wait(600)
     update_intake_posessions(None, None)
     gyro_straight.move(500, angle, lambda: sensor.rgb()[0] < (white_value[0] - 5))
     if number_of_batteries is 2:
