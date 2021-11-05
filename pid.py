@@ -137,8 +137,12 @@ class GyroStraight(PID):
 
         if speed is 900 or speed is -900:
             kp = 1.60
+            ki = 0.00
+            kd = 0.00
         elif speed is ~1400 or speed is -1400:
             kp = 2.20
+            ki = 0.00
+            kd = 0.00
 
         while condition():
             self.error = threshold - gyro_sensor.angle()
@@ -164,10 +168,9 @@ class GyroTurn(PID):
     def turn(
         self,
         threshold: int,
-        kp=0.70,
-        ki=0.0001,
-        kd=0.00,
-        # kd=0.0004,
+        kp=1.00,
+        ki=0.0006,
+        kd=6.0,
     ):
         self.reset_values()
 
@@ -190,11 +193,9 @@ class GyroTurn(PID):
         threshold: int,
         left_mode: int,
         right_mode: int,
-        kp=1.50,
-        # ki=0.00001,
-        # kd=0.0004,
-        ki=0.00001,
-        kd=0.0,
+        kp=1.60,
+        ki=0.00003,
+        kd=4.0,
     ):
         self.reset_values()
 
