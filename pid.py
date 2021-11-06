@@ -168,9 +168,11 @@ class GyroTurn(PID):
     def turn(
         self,
         threshold: int,
-        kp=1.00,
-        ki=0.0006,
-        kd=6.0,
+        kp=0.90,
+        # ki=0.0008,
+        # kd=6.0,
+        ki=0.0004,
+        kd=4.0,
     ):
         self.reset_values()
 
@@ -193,9 +195,9 @@ class GyroTurn(PID):
         threshold: int,
         left_mode: int,
         right_mode: int,
-        kp=1.60,
-        ki=0.00003,
-        kd=4.0,
+        kp=1.55,
+        ki=0.000035,
+        kd=8.0,
     ):
         self.reset_values()
 
