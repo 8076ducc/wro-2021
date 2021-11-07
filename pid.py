@@ -40,7 +40,7 @@ class LineTrack(PID):
         ki=0.0001,
         kd=1.3,
     ):
-        if reset is True:
+        if reset == True:
             self.reset_values()
 
         self.loop = loop
@@ -83,7 +83,7 @@ class LineTrack(PID):
         ki=0.00,
         kd=0.5,
     ):
-        if reset is True:
+        if reset == True:
             self.reset_values()
 
         self.loop = loop
@@ -132,14 +132,14 @@ class GyroStraight(PID):
         ki=0.00,
         kd=0.00,
     ):
-        if reset is True:
+        if reset == True:
             self.reset_values()
 
-        if speed is 900 or speed is -900:
+        if speed == 900 or speed == -900:
             kp = 1.60
             ki = 0.00
             kd = 0.00
-        elif speed is ~1400 or speed is -1400:
+        elif speed == 1400 or speed == -1400:
             kp = 2.20
             ki = 0.00
             kd = 0.00
@@ -168,15 +168,13 @@ class GyroTurn(PID):
     def turn(
         self,
         threshold: int,
-        kp=0.90,
-        # ki=0.0008,
-        # kd=6.0,
-        ki=0.0004,
-        kd=4.0,
+        kp=0.82,
+        ki=0.00045,
+        kd=5.0,
     ):
         self.reset_values()
 
-        while gyro_sensor.angle() is not threshold:
+        while gyro_sensor.angle() != threshold:
             self.error = threshold - gyro_sensor.angle()
             self.proportional = self.error * kp
             self.integral += self.error
@@ -201,7 +199,7 @@ class GyroTurn(PID):
     ):
         self.reset_values()
 
-        while gyro_sensor.angle() is not threshold:
+        while gyro_sensor.angle() != threshold:
             self.error = threshold - gyro_sensor.angle()
             self.proportional = self.error * kp
             self.integral += self.error
