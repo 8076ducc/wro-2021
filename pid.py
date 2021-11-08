@@ -1,5 +1,6 @@
 from devices import *
 from constants import *
+from pybricks.tools import wait
 
 
 class PID(object):
@@ -170,7 +171,7 @@ class GyroTurn(PID):
         threshold: int,
         kp=0.82,
         ki=0.00045,
-        kd=5.0,
+        kd=0.0,
     ):
         self.reset_values()
 
@@ -187,6 +188,9 @@ class GyroTurn(PID):
             self.last_error = self.error
 
         base.brake()
+        
+        gyro_sensor.reset_angle(threshold)
+        wait(100)
 
     def single_motor_turn(
         self,
@@ -215,6 +219,9 @@ class GyroTurn(PID):
             self.last_error = self.error
 
         base.brake()
+        
+        gyro_sensor.reset_angle(threshold)
+        wait(100)
 
 
 gyro_straight = GyroStraight()

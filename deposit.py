@@ -83,6 +83,7 @@ def deposit_waiting(motor: Motor, angle: int):
     )
 
     if number_of_batteries == 2:
+        base.hold()
         ev3.speaker.beep()
         intake.close(motor)
         wait(500)
@@ -90,9 +91,9 @@ def deposit_waiting(motor: Motor, angle: int):
     gyro_straight.move(800, angle, lambda: sensor.rgb()[0] > (grey_value[0] + 5), False)
     base.hold()
     if number_of_batteries == 1:
-        gyro_turn.turn(angle - 95)
+        base.run_target(-800, 800, -160, 160)
     else:
-        gyro_turn.turn(angle - 90)
+        base.run_target(-800, 800, -150, 150)
 
     intake.hold()
     update_intake_posessions(None, None, number_of_batteries - 1)
@@ -190,10 +191,11 @@ def deposit_waiting_without_battery(motor: Motor, angle: int):
     gyro_straight.move(
         800, angle, lambda: sensor.rgb()[0] < (white_value[0] - 5), False
     )
-    gyro_straight.move(650, angle, lambda: sensor.rgb()[0] > (grey_value[0] + 5), False)
+    gyro_straight.move(800, angle, lambda: sensor.rgb()[0] > (grey_value[0] + 5), False)
 
     base.hold()
-    gyro_turn.turn(angle - 93)
+    base.run_target(-800, 800, -150, 150)
+
     intake.hold()
 
 
@@ -211,7 +213,7 @@ def collect_parked(motor: Motor, angle: int, car_color: Color):
                 ((BLACK_RGB_RIGHT[0] + WHITE_RGB_RIGHT[0]) / 2),
             ],
             -1,
-            lambda: base.angle() < 85,
+            lambda: base.angle() < 80,
             False,
         )
         base.brake()
@@ -273,8 +275,9 @@ def collect_parked(motor: Motor, angle: int, car_color: Color):
     gyro_straight.move(
         800, angle, lambda: sensor.rgb()[0] < (white_value[0] - 5), False
     )
-    gyro_straight.move(500, angle, lambda: sensor.rgb()[0] > (grey_value[0] + 5), False)
+    gyro_straight.move(800, angle, lambda: sensor.rgb()[0] > (grey_value[0] + 5), False)
     base.hold()
-    gyro_turn.turn(angle - 90)
+
+    base.run_target(-800, 800, -150, 150)
 
     intake.hold()

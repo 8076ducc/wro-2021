@@ -5,7 +5,7 @@ from pybricks.ev3devices import (
     GyroSensor,
 )
 from pybricks import nxtdevices
-from pybricks.parameters import Port, Direction
+from pybricks.parameters import Port, Direction, Stop
 from pybricks.iodevices import Ev3devSensor
 
 ev3 = EV3Brick()
@@ -54,6 +54,20 @@ class Base:
     def run(self, left_speed: float, right_speed: float):
         self.left_motor.run(left_speed)
         self.right_motor.run(right_speed)
+
+    def run_time(self, left_speed, right_speed, time):
+        left_motor.run_time(left_speed, time, wait=False, then=Stop.HOLD)
+        right_motor.run_time(right_speed, time, wait=True, then=Stop.HOLD)
+
+        base.brake()
+
+    def run_target(self, left_speed, right_speed, left_angle, right_angle):
+        base.reset_angle()
+
+        left_motor.run_target(left_speed, left_angle, wait=False, then=Stop.HOLD)
+        right_motor.run_target(right_speed, right_angle, wait=True, then=Stop.HOLD)
+
+        base.brake()
 
 
 base = Base()
@@ -106,6 +120,23 @@ class Intake:
             self.right_intake.run(-1500)
         else:
             motor.run(-1500)
+
+    def run_time(self, speed, time, motor: Motor = None):
+
+        if motor is None:
+            left_intake.run_time(speed, time, wait=False, then=Stop.HOLD)
+            right_intake.run_time(speed, time, wait=True, then=Stop.HOLD)
+        else:
+            motor.run_time(speed, time, then=Stop.HOLD)
+
+    def run_target(self, speed, angle, motor: Motor = None):
+        if motor is None:
+            left_intake.run_target(speed, angle, then=Stop.HOLD)
+            right_intake.run_target(speed, angle, then=Stop.HOLD)
+        else:
+            motor.run_target(speed, angle, then=Stop.HOLD)
+
+        base.brake()
 
     def update_left_possessions(
         self,
