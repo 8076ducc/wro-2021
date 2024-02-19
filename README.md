@@ -1,10 +1,16 @@
-# ducc's WRO 2021 Team Repository
+<img src="assets/icons/logo.png" alt="" width="80"/>
 
-ducc is a three-person team comprising Neo Hao Jun, Isaac Tan Jia Le, and Ng Yu Han Dominic from the Hwa Chong Robotics Club. This repository documents their programming journey through the World Robot Olympiad 2021 Regular Category (Junior).
+# ducc. Robotics: World Robot Olympiad 2021
+
+This repository contains the working files and source code for ducc's run for the 2021 World Robot Olympiad (WRO) Regular Category (Junior) competition.
+
+## About
+
+ducc. is a three-man team comprising Neo Hao Jun, Isaac Tan Jia Le, and Ng Yu Han Dominic from the Hwa Chong Robotics Club in Singapore.
 
 ## Technologies
 
-This project was built with Pybricks, an API build on micropython.
+This project was built with Pybricks, an API build on MicroPython.
 
 ## License 📜
 
@@ -14,10 +20,6 @@ This project was built with Pybricks, an API build on micropython.
 
 ### Copyright
 
-© 2021, Neo Hao Jun
+© 2021, ducc. Robotics Competition Team.
 
-While I have made every effort to abide by legal and ethical requirements when using works that I did not create, some may have been overlooked inadvertently. Please drop me an email at 191444y@student.hci.edu.sg, and I will be happy to make the necessary arrangements.
-
-### Trademarks
-
-I reserve the full rights to use any word, phrase, symbol, or design created by me as part of this project, for any endeavor. Your use of this project, pursuant to the GPLv3 license, does not permit you to use or modify my trademarks for any purpose other than in reference to me and my work.
+While we have made every effort to abide by legal and ethical requirements when using works we did not create, some may have been overlooked inadvertently. Please let us know and we will be happy to make the necessary arrangements.
